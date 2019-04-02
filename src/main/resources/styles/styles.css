@@ -1,0 +1,48 @@
+.button{
+    -fx-font-size: 14.0px;
+    -jfx-button-type: RAISED;
+    -fx-background-color: blue;
+    -fx-pref-width: 100.0;
+    -fx-pref-height: 25.0;
+    -fx-text-fill: white;
+}
+.newDatasetButton{
+    -fx-background-color: white;
+    -fx-pref-width: 120.0;
+    -fx-text-fill: blue;
+}
+.newDicomStoreButton{
+    -fx-background-color: white;
+    -fx-pref-width: 150.0;
+    -fx-text-fill: blue;
+}
+.createButton{
+    -fx-pref-width: 80.0;
+}
+.cancelButton{
+    -fx-background-color: white;
+    -fx-pref-width: 80.0;
+    -fx-text-fill: blue;
+}
+.beardCrumbsBlack{
+    -fx-font-size: 12.0px;
+    -fx-text-fill: black;
+}
+.beardCrumbsGray{
+    -fx-font-size: 12.0px;
+    -fx-text-fill: gray;
+}
+.errorPage{
+    -fx-text-fill: red;
+    -fx-font-size: 30px;
+}
+.errorText{
+    -fx-font-size: 16px;
+}
+.cloudWindowHeaderLabel{
+    -fx-text-fill: white;
+    -fx-font-size: 30px;
+}
+.cloudWindowHeaderBackgroundColor{
+    -fx-background-color: black;
+}
