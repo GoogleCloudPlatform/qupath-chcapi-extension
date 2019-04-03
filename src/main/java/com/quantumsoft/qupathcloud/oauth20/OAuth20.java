@@ -15,7 +15,8 @@
 
 package com.quantumsoft.qupathcloud.oauth20;
 
-import com.google.api.client.auth.oauth2.*;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.auth.oauth2.DataStoreCredentialRefreshListener;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
@@ -27,10 +28,14 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
+import com.quantumsoft.qupathcloud.repository.Repository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.List;
@@ -39,10 +44,10 @@ public class OAuth20 {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final File DATA_STORE_DIR =
             new File(System.getProperty("user.home") + "/QuPath/.store/oauth20");
+    private static final String CLIENT_SECRETS_FILE_NAME = "client_secrets.json";
     private static final List<String> SCOPES = Arrays.asList(
             "https://www.googleapis.com/auth/cloud-healthcare",
             "https://www.googleapis.com/auth/cloudplatformprojects.readonly");
-    private static final String CLIENT_SECRETS_FILE_NAME = "client_secrets.json";
     private static final String USER_ID = "user";
     private static final int TIME_WHEN_REFRESH_TOKEN_IN_SECONDS = 60;
     private final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
@@ -66,6 +71,7 @@ public class OAuth20 {
                 .setAccessType("offline")
                 .setApprovalPrompt("force")
                 .build();
+        Repository.INSTANCE.getBooleanProperty().set(false);
         return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver());
     }
 
@@ -85,9 +91,25 @@ public class OAuth20 {
         return credential;
     }
 
+    public void invalidateCredentials() throws IOException {
+        if (authenticator != null) {
+            authenticator.getReceiver().stop();
+            authenticator.getFlow().getCredentialDataStore().clear();
+            authenticator = null;
+        }
+    }
+
     private void login() throws QuPathCloudException, IOException, GeneralSecurityException {
         LOGGER.debug("Login user");
         authenticator = getAuthenticator();
-        credential = authenticator.authorize(USER_ID);
+        authorize();
+    }
+
+    private void authorize() throws IOException {
+        try {
+            credential = authenticator.authorize(USER_ID);
+        } catch (NullPointerException e) {
+            //nope
+        }
     }
 }

@@ -28,6 +28,8 @@ import java.util.Date;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Instance {
+    private static final String TILED_FULL = "TILED_FULL";
+
     @JsonProperty("0020000D")
     private DicomAttribute<String> studyInstanceUID; //required includefield parameter
     @JsonProperty("0020000E")
@@ -54,6 +56,16 @@ public class Instance {
     private DicomAttribute<String> timezoneOffsetFromUTC;
     @JsonProperty("01000424")
     private DicomAttribute<String> sopAuthorizationComment;
+
+    @JsonProperty("00209311")
+    private DicomAttribute<String> dimensionOrganizationType;
+    @JsonProperty("00209161")
+    private DicomAttribute<String> concatenationUID;
+    @JsonProperty("00209228")
+    private DicomAttribute<Integer> concatenationFrameOffsetNumber;
+    @JsonProperty("00280008")
+    private DicomAttribute<Integer> numberOfFrames;
+
 
     public DicomAttribute<String> getStudyInstanceUID() {
         return studyInstanceUID;
@@ -153,5 +165,31 @@ public class Instance {
 
     public DicomAttribute<String> getSopAuthorizationComment() {
         return sopAuthorizationComment;
+    }
+
+    public DicomAttribute<String> getDimensionOrganizationType() {
+        return dimensionOrganizationType;
+    }
+
+    @JsonIgnore
+    public boolean isFullTiled(){
+        if(dimensionOrganizationType == null)
+            return false;
+        String[] values = dimensionOrganizationType.getValue();
+        if(values.length == 0)
+            return false;
+        return values[0].equals(TILED_FULL);
+    }
+
+    public DicomAttribute<String> getConcatenationUID() {
+        return concatenationUID;
+    }
+
+    public DicomAttribute<Integer> getConcatenationFrameOffsetNumber() {
+        return concatenationFrameOffsetNumber;
+    }
+
+    public DicomAttribute<Integer> getNumberOfFrames() {
+        return numberOfFrames;
     }
 }

@@ -24,6 +24,9 @@ public class Series {
     private DicomAttribute<String> studyInstanceUID;
     @JsonProperty("0020000E")
     private DicomAttribute<String> seriesInstanceUID;
+    @JsonProperty("0008103E")
+    private DicomAttribute<String> seriesDescription;
+    @Deprecated
     @JsonProperty("00204000")
     private DicomAttribute<String> imageComments;
     @JsonProperty("00080060")
@@ -45,17 +48,17 @@ public class Series {
         this.seriesInstanceUID = seriesInstanceUID;
     }
 
-    public DicomAttribute<String> getImageComments() {
-        if(imageComments == null){
+    public DicomAttribute<String> getSeriesDescription() {
+        if(seriesDescription == null){
             String temp = studyInstanceUID.getValue1() + seriesInstanceUID.getValue1();
-            imageComments = new DicomAttribute<>();
-            imageComments.setValue( new String[]{ String.valueOf(temp.hashCode())});
+            seriesDescription = new DicomAttribute<>();
+            seriesDescription.setValue( new String[]{ String.valueOf(temp.hashCode())});
         }
-        return imageComments;
+        return seriesDescription;
     }
 
-    public void setImageComments(DicomAttribute<String> imageComments) {
-        this.imageComments = imageComments;
+    public void setSeriesDescription(DicomAttribute<String> imageComments) {
+        this.seriesDescription = imageComments;
     }
 
     public DicomAttribute<String> getModality() {
@@ -73,11 +76,11 @@ public class Series {
         Series series = (Series) o;
         return Objects.equals(studyInstanceUID, series.studyInstanceUID) &&
                 Objects.equals(seriesInstanceUID, series.seriesInstanceUID) &&
-                Objects.equals(imageComments, series.imageComments);
+                Objects.equals(seriesDescription, series.seriesDescription);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(studyInstanceUID, seriesInstanceUID, imageComments);
+        return Objects.hash(studyInstanceUID, seriesInstanceUID, seriesDescription);
     }
 }

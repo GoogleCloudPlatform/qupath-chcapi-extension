@@ -30,6 +30,9 @@ public class Pyramid {
     private String seriesUID;
 
     public Pyramid(List<Instance> instances) throws QuPathCloudException {
+        if(instances.get(0).isFullTiled()){
+            instances.sort(Comparator.comparingInt(Pyramid::getInstanceFrameOffset));
+        }
         instances.sort(Comparator.comparingInt(Pyramid::getInstanceWidth).reversed());
 
         PyramidLevel currentLevel = null;
@@ -86,5 +89,9 @@ public class Pyramid {
 
     private static int getInstanceWidth(Instance instance){
         return instance.getTotalPixelMatrixColumns().getValue1();
+    }
+
+    private static int getInstanceFrameOffset(Instance instance){
+        return instance.getConcatenationFrameOffsetNumber().getValue1();
     }
 }

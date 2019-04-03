@@ -19,16 +19,22 @@ import com.quantumsoft.qupathcloud.gui.windows.CloudWindow;
 import com.quantumsoft.qupathcloud.repository.Repository;
 import com.quantumsoft.qupathcloud.synchronization.SynchronizationProjectWithDicomStore;
 import javafx.scene.control.Button;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import qupath.lib.gui.QuPathGUI;
 import qupath.lib.gui.extensions.QuPathExtension;
 
+import java.io.IOException;
+
 public class CloudExtension implements QuPathExtension {
+    private static final Logger LOGGER = LogManager.getLogger();
     private static final String EXTENSION_NAME = "Cloud extension";
     private static final String EXTENSION_DESCRIPTION = "Adds integration with Google Cloud Healthcare API";
 
     public void installExtension(QuPathGUI qupath) {
         Button cloudButton = new Button("Cloud");
         Button synchronizeButton = new Button("Synchronize");
+        Button logoutButton = new Button("Logout");
 
         cloudButton.setOnAction(e -> {
             CloudWindow window = new CloudWindow(qupath);
@@ -43,9 +49,21 @@ public class CloudExtension implements QuPathExtension {
         });
         synchronizeButton.disableProperty().bind(Repository.INSTANCE.getDicomStoreProperty().isNull());
 
+        logoutButton.setOnAction(event -> {
+            Repository.INSTANCE.setDicomStore(null);
+            try {
+                Repository.INSTANCE.invalidateCredentials();
+            } catch (IOException e) {
+                LOGGER.error("Error invalidate!", e);
+            }
+            Repository.INSTANCE.getBooleanProperty().set(true);
+        });
+        logoutButton.disableProperty().bind(Repository.INSTANCE.getBooleanProperty());
+
         qupath.addToolbarSeparator();
         qupath.addToolbarButton(cloudButton);
         qupath.addToolbarButton(synchronizeButton);
+        qupath.addToolbarButton(logoutButton);
     }
 
     public String getName() {

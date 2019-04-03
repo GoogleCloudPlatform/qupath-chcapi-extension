@@ -20,7 +20,7 @@ public class QuPathCloudException extends Exception{
         super(message);
     }
 
-    public QuPathCloudException(Exception e) {
+    public QuPathCloudException(Throwable e) {
         super(e);
     }
 }

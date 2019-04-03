@@ -19,6 +19,8 @@ import com.quantumsoft.qupathcloud.entities.DicomAttribute;
 import com.quantumsoft.qupathcloud.entities.instance.Instance;
 import com.quantumsoft.qupathcloud.entities.instance.objects.ObjectOfPerframeFunctionalGroupsSequence;
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -26,10 +28,14 @@ import java.util.HashMap;
 import java.util.List;
 
 public class PyramidLevel {
+    private static final Logger LOGGER = LogManager.getLogger();
+
     private int width;
     private int height;
     private int tileWidth;
     private int tileHeight;
+
+    private boolean isFullTiled;
 
     private HashMap<Point, PyramidFrame> frameMap = new HashMap<>();
 
@@ -38,6 +44,7 @@ public class PyramidLevel {
         this.height = instance.getTotalPixelMatrixRows().getValue1();
         this.tileWidth = instance.getColumns().getValue1();
         this.tileHeight = instance.getRows().getValue1();
+        this.isFullTiled = instance.isFullTiled();
 
         addInstance(instance);
     }
@@ -58,7 +65,7 @@ public class PyramidLevel {
         return tileHeight;
     }
 
-    public PyramidFrame getFrame(int tileX, int tileY){
+    public PyramidFrame getFrame(int tileX, int tileY) {
         return frameMap.get(new Point(tileX, tileY));
     }
 
@@ -66,21 +73,51 @@ public class PyramidLevel {
         if (instance.getTotalPixelMatrixColumns().getValue1() != width ||
                 instance.getTotalPixelMatrixRows().getValue1() != height ||
                 instance.getColumns().getValue1() != tileWidth ||
-                instance.getRows().getValue1() != tileHeight
+                instance.getRows().getValue1() != tileHeight ||
+                instance.isFullTiled() != isFullTiled
         ) {
             throw new QuPathCloudException("PyramidLevel and instance parameters do not match");
         }
-
-        ObjectOfPerframeFunctionalGroupsSequence[] objectsOfPerframeFunctionalGroupsSequences = instance.getPerframeFunctionalGroupsSequence().getValue();
-        List<ObjectOfPerframeFunctionalGroupsSequence> frameList = Arrays.asList(objectsOfPerframeFunctionalGroupsSequences);
         String instanceUID = instance.getSopInstanceUID().getValue1();
-        for (int i = 0; i < frameList.size(); i++) {
-            Point tileCoordinate = getFrameCoordinate(frameList.get(i));
-            if (frameMap.get(tileCoordinate) != null){
-                throw new QuPathCloudException("PyramidLevel build error: tiles with same coordinates");
+
+        if (isFullTiled) {
+            int numberOfFrames = instance.getNumberOfFrames().getValue1();
+            int frameOffset = instance.getConcatenationFrameOffsetNumber().getValue1();
+
+            int widthInTiles = (int) Math.ceil((double) width / tileWidth);
+            int heightInTiles = (int) Math.ceil((double) height / tileHeight);
+
+            int startX = Math.floorMod(frameOffset, widthInTiles);
+            int startY = Math.floorDiv(frameOffset, widthInTiles);
+
+            int frameIndex = 0;
+            for (int y = startY; y < heightInTiles; y++) {
+                for (int x = frameIndex == 0 ? startX : 0; x < widthInTiles; x++) {
+                    Point tileCoordinate = new Point(x + 1, y + 1);
+                    if (frameMap.get(tileCoordinate) != null) {
+                        throw new QuPathCloudException("PyramidLevel build error: tiles with same coordinates");
+                    }
+                    PyramidFrame frame = new PyramidFrame(instanceUID, ++frameIndex);
+                    frameMap.put(tileCoordinate, frame);
+
+                    if (frameIndex >= numberOfFrames) break;
+                }
+
+                if (frameIndex >= numberOfFrames) break;
             }
-            PyramidFrame frame = new PyramidFrame(instanceUID, i+1);
-            frameMap.put(tileCoordinate, frame);
+        } else {
+            ObjectOfPerframeFunctionalGroupsSequence[] objectsOfPerframeFunctionalGroupsSequences =
+                    instance.getPerframeFunctionalGroupsSequence().getValue();
+            List<ObjectOfPerframeFunctionalGroupsSequence> frameList =
+                    Arrays.asList(objectsOfPerframeFunctionalGroupsSequences);
+            for (int i = 0; i < frameList.size(); i++) {
+                Point tileCoordinate = getFrameCoordinate(frameList.get(i));
+                if (frameMap.get(tileCoordinate) != null) {
+                    throw new QuPathCloudException("PyramidLevel build error: tiles with same coordinates");
+                }
+                PyramidFrame frame = new PyramidFrame(instanceUID, i + 1);
+                frameMap.put(tileCoordinate, frame);
+            }
         }
     }
 

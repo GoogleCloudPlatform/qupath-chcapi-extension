@@ -157,6 +157,10 @@ public class CloudDAOImpl extends CloudDAO {
                 .addParameter(PARAM_INCLUDE_FIELD, VALUE_PARAM_INSTANCE_CREATION_TIME)
                 .addParameter(PARAM_INCLUDE_FIELD, VALUE_PARAM_TIMEZONE_OFFSET_FROM_UTC)
                 .addParameter(PARAM_INCLUDE_FIELD, VALUE_PARAM_SOP_AUTHORIZATHION_COMMENT)
+                .addParameter(PARAM_INCLUDE_FIELD, VALUE_PARAM_DIMENSION_ORGANIZATION_TYPE)
+                .addParameter(PARAM_INCLUDE_FIELD, VALUE_PARAM_CONCATENATION_UID)
+                .addParameter(PARAM_INCLUDE_FIELD, VALUE_PARAM_CONCATENATION_FRAME_OFFSET_NUMBER)
+                .addParameter(PARAM_INCLUDE_FIELD, VALUE_PARAM_NUMBER_OF_FRAMES)
                 .setPath(instancesPathBuilder.toPath());
         return createRequestForObjectList(uriBuilder, new TypeReference<List<Instance>>() {
         });

@@ -108,7 +108,7 @@ public class CloudWindow {
         scene.getStylesheets().add("styles/styles.css");
 
         DicomStore dicomStore = Repository.INSTANCE.getDicomStore();
-        if (dicomStore != null){
+        if (dicomStore != null) {
             loadData(dicomStore);
         } else {
             authorizationPage();
