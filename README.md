@@ -1,10 +1,10 @@
-# QuPath-cloud
+# QuPath Cloud Healthcare API Extension
 
-The **QuPath-cloud** extension provides viewing whole-slide images online without full downloading and synchronize annotations with the help of [Google Cloud Healthcare API](https://cloud.google.com/healthcare/).
+The **QuPath Cloud Healthcare API** provides viewing whole-slide images online without full downloading and synchronize annotations with the help of [Google Cloud Healthcare API](https://cloud.google.com/healthcare/).
 
 ## Installation:
-1) Download the latest **qupath-cloud.jar** from the releases tab.
-2) Run **QuPath** application and drop the **qupath-cloud.jar** on it's window or just put to /extensions in QuPath data folder.
+1) Download the latest JAR from the releases tab.
+2) Run **QuPath** application and drop the JAR on it's window or just put to /extensions in QuPath data folder.
 
 >If you haven't installed QuPath, install QuPath from [here](https://github.com/qupath/qupath/releases/tag/v0.1.2). 
 
