@@ -10,7 +10,7 @@ The **QuPath-cloud** extension provides viewing whole-slide images online withou
 
 ## Setting up project to use dicom cloud:
 To upload to the cloud it is necessary to dicomize your whole-slide images using embedded dicomizer in qupath-cloud extension or 
-using [OrthancWSIDicomizer](https://www.orthanc-server.com/browse.php?path=/whole-slide-imaging) and upload it with the help of [cURL](https://curl.haxx.se/)  or [dcm4che stowrs](https://github.com/dcm4che/dcm4che/tree/master/dcm4che-tool/dcm4che-tool-stowrs).
+using [OrthancWSIDicomizer](https://www.orthanc-server.com/browse.php?path=/whole-slide-imaging) and upload it with the help of [cURL](https://curl.haxx.se/)  or [dcm4che stowrs](https://sourceforge.net/projects/dcm4che/).
 
 1) Create empty project in QuPath.
 2) Click **Cloud** button on the button bar. Login with OAuth in your default browser with your account which have access permission (1 time).
@@ -19,8 +19,8 @@ using [OrthancWSIDicomizer](https://www.orthanc-server.com/browse.php?path=/whol
 5) Create dicom store. Click **New DICOM Store** button, input dicom store name and after that click **OK** button.
 6) Upload dicomized images into created dicom store and dataset in chosen location:
    1) If you want to use the embedded dicomizer in the qupath-cloud extension, just add images to the project. When you click **Synchronize** button images will be dicomized and uploaded.
-   2) If you want to use **OrthancWSIDicomizer**, follow theses [instructions](http://book.orthanc-server.com/plugins/wsi.html). 
-   For uploading dicomized images, follow theses [instructions](https://cloud.google.com/healthcare/docs/how-tos/dicom-import-export). Alternatively you can upload via [dcm4che stowrs tool](https://sourceforge.net/projects/dcm4che/).
+   2) Alternatively you can use [OrthancWSIDicomizer](http://book.orthanc-server.com/plugins/wsi.html). 
+   Once source images have dicomized, you can upload them via [curl](https://cloud.google.com/healthcare/docs/how-tos/dicom-import-export) or [dcm4che stowrs tool](https://github.com/dcm4che/dcm4che/tree/master/dcm4che-tool/dcm4che-tool-stowrs).
 7) Click **Synchronize** button on the button bar in QuPath to synchronize DICOM Store with your project.
 >Extension saved in your chosen dicom store for existing project and saved your access permission on computer.   
 >Supported formats for qupath-cloud extension and pathology test data you can see [here](https://openslide.org/).
