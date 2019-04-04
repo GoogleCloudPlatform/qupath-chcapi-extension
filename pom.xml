@@ -4,7 +4,7 @@
 
 	<groupId>com.quantumsoft</groupId>
 	<artifactId>qupath-cloud</artifactId>
-	<version>0.1</version>
+	<version>1.0</version>
 
 	<repositories>
 		<repository>
