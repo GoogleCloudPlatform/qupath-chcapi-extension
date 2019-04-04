@@ -20,7 +20,7 @@ using [OrthancWSIDicomizer](https://www.orthanc-server.com/browse.php?path=/whol
 6) Upload dicomized images into created dicom store and dataset in chosen location:
    1) If you want to use the embedded dicomizer in the qupath-cloud extension, just add images to the project. When you click **Synchronize** button images will be dicomized and uploaded.
    2) Alternatively you can use [OrthancWSIDicomizer](http://book.orthanc-server.com/plugins/wsi.html). 
-   Once source images have dicomized, you can upload them via [curl](https://cloud.google.com/healthcare/docs/how-tos/dicom-import-export) or [dcm4che stowrs tool](https://github.com/dcm4che/dcm4che/tree/master/dcm4che-tool/dcm4che-tool-stowrs).
+   Once source images have been dicomized, you can upload them via [curl](https://cloud.google.com/healthcare/docs/how-tos/dicom-import-export) or [dcm4che stowrs tool](https://github.com/dcm4che/dcm4che/tree/master/dcm4che-tool/dcm4che-tool-stowrs).
 7) Click **Synchronize** button on the button bar in QuPath to synchronize DICOM Store with your project.
 >Extension saved in your chosen dicom store for existing project and saved your access permission on computer.   
 >Supported formats for qupath-cloud extension and pathology test data you can see [here](https://openslide.org/).
