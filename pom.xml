@@ -79,11 +79,6 @@
 			<version>2.6</version>
 		</dependency>
 		<dependency>
-			<groupId>qupath</groupId>
-			<artifactId>qupath-gui-fx</artifactId>
-			<version>0.1.2</version>
-		</dependency>
-		<dependency>
 			<groupId>net.java.dev.jna</groupId>
 			<artifactId>jna</artifactId>
 			<version>5.0.0</version>
@@ -97,11 +92,6 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
 			<version>2.11.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openslide</groupId>
-			<artifactId>openslide</artifactId>
-			<version>3.4.1_2</version>
 		</dependency>
 	</dependencies>
 
