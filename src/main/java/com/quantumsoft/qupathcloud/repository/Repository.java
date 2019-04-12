@@ -47,12 +47,12 @@ public enum Repository {
     private final Logger LOGGER = LogManager.getLogger();
     private final ObjectProperty<DicomStore> dicomStore;
     private final ObjectProperty<CloudDAO> cloudDao;
-    private final BooleanProperty booleanProperty = new SimpleBooleanProperty();
+    private final BooleanProperty isLoggedInProperty = new SimpleBooleanProperty();
 
     private final QuPathHierarchyListener hierarchyListener;
 
     Repository() {
-        booleanProperty.set(true);
+        isLoggedInProperty.set(true);
         QuPathGUI qupath = QuPathGUI.getInstance();
         dicomStore = new SimpleObjectProperty<>();
         dicomStore.addListener((observableValue, oldStore, newStore) -> {
@@ -114,8 +114,8 @@ public enum Repository {
         return cloudDao.get();
     }
 
-    public BooleanProperty getBooleanProperty() {
-        return booleanProperty;
+    public BooleanProperty getIsLoggedInProperty() {
+        return isLoggedInProperty;
     }
 
     public void invalidateCredentials() throws IOException {

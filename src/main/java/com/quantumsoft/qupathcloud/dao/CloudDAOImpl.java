@@ -68,8 +68,16 @@ public class CloudDAOImpl extends CloudDAO {
                 .setScheme(SCHEME)
                 .setHost(CLOUD_RESOURCE_MANAGER_HOST)
                 .setPath(PATH_TO_PROJECTS);
-        return createRequestForObjectList(uriBuilder, new TypeReference<Projects>() {
-        }).getProjects();
+        Projects projectsOnPage = createRequestForObjectList(uriBuilder, new TypeReference<Projects>() {});
+        List<Project> projectList = new ArrayList<>(projectsOnPage.getProjects());
+        String nextPageToken = projectsOnPage.getNextPageToken();
+        while (nextPageToken != null) {
+            uriBuilder.addParameter(PARAM_PAGE_TOKEN, nextPageToken);
+            projectsOnPage = createRequestForObjectList(uriBuilder, new TypeReference<Projects>() {});
+            projectList.addAll(projectsOnPage.getProjects());
+            nextPageToken = projectsOnPage.getNextPageToken();
+        }
+        return projectList;
     }
 
     @Override
@@ -79,8 +87,7 @@ public class CloudDAOImpl extends CloudDAO {
                 .setScheme(SCHEME)
                 .setHost(HEALTHCARE_HOST)
                 .setPath(locationsPathBuilder.toPath());
-        return createRequestForObjectList(uriBuilder, new TypeReference<Locations>() {
-        }).getLocations();
+        return createRequestForObjectList(uriBuilder, new TypeReference<Locations>() {}).getLocations();
     }
 
     @Override
@@ -101,17 +108,12 @@ public class CloudDAOImpl extends CloudDAO {
                 .setScheme(SCHEME)
                 .setHost(HEALTHCARE_HOST)
                 .setPath(dicomStoresPathBuilder.toPath());
-        DicomStores dicomStoresOnPage = createRequestForObjectList(uriBuilder, new TypeReference<DicomStores>() {
-        });
-        List<DicomStore> dicomStoresList = new ArrayList<>();
-        if(dicomStoresOnPage.getDicomStores() != null){
-            dicomStoresList.addAll(dicomStoresOnPage.getDicomStores());
-        }
+        DicomStores dicomStoresOnPage = createRequestForObjectList(uriBuilder, new TypeReference<DicomStores>() {});
+        List<DicomStore> dicomStoresList = new ArrayList<>(dicomStoresOnPage.getDicomStores());
         String nextPageToken = dicomStoresOnPage.getNextPageToken();
         while (nextPageToken != null) {
-            uriBuilder.setParameter(PARAM_PAGE_TOKEN, nextPageToken);
-            dicomStoresOnPage = createRequestForObjectList(uriBuilder, new TypeReference<DicomStores>() {
-            });
+            uriBuilder.addParameter(PARAM_PAGE_TOKEN, nextPageToken);
+            dicomStoresOnPage = createRequestForObjectList(uriBuilder, new TypeReference<DicomStores>() {});
             dicomStoresList.addAll(dicomStoresOnPage.getDicomStores());
             nextPageToken = dicomStoresOnPage.getNextPageToken();
         }
@@ -125,8 +127,7 @@ public class CloudDAOImpl extends CloudDAO {
                 .setScheme(SCHEME)
                 .setHost(HEALTHCARE_HOST)
                 .setPath(studiesPathBuilder.toPath());
-        return createRequestForObjectList(uriBuilder, new TypeReference<List<Study>>() {
-        });
+        return createRequestForObjectList(uriBuilder, new TypeReference<List<Study>>() {});
     }
 
     @Override
@@ -137,8 +138,7 @@ public class CloudDAOImpl extends CloudDAO {
                 .setHost(HEALTHCARE_HOST)
                 .setParameter(PARAM_INCLUDE_FIELD, VALUE_PARAM_IMAGE_COMMENTS)
                 .setPath(seriesPathBuilder.toPath());
-        return createRequestForObjectList(uriBuilder, new TypeReference<List<Series>>() {
-        });
+        return createRequestForObjectList(uriBuilder, new TypeReference<List<Series>>() {});
     }
 
     @Override
@@ -162,8 +162,7 @@ public class CloudDAOImpl extends CloudDAO {
                 .addParameter(PARAM_INCLUDE_FIELD, VALUE_PARAM_CONCATENATION_FRAME_OFFSET_NUMBER)
                 .addParameter(PARAM_INCLUDE_FIELD, VALUE_PARAM_NUMBER_OF_FRAMES)
                 .setPath(instancesPathBuilder.toPath());
-        return createRequestForObjectList(uriBuilder, new TypeReference<List<Instance>>() {
-        });
+        return createRequestForObjectList(uriBuilder, new TypeReference<List<Instance>>() {});
     }
 
     @Override
@@ -355,17 +354,12 @@ public class CloudDAOImpl extends CloudDAO {
                 .setScheme(SCHEME)
                 .setHost(HEALTHCARE_HOST)
                 .setPath(datasetsPathBuilder.toPath());
-        List<Dataset> datasetsInProjectLocation = new ArrayList<>();
-        Datasets datasetsOnPage = createRequestForObjectList(uriBuilder, new TypeReference<Datasets>() {
-        });
-        if(datasetsOnPage.getDatasets() != null){
-            datasetsInProjectLocation.addAll(datasetsOnPage.getDatasets());
-        }
+        Datasets datasetsOnPage = createRequestForObjectList(uriBuilder, new TypeReference<Datasets>() {});
+        List<Dataset> datasetsInProjectLocation = new ArrayList<>(datasetsOnPage.getDatasets());
         String nextPageToken = datasetsOnPage.getNextPageToken();
         while (nextPageToken != null) {
-            uriBuilder.setParameter(PARAM_PAGE_TOKEN, nextPageToken);
-            datasetsOnPage = createRequestForObjectList(uriBuilder, new TypeReference<Datasets>() {
-            });
+            uriBuilder.addParameter(PARAM_PAGE_TOKEN, nextPageToken);
+            datasetsOnPage = createRequestForObjectList(uriBuilder, new TypeReference<Datasets>() {});
             datasetsInProjectLocation.addAll(datasetsOnPage.getDatasets());
             nextPageToken = datasetsOnPage.getNextPageToken();
         }
@@ -376,20 +370,21 @@ public class CloudDAOImpl extends CloudDAO {
      * This method cuts only the top headers and the top boundary besides the down boundary.
      * It's necessary for a delay of ~ 1 millisecond when the method cuts inputStream.
      * This method works only for cuts an image.
+     *
      * @param inputStream without cuts body.
      * @return cut inputStream.
      * @throws IOException when read method throws an exception.
      */
     private InputStream cutHeadersAndTopBoundary(InputStream inputStream) throws IOException {
         int b;
-        while((b = inputStream.read()) != -1){
-            if (b == 0x0d){
+        while ((b = inputStream.read()) != -1) {
+            if (b == 0x0d) {
                 b = inputStream.read();
-                if(b == 0x0a){
+                if (b == 0x0a) {
                     b = inputStream.read();
-                    if (b == 0x0d){
+                    if (b == 0x0d) {
                         b = inputStream.read();
-                        if(b == 0x0a){
+                        if (b == 0x0a) {
                             break;
                         }
                     }
@@ -402,6 +397,7 @@ public class CloudDAOImpl extends CloudDAO {
     /**
      * This method cuts the top headers and the top boundary with the bottom boundary.
      * The minus of this method is a delay of ~ 0.2 - 0.5 seconds during cuts.
+     *
      * @param inputStream without cuts body.
      * @return cut inputStream.
      * @throws IOException when toByteArray method throws an exception.
@@ -411,15 +407,15 @@ public class CloudDAOImpl extends CloudDAO {
         int bodyLength = body.length;
         int startImageBody = 0;
         for (int i = 0; i < bodyLength - 1; i++) {
-            if (body[i] == 0x0d && body[i+1] == 0x0a && body[i+2] == 0x0d && body[i+3] == 0x0a){
-                startImageBody = i+4; //inclusive
+            if (body[i] == 0x0d && body[i + 1] == 0x0a && body[i + 2] == 0x0d && body[i + 3] == 0x0a) {
+                startImageBody = i + 4; //inclusive
                 break;
             }
         }
         int endImageBody = 0;
         for (int i = bodyLength - 1; i > 0; i--) {
-            if (body[i] == 0x2d && body[i-1] == 0x2d && body[i-2] == 0x0a && body[i-3] == 0x0d){
-                endImageBody = i-3; //not inclusive
+            if (body[i] == 0x2d && body[i - 1] == 0x2d && body[i - 2] == 0x0a && body[i - 3] == 0x0d) {
+                endImageBody = i - 3; //not inclusive
                 break;
             }
         }

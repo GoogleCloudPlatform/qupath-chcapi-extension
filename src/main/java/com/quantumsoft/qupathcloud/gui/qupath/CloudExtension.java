@@ -56,9 +56,9 @@ public class CloudExtension implements QuPathExtension {
             } catch (IOException e) {
                 LOGGER.error("Error invalidate!", e);
             }
-            Repository.INSTANCE.getBooleanProperty().set(true);
+            Repository.INSTANCE.getIsLoggedInProperty().set(true);
         });
-        logoutButton.disableProperty().bind(Repository.INSTANCE.getBooleanProperty());
+        logoutButton.disableProperty().bind(Repository.INSTANCE.getIsLoggedInProperty());
 
         qupath.addToolbarSeparator();
         qupath.addToolbarButton(cloudButton);

@@ -36,6 +36,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.List;
@@ -56,7 +57,7 @@ public class OAuth20 {
 
     private AuthorizationCodeInstalledApp getAuthenticator() throws QuPathCloudException, IOException, GeneralSecurityException {
         InputStream is = getClass().getClassLoader().getResourceAsStream(CLIENT_SECRETS_FILE_NAME);
-        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(is, "UTF-8"));
+        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(is, StandardCharsets.UTF_8));
         Details details = clientSecrets.getDetails();
         String clientId = details.getClientId();
         String clientSecret = details.getClientSecret();
@@ -71,7 +72,7 @@ public class OAuth20 {
                 .setAccessType("offline")
                 .setApprovalPrompt("force")
                 .build();
-        Repository.INSTANCE.getBooleanProperty().set(false);
+        Repository.INSTANCE.getIsLoggedInProperty().set(false);
         return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver());
     }
 
