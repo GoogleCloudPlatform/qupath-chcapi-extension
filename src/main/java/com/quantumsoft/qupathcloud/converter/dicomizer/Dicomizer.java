@@ -13,7 +13,7 @@ public class Dicomizer {
     private static final Logger LOGGER = LogManager.getLogger();
 
     public void run(Options options) throws IOException {
-        int exitCode = DicomizerLibrary.INSTANCE.dicomize(
+        int exitCode = Wsi2dcmLibrary.INSTANCE.wsi2dcm(
                 StandardCharsets.UTF_8.encode(options.getInputPath()),
                 StandardCharsets.UTF_8.encode(options.getOutputFolder()),
                 new NativeLong(options.getTileWidth()),
