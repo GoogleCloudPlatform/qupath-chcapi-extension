@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 public class Dicomizer {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public void run(Options options) throws IOException {
+    public static void run(Options options) throws IOException {
         int exitCode = Wsi2dcmLibrary.INSTANCE.wsi2dcm(
                 StandardCharsets.UTF_8.encode(options.getInputPath()),
                 StandardCharsets.UTF_8.encode(options.getOutputFolder()),
@@ -54,36 +54,46 @@ public class Dicomizer {
         }
 
         public Options threads(int count) {
-            // default 2
             threadCount = count;
             return this;
         }
 
+        /**
+         * Generate pyramid with n levels, default 0 means 'use as is'
+         */
         public Options generatePyramid(int levels) {
             pyramidLevels = levels;
             return this;
         }
 
+        /**
+         * Width of the tiles in the target image
+         */
         public Options tileWidth(int width) {
-            // Width of the tiles in the target image
             tileWidth = width;
             return this;
         }
 
+        /**
+         * Height of the tiles in the target image
+         */
         public Options tileHeight(int height) {
-            // Height of the tiles in the target image
             tileHeight = height;
             return this;
         }
 
+        /**
+         * Compression of the target image
+         */
         public Options compression(Compression value) {
-            // Compression of the target image
             compression = value;
             return this;
         }
 
+        /**
+         * Quality of the target image (0..100)
+         */
         public Options compressionQuality(int value) {
-            // 0..100
             compressionQuality = value;
             return this;
         }
@@ -93,6 +103,9 @@ public class Dicomizer {
             return this;
         }
 
+        /**
+         * Image name is set as SeriesDescription tag
+         */
         public Options imageName(String name) {
             imageName = name;
             return this;
@@ -143,7 +156,6 @@ public class Dicomizer {
             return result;
         }
 
-        // check if constants are still same
         public enum Compression {
             NONE("raw"),
             JPEG("jpeg"),

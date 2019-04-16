@@ -34,21 +34,11 @@ public class ImageToWsiDcmConverter {
                     .imageName(imageName);
             configurePyramidParameters(options);
 
-            Dicomizer dicomizer = new Dicomizer();
-            dicomizer.run(options);
+            Dicomizer.run(options);
         } catch (Throwable e) {
             LOGGER.error("Error converting image to dcm!", e);
             throw new QuPathCloudException(e);
         }
-    }
-
-    private String getOpenslidePath() throws IOException {
-        File dir = new File(System.getProperty("user.dir"));
-        File[] files = dir.listFiles((dir1, name) -> name.contains("openslide") && !name.contains("jni"));
-        if (files == null || files.length != 1) {
-            throw new IOException("Can't locate openslide library in: " + dir.getPath());
-        }
-        return files[0].getPath();
     }
 
     private void configurePyramidParameters(Dicomizer.Options options) {
@@ -102,15 +92,5 @@ public class ImageToWsiDcmConverter {
             LOGGER.error("Openslide: Could not parse property {} with value {}", name, value);
             return defaultValue;
         }
-    }
-
-    // TODO newer writeStringToFile call can conflict with older version of commons loaded from other extension jars, namely bioformats
-    @SuppressWarnings("deprecation")
-    private File generateDataset(String imageName) throws IOException {
-        String dataset = MessageFormat.format("'{' \"ImageComments\" : \"{0}\" '}'", imageName);
-        String datasetFilename = MessageFormat.format("{0}_dataset.json", imageName);
-        File datasetFile = new File(System.getProperty("java.io.tmpdir"), datasetFilename);
-        FileUtils.writeStringToFile(datasetFile, dataset);
-        return datasetFile;
     }
 }
