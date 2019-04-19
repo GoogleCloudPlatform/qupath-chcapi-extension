@@ -82,7 +82,10 @@ public class PyramidLevel {
 
         if (isFullTiled) {
             int numberOfFrames = instance.getNumberOfFrames().getValue1();
-            int frameOffset = instance.getConcatenationFrameOffsetNumber().getValue1();
+
+            // single-instance levels can come without concatenation tags
+            DicomAttribute<Integer> frameOffsetAttribute = instance.getConcatenationFrameOffsetNumber();
+            int frameOffset = frameOffsetAttribute == null? 0 : frameOffsetAttribute.getValue1();
 
             int widthInTiles = (int) Math.ceil((double) width / tileWidth);
             int heightInTiles = (int) Math.ceil((double) height / tileHeight);
