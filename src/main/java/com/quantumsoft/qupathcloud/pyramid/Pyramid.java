@@ -15,6 +15,7 @@
 
 package com.quantumsoft.qupathcloud.pyramid;
 
+import com.quantumsoft.qupathcloud.entities.DicomAttribute;
 import com.quantumsoft.qupathcloud.entities.instance.Instance;
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 
@@ -91,7 +92,8 @@ public class Pyramid {
         return instance.getTotalPixelMatrixColumns().getValue1();
     }
 
-    private static int getInstanceFrameOffset(Instance instance){
-        return instance.getConcatenationFrameOffsetNumber().getValue1();
+    private static int getInstanceFrameOffset(Instance instance) {
+        DicomAttribute<Integer> offset = instance.getConcatenationFrameOffsetNumber();
+        return offset == null ? 0 : offset.getValue1();
     }
 }
