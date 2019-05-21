@@ -46,6 +46,10 @@ public class Constants {
     public static final String VALUE_PARAM_INSTANCE_CREATION_TIME = "00080013";
     public static final String VALUE_PARAM_TIMEZONE_OFFSET_FROM_UTC = "00080201";
     public static final String VALUE_PARAM_SOP_AUTHORIZATHION_COMMENT = "01000424";
+    public static final String VALUE_PARAM_DIMENSION_ORGANIZATION_TYPE= "00209311";
+    public static final String VALUE_PARAM_CONCATENATION_UID = "00209161";
+    public static final String VALUE_PARAM_CONCATENATION_FRAME_OFFSET_NUMBER = "00209228";
+    public static final String VALUE_PARAM_NUMBER_OF_FRAMES = "00209228";
 
     public static final String BEARER = "Bearer ";
 }

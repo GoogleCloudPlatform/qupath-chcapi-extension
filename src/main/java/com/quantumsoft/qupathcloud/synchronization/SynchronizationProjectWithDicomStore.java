@@ -17,6 +17,7 @@ package com.quantumsoft.qupathcloud.synchronization;
 
 import com.quantumsoft.qupathcloud.configuration.MetadataConfiguration;
 import com.quantumsoft.qupathcloud.converter.ImageDataUtilities;
+import com.quantumsoft.qupathcloud.converter.dicomizer.ImageToWsiDcmConverter;
 import com.quantumsoft.qupathcloud.converter.qpdata.DataToDcmConverter;
 import com.quantumsoft.qupathcloud.converter.qpdata.DcmToDataConverter;
 import com.quantumsoft.qupathcloud.dao.CloudDAO;
@@ -122,17 +123,13 @@ public class SynchronizationProjectWithDicomStore {
             String localFileName = FilenameUtils.getBaseName(pathToImage);
 
             if (!extension.equals(METADATA_FILE_EXTENSION)) {
-                if(1==1)
-                    return;
-
-                project.removeImage(entry);
                 File localFolder = new File(temporaryDirectory, String.valueOf(i));
                 checkedMkDir(localFolder);
                 File localImageFile = new File(pathToImage);
                 String checkedFileName = checkFileName(remoteSeriesList, localFileName);
 
-                //ImageToWsiDcmConverter converter = new ImageToWsiDcmConverter(localImageFile, localFolder);
-                //converter.convertImageToWsiDcm(checkedFileName);
+                ImageToWsiDcmConverter converter = new ImageToWsiDcmConverter(localImageFile, localFolder);
+                converter.convertImageToWsiDcm(checkedFileName);
 
                 File[] dicomizedFiles = localFolder.listFiles((dir, fname) -> fname.contains(".dcm"));
                 if (dicomizedFiles == null || dicomizedFiles.length == 0) {
@@ -146,6 +143,8 @@ public class SynchronizationProjectWithDicomStore {
                 };
                 Future<Void> future = executorService.submit(callable);
                 futureList.add(future);
+
+                project.removeImage(entry);
             }
         }
         for (Future<Void> future : futureList) {
@@ -200,7 +199,7 @@ public class SynchronizationProjectWithDicomStore {
         for (Series series : seriesList) {
             String studyId = series.getStudyInstanceUID().getValue1();
             String seriesId = series.getSeriesInstanceUID().getValue1();
-            String imageComments = series.getImageComments().getValue1();
+            String imageComments = series.getSeriesDescription().getValue1();
             QueryBuilder queryBuilder = QueryBuilder.forProject(projectId)
                     .setLocationId(locationId)
                     .setDatasetId(datasetId)
@@ -391,7 +390,7 @@ public class SynchronizationProjectWithDicomStore {
     private String checkFileName(List<Series> remoteSeriesList, String localFileName) {
         List<String> remoteFileNames = new ArrayList<>();
         for (Series series : remoteSeriesList) {
-            String remoteFileName = series.getImageComments().getValue1();
+            String remoteFileName = series.getSeriesDescription().getValue1();
             remoteFileNames.add(remoteFileName);
         }
         int fileNumber = 0;
@@ -413,7 +412,7 @@ public class SynchronizationProjectWithDicomStore {
     }
 
     private void checkedMkDir(File directory) throws QuPathCloudException {
-        if (!directory.mkdir()) {
+        if (!directory.exists() && !directory.mkdir()) {
             throw new QuPathCloudException("Failed to create directory: " + directory);
         }
     }

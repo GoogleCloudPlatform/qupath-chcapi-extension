@@ -46,7 +46,7 @@ public abstract class CloudDAO{
     public abstract void downloadDicomStore(QueryBuilder queryBuilder) throws QuPathCloudException;
     public abstract void deleteInstances(QueryBuilder queryBuilder) throws QuPathCloudException;
 
-    OAuth20 getoAuth20() {
+    public OAuth20 getoAuth20() {
         return oAuth20;
     }
 }

@@ -29,8 +29,4 @@ public class Datasets {
     public String getNextPageToken() {
         return nextPageToken;
     }
-
-    public void setNextPageToken(String nextPageToken) {
-        this.nextPageToken = nextPageToken;
-    }
 }

@@ -20,8 +20,13 @@ import java.util.List;
 
 public class Projects {
     private List<Project> projects = new ArrayList<>();
+    private String nextPageToken;
 
     public List<Project> getProjects() {
         return projects;
+    }
+
+    public String getNextPageToken() {
+        return nextPageToken;
     }
 }

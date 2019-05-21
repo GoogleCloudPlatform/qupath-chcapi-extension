@@ -15,10 +15,11 @@
 
 package com.quantumsoft.qupathcloud.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DicomStores {
-    private List<DicomStore> dicomStores;
+    private List<DicomStore> dicomStores = new ArrayList<>();
     private String nextPageToken;
 
     public List<DicomStore> getDicomStores(){
@@ -27,9 +28,5 @@ public class DicomStores {
 
     public String getNextPageToken() {
         return nextPageToken;
-    }
-
-    public void setNextPageToken(String nextPageToken) {
-        this.nextPageToken = nextPageToken;
     }
 }

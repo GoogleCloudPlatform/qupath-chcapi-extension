@@ -23,7 +23,9 @@ import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 import com.quantumsoft.qupathcloud.oauth20.OAuth20;
 import com.quantumsoft.qupathcloud.synchronization.SynchronizationProjectWithDicomStore;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +36,7 @@ import qupath.lib.objects.hierarchy.events.PathObjectHierarchyEvent;
 import qupath.lib.objects.hierarchy.events.PathObjectHierarchyListener;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Date;
 
 import static com.quantumsoft.qupathcloud.converter.ImageDataUtilities.LAST_CHANGE;
@@ -44,10 +47,12 @@ public enum Repository {
     private final Logger LOGGER = LogManager.getLogger();
     private final ObjectProperty<DicomStore> dicomStore;
     private final ObjectProperty<CloudDAO> cloudDao;
+    private final BooleanProperty isLoggedInProperty = new SimpleBooleanProperty();
 
     private final QuPathHierarchyListener hierarchyListener;
 
     Repository() {
+        isLoggedInProperty.set(true);
         QuPathGUI qupath = QuPathGUI.getInstance();
         dicomStore = new SimpleObjectProperty<>();
         dicomStore.addListener((observableValue, oldStore, newStore) -> {
@@ -107,6 +112,14 @@ public enum Repository {
 
     public CloudDAO getCloudDao() {
         return cloudDao.get();
+    }
+
+    public BooleanProperty getIsLoggedInProperty() {
+        return isLoggedInProperty;
+    }
+
+    public void invalidateCredentials() throws IOException {
+        cloudDao.get().getoAuth20().invalidateCredentials();
     }
 
     // attempt to provide meaningfull modification date for qpdata.

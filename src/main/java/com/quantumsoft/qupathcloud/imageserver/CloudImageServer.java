@@ -109,15 +109,6 @@ public class CloudImageServer extends AbstractImageServer<BufferedImage> {
         double downsample = getPreferredDownsamples()[level];
         int levelWidth = (int) (region.width / downsample + .5);
         int levelHeight = (int) (region.height / downsample + .5);
-        BufferedImage img = new BufferedImage(levelWidth, levelHeight, BufferedImage.TYPE_INT_RGB);
-
-        Graphics2D g1 = img.createGraphics();
-
-        if (DRAW_DEBUG_INFO) {
-            Font font = new Font("Serif", Font.PLAIN, levelWidth / 15);
-            g1.setFont(font);
-            g1.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        }
 
         Map<Point, BufferedImage> tileImagesMap = new HashMap<>();
         List<Callable<Void>> tileCallables = new ArrayList<>();
@@ -126,6 +117,14 @@ public class CloudImageServer extends AbstractImageServer<BufferedImage> {
         int widthInTiles = (int) Math.ceil((double)levelWidth / pyramid.getTileWidth());
         int heightInTiles = (int) Math.ceil((double)levelHeight / pyramid.getTileHeight());
 
+        BufferedImage img = new BufferedImage(levelWidth, levelHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g1 = img.createGraphics();
+
+        if (DRAW_DEBUG_INFO) {
+            Font font = new Font("Serif", Font.PLAIN, levelWidth / widthInTiles / 10);
+            g1.setFont(font);
+            g1.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        }
 
         final QueryBuilder baseQuery = QueryBuilder.forProject(dicomStore.getProjectId())
                 .setLocationId(dicomStore.getLocationId())
@@ -161,6 +160,8 @@ public class CloudImageServer extends AbstractImageServer<BufferedImage> {
                             return null;
                         }
                     });
+                } else {
+                    LOGGER.warn("No frame for " + tileX + "/" + tileY + "/" + level);
                 }
             }
         }
