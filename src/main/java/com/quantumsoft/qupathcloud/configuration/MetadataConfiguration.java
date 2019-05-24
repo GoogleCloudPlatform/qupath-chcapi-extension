@@ -17,71 +17,72 @@ package com.quantumsoft.qupathcloud.configuration;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.quantumsoft.qupathcloud.entities.Series;
 import com.quantumsoft.qupathcloud.entities.instance.Instance;
 import com.quantumsoft.qupathcloud.entities.metadata.ImageMetadataIndex;
-import com.quantumsoft.qupathcloud.entities.Series;
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
 public class MetadataConfiguration {
-    private static final Logger LOGGER = LogManager.getLogger();
-    public static final String METADATA_FILE_EXTENSION = "mtd";
-    private static final String PROJECT_METADATA_INDEX_FILE = "project.mtdp";
-    private File metadataDirectory;
-    private File projectMetadataIndexFile;
-    private ObjectMapper mapper;
 
-    public MetadataConfiguration(File metadataDirectory){
-        this.metadataDirectory = metadataDirectory;
-        projectMetadataIndexFile = new File(metadataDirectory, PROJECT_METADATA_INDEX_FILE);
-        mapper = new ObjectMapper();
-    }
+  private static final Logger LOGGER = LogManager.getLogger();
+  private static final Path PROJECT_METADATA_INDEX_FILE = Paths.get("project.mtdp");
+  public static final String METADATA_FILE_EXTENSION = "mtd";
+  private Path metadataDirectory;
+  private Path projectMetadataIndexFile;
+  private ObjectMapper mapper;
 
-    public File saveMetadataFile(Series series, List<Instance> instancesInSeries)
-            throws QuPathCloudException{
-        String seriesId = series.getSeriesInstanceUID().getValue1();
-        File metadataFile = new File(metadataDirectory, seriesId + "." + METADATA_FILE_EXTENSION);
-        try {
-            LOGGER.debug("Start saving metadata file");
-            mapper.writeValue(metadataFile, instancesInSeries);
-            return metadataFile;
-        } catch (IOException e) {
-            throw new QuPathCloudException(e);
-        }
-    }
+  public MetadataConfiguration(Path metadataDirectory) {
+    this.metadataDirectory = metadataDirectory;
+    projectMetadataIndexFile = metadataDirectory.resolve(PROJECT_METADATA_INDEX_FILE);
+    mapper = new ObjectMapper();
+  }
 
-    public List<Instance> readMetadataFile(File metadataFile) throws QuPathCloudException {
-        try {
-            LOGGER.debug("Start reading metadata file");
-            return mapper.readValue(metadataFile, new TypeReference<List<Instance>>() {
-            });
-        } catch (IOException e) {
-            throw new QuPathCloudException(e);
-        }
+  public Path saveMetadataFile(Series series, List<Instance> instancesInSeries)
+      throws QuPathCloudException {
+    String seriesId = series.getSeriesInstanceUID().getValue1();
+    Path metadataFile = Paths.get(seriesId + "." + METADATA_FILE_EXTENSION);
+    Path pathToMetadataFile = metadataDirectory.resolve(metadataFile);
+    try {
+      LOGGER.debug("Start saving metadata file");
+      mapper.writeValue(pathToMetadataFile.toFile(), instancesInSeries);
+      return pathToMetadataFile;
+    } catch (IOException e) {
+      throw new QuPathCloudException(e);
     }
+  }
 
-    public void saveProjectMetadataIndexFile(List<ImageMetadataIndex> imageMetadataIndexList)
-            throws QuPathCloudException{
-        try {
-            LOGGER.debug("Start saving metadata index file");
-            mapper.writeValue(projectMetadataIndexFile, imageMetadataIndexList);
-        } catch (IOException e) {
-            throw new QuPathCloudException(e);
-        }
+  public List<Instance> readMetadataFile(Path metadataFile) throws QuPathCloudException {
+    try {
+      LOGGER.debug("Start reading metadata file");
+      return mapper.readValue(metadataFile.toFile(), new TypeReference<List<Instance>>() {});
+    } catch (IOException e) {
+      throw new QuPathCloudException(e);
     }
+  }
 
-    public List<ImageMetadataIndex> readProjectMetadataIndexFile() throws QuPathCloudException {
-        try {
-            LOGGER.debug("Start reading metadata index file");
-            return mapper.readValue(projectMetadataIndexFile, new TypeReference<List<ImageMetadataIndex>>() {
-            });
-        } catch (IOException e) {
-            throw new QuPathCloudException(e);
-        }
+  public void saveProjectMetadataIndexFile(List<ImageMetadataIndex> imageMetadataIndexList)
+      throws QuPathCloudException {
+    try {
+      LOGGER.debug("Start saving metadata index file");
+      mapper.writeValue(projectMetadataIndexFile.toFile(), imageMetadataIndexList);
+    } catch (IOException e) {
+      throw new QuPathCloudException(e);
     }
+  }
+
+  public List<ImageMetadataIndex> readProjectMetadataIndexFile() throws QuPathCloudException {
+    try {
+      LOGGER.debug("Start reading metadata index file");
+      return mapper.readValue(projectMetadataIndexFile.toFile(),
+          new TypeReference<List<ImageMetadataIndex>>() {});
+    } catch (IOException e) {
+      throw new QuPathCloudException(e);
+    }
+  }
 }

@@ -15,44 +15,48 @@
 
 package com.quantumsoft.qupathcloud.configuration;
 
+import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quantumsoft.qupathcloud.entities.DicomStore;
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.IOException;
-
 public class DicomStoreConfiguration {
-    private static final Logger LOGGER = LogManager.getLogger();
-    private static final String configurationFileName = "conf.json";
-    private File configurationFileInProjectDirectory;
-    private ObjectMapper mapper;
 
-    public DicomStoreConfiguration(File projectDirectory){
-        configurationFileInProjectDirectory = new File(projectDirectory, configurationFileName);
-        mapper = new ObjectMapper();
-    }
+  private static final Logger LOGGER = LogManager.getLogger();
+  private static final Path configurationFileName = Paths.get("conf.json");
+  private Path configurationFileInProjectDirectory;
+  private ObjectMapper mapper;
 
-    public DicomStore readConfiguration() throws QuPathCloudException {
-        if (configurationFileInProjectDirectory.exists()){
-            try {
-                LOGGER.debug("Start reading configuration");
-                return mapper.readValue(configurationFileInProjectDirectory, DicomStore.class);
-            } catch (IOException e) {
-                throw new QuPathCloudException(e);
-            }
-        }
-        return null;
-    }
+  public DicomStoreConfiguration(Path projectDirectory) {
+    configurationFileInProjectDirectory = projectDirectory.resolve(configurationFileName);
+    mapper = new ObjectMapper();
+  }
 
-    public void saveConfiguration(DicomStore selectedDicomStore) throws QuPathCloudException {
-        try {
-            LOGGER.debug("Start writing configuration");
-            mapper.writeValue(configurationFileInProjectDirectory, selectedDicomStore);
-        } catch (IOException e) {
-            throw new QuPathCloudException(e);
-        }
+  public DicomStore readConfiguration() throws QuPathCloudException {
+    if (Files.exists(configurationFileInProjectDirectory, NOFOLLOW_LINKS)) {
+      try {
+        LOGGER.debug("Start reading configuration");
+        return mapper.readValue(configurationFileInProjectDirectory.toFile(), DicomStore.class);
+      } catch (IOException e) {
+        throw new QuPathCloudException(e);
+      }
     }
+    return null;
+  }
+
+  public void saveConfiguration(DicomStore selectedDicomStore) throws QuPathCloudException {
+    try {
+      LOGGER.debug("Start writing configuration");
+      mapper.writeValue(configurationFileInProjectDirectory.toFile(), selectedDicomStore);
+    } catch (IOException e) {
+      throw new QuPathCloudException(e);
+    }
+  }
 }
