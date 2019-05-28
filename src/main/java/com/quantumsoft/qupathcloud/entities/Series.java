@@ -16,71 +16,72 @@
 package com.quantumsoft.qupathcloud.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 public class Series {
-    @JsonProperty("0020000D")
-    private DicomAttribute<String> studyInstanceUID;
-    @JsonProperty("0020000E")
-    private DicomAttribute<String> seriesInstanceUID;
-    @JsonProperty("0008103E")
-    private DicomAttribute<String> seriesDescription;
-    @Deprecated
-    @JsonProperty("00204000")
-    private DicomAttribute<String> imageComments;
-    @JsonProperty("00080060")
-    private DicomAttribute<String> modality;
 
-    public DicomAttribute<String> getStudyInstanceUID() {
-        return studyInstanceUID;
-    }
+  @JsonProperty("0020000D")
+  private DicomAttribute<String> studyInstanceUID;
+  @JsonProperty("0020000E")
+  private DicomAttribute<String> seriesInstanceUID;
+  @JsonProperty("0008103E")
+  private DicomAttribute<String> seriesDescription;
+  @JsonProperty("00080060")
+  private DicomAttribute<String> modality;
 
-    public void setStudyInstanceUID(DicomAttribute<String> studyInstanceUID) {
-        this.studyInstanceUID = studyInstanceUID;
-    }
+  public DicomAttribute<String> getStudyInstanceUID() {
+    return studyInstanceUID;
+  }
 
-    public DicomAttribute<String> getSeriesInstanceUID() {
-        return seriesInstanceUID;
-    }
+  public void setStudyInstanceUID(DicomAttribute<String> studyInstanceUID) {
+    this.studyInstanceUID = studyInstanceUID;
+  }
 
-    public void setSeriesInstanceUID(DicomAttribute<String> seriesInstanceUID) {
-        this.seriesInstanceUID = seriesInstanceUID;
-    }
+  public DicomAttribute<String> getSeriesInstanceUID() {
+    return seriesInstanceUID;
+  }
 
-    public DicomAttribute<String> getSeriesDescription() {
-        if(seriesDescription == null){
-            String temp = studyInstanceUID.getValue1() + seriesInstanceUID.getValue1();
-            seriesDescription = new DicomAttribute<>();
-            seriesDescription.setValue( new String[]{ String.valueOf(temp.hashCode())});
-        }
-        return seriesDescription;
-    }
+  public void setSeriesInstanceUID(DicomAttribute<String> seriesInstanceUID) {
+    this.seriesInstanceUID = seriesInstanceUID;
+  }
 
-    public void setSeriesDescription(DicomAttribute<String> imageComments) {
-        this.seriesDescription = imageComments;
+  public DicomAttribute<String> getSeriesDescription() {
+    if (seriesDescription == null) {
+      String temp = studyInstanceUID.getValue1() + seriesInstanceUID.getValue1();
+      seriesDescription = new DicomAttribute<>();
+      seriesDescription.setValue(new String[]{String.valueOf(temp.hashCode())});
     }
+    return seriesDescription;
+  }
 
-    public DicomAttribute<String> getModality() {
-        return modality;
-    }
+  public void setSeriesDescription(DicomAttribute<String> seriesDescription) {
+    this.seriesDescription = seriesDescription;
+  }
 
-    public void setModality(DicomAttribute<String> modality) {
-        this.modality = modality;
-    }
+  public DicomAttribute<String> getModality() {
+    return modality;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Series series = (Series) o;
-        return Objects.equals(studyInstanceUID, series.studyInstanceUID) &&
-                Objects.equals(seriesInstanceUID, series.seriesInstanceUID) &&
-                Objects.equals(seriesDescription, series.seriesDescription);
-    }
+  public void setModality(DicomAttribute<String> modality) {
+    this.modality = modality;
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(studyInstanceUID, seriesInstanceUID, seriesDescription);
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Series series = (Series) o;
+    return Objects.equals(studyInstanceUID, series.studyInstanceUID) &&
+        Objects.equals(seriesInstanceUID, series.seriesInstanceUID) &&
+        Objects.equals(seriesDescription, series.seriesDescription);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(studyInstanceUID, seriesInstanceUID, seriesDescription);
+  }
 }

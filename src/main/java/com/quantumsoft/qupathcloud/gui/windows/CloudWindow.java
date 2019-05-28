@@ -37,6 +37,7 @@ import com.quantumsoft.qupathcloud.gui.tables.DatasetsTable;
 import com.quantumsoft.qupathcloud.gui.tables.DicomStoresTable;
 import com.quantumsoft.qupathcloud.gui.tables.ProjectsTable;
 import com.quantumsoft.qupathcloud.repository.Repository;
+import java.nio.file.Path;
 import java.util.List;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -70,7 +71,7 @@ public class CloudWindow {
   private static final double PAGE_HEIGHT_IN_PERCENT = 85;
   private static final String STAGE_TITLE = "QuPath cloud";
 
-  private CloudDAO cloudDAO;
+  private final CloudDAO cloudDAO;
   private Label headerLabel;
   private GridPane root;
   private Pane currentPage;
@@ -82,7 +83,8 @@ public class CloudWindow {
   private Dataset choseDataset;
 
   public CloudWindow(QuPathGUI qupath) {
-    dicomStoreConfiguration = new DicomStoreConfiguration(qupath.getProject().getPath());
+    Path projectDirectory = qupath.getProject().getPath().getParent();
+    dicomStoreConfiguration = new DicomStoreConfiguration(projectDirectory);
     primaryStage = new Stage();
     cloudDAO = Repository.INSTANCE.getCloudDao();
     headerLabel = new Label();

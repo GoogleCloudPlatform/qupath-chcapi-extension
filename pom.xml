@@ -144,7 +144,6 @@
                   <exclude>org.openjfx</exclude>
                   <exclude>ch.qos.logback:logback-classic</exclude>
                   <exclude>ch.qos.logback:logback-core</exclude>
-                  <exclude>org.openslide:openslide</exclude>
                 </excludes>
               </artifactSet>
               <relocations>

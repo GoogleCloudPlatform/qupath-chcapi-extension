@@ -26,6 +26,7 @@ import com.quantumsoft.qupathcloud.oauth20.OAuth20;
 import com.quantumsoft.qupathcloud.synchronization.SynchronizationProjectWithDicomStore;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Date;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -76,8 +77,9 @@ public enum Repository {
       }
 
       Runnable loader = () -> {
+        Path projectDirectory = newProject.getPath().getParent();
         DicomStoreConfiguration dicomStoreConfiguration = new DicomStoreConfiguration(
-            newProject.getPath());
+            projectDirectory);
         try {
           DicomStore projectDicomStore = dicomStoreConfiguration.readConfiguration();
           setDicomStore(projectDicomStore);

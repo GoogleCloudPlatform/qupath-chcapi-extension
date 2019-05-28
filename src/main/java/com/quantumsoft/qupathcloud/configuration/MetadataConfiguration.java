@@ -19,7 +19,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quantumsoft.qupathcloud.entities.Series;
 import com.quantumsoft.qupathcloud.entities.instance.Instance;
-import com.quantumsoft.qupathcloud.entities.metadata.ImageMetadataIndex;
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -66,21 +65,21 @@ public class MetadataConfiguration {
     }
   }
 
-  public void saveProjectMetadataIndexFile(List<ImageMetadataIndex> imageMetadataIndexList)
+  public void saveProjectMetadataIndexFile(List<Series> seriesListInProject)
       throws QuPathCloudException {
     try {
       LOGGER.debug("Start saving metadata index file");
-      mapper.writeValue(projectMetadataIndexFile.toFile(), imageMetadataIndexList);
+      mapper.writeValue(projectMetadataIndexFile.toFile(), seriesListInProject);
     } catch (IOException e) {
       throw new QuPathCloudException(e);
     }
   }
 
-  public List<ImageMetadataIndex> readProjectMetadataIndexFile() throws QuPathCloudException {
+  public List<Series> readProjectMetadataIndexFile() throws QuPathCloudException {
     try {
       LOGGER.debug("Start reading metadata index file");
       return mapper.readValue(projectMetadataIndexFile.toFile(),
-          new TypeReference<List<ImageMetadataIndex>>() {});
+          new TypeReference<List<Series>>() {});
     } catch (IOException e) {
       throw new QuPathCloudException(e);
     }

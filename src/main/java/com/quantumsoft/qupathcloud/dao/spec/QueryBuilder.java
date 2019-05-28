@@ -17,147 +17,149 @@ package com.quantumsoft.qupathcloud.dao.spec;
 
 import com.quantumsoft.qupathcloud.entities.Location;
 import com.quantumsoft.qupathcloud.entities.instance.Instance;
-
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 public class QueryBuilder {
-    private String projectId;
-    private String locationId;
-    private String datasetId;
-    private String dicomStoreId;
-    private String studyId;
-    private String seriesId;
-    private String instanceId;
-    private int frameNumber;
-    private List<File> files;
-    private File directory;
-    private List<Location> locations;
-    private List<Instance> instances;
 
-    private QueryBuilder(){}
+  private String projectId;
+  private String locationId;
+  private String datasetId;
+  private String dicomStoreId;
+  private String studyId;
+  private String seriesId;
+  private String instanceId;
+  private int frameNumber;
+  private List<Path> paths;
+  private File directory;
+  private List<Location> locations;
+  private List<Instance> instances;
 
-    public QueryBuilder(QueryBuilder original){
-        this.projectId = original.projectId;
-        this.locationId = original.locationId;
-        this.datasetId = original.datasetId;
-        this.dicomStoreId = original.dicomStoreId;
-        this.studyId = original.studyId;
-        this.seriesId = original.seriesId;
-        this.instanceId = original.instanceId;
-        this.frameNumber = original.frameNumber;
-        this.files = original.files;
-        this.directory = original.directory;
-        this.locations = original.locations;
-        this.instances = original.instances;
-    }
+  private QueryBuilder() {
+  }
 
-    public static QueryBuilder forProject(String projectId){
-        QueryBuilder builder = new QueryBuilder();
-        builder.projectId = projectId;
-        return  builder;
-    }
+  public QueryBuilder(QueryBuilder original) {
+    this.projectId = original.projectId;
+    this.locationId = original.locationId;
+    this.datasetId = original.datasetId;
+    this.dicomStoreId = original.dicomStoreId;
+    this.studyId = original.studyId;
+    this.seriesId = original.seriesId;
+    this.instanceId = original.instanceId;
+    this.frameNumber = original.frameNumber;
+    this.paths = original.paths;
+    this.directory = original.directory;
+    this.locations = original.locations;
+    this.instances = original.instances;
+  }
 
-    public QueryBuilder setLocationId(String locationId) {
-        this.locationId = locationId;
-        return this;
-    }
+  public static QueryBuilder forProject(String projectId) {
+    QueryBuilder builder = new QueryBuilder();
+    builder.projectId = projectId;
+    return builder;
+  }
 
-    public QueryBuilder setDatasetId(String datasetId){
-        this.datasetId = datasetId;
-        return this;
-    }
+  public QueryBuilder setLocationId(String locationId) {
+    this.locationId = locationId;
+    return this;
+  }
 
-    public QueryBuilder setDicomStoreId(String dicomStoreId){
-        this.dicomStoreId = dicomStoreId;
-        return this;
-    }
+  public QueryBuilder setDatasetId(String datasetId) {
+    this.datasetId = datasetId;
+    return this;
+  }
 
-    public QueryBuilder setStudyId(String studyId){
-        this.studyId = studyId;
-        return this;
-    }
+  public QueryBuilder setDicomStoreId(String dicomStoreId) {
+    this.dicomStoreId = dicomStoreId;
+    return this;
+  }
 
-    public QueryBuilder setSeriesId(String seriesId){
-        this.seriesId = seriesId;
-        return this;
-    }
+  public QueryBuilder setStudyId(String studyId) {
+    this.studyId = studyId;
+    return this;
+  }
 
-    public QueryBuilder setInstanceId(String instanceId){
-        this.instanceId = instanceId;
-        return this;
-    }
+  public QueryBuilder setSeriesId(String seriesId) {
+    this.seriesId = seriesId;
+    return this;
+  }
 
-    public QueryBuilder setFrameNumber(int frameNumber){
-        this.frameNumber = frameNumber;
-        return this;
-    }
+  public QueryBuilder setInstanceId(String instanceId) {
+    this.instanceId = instanceId;
+    return this;
+  }
 
-    public QueryBuilder setFiles(List<File> files) {
-        this.files = files;
-        return this;
-    }
+  public QueryBuilder setFrameNumber(int frameNumber) {
+    this.frameNumber = frameNumber;
+    return this;
+  }
 
-    public QueryBuilder setDirectory(File directory) {
-        this.directory = directory;
-        return this;
-    }
+  public QueryBuilder setPaths(List<Path> paths) {
+    this.paths = paths;
+    return this;
+  }
 
-    public QueryBuilder setInstances(List<Instance> instances) {
-        this.instances = instances;
-        return this;
-    }
+  public QueryBuilder setDirectory(File directory) {
+    this.directory = directory;
+    return this;
+  }
 
-    public QueryBuilder setLocations(List<Location> locations) {
-        this.locations = locations;
-        return this;
-    }
+  public QueryBuilder setInstances(List<Instance> instances) {
+    this.instances = instances;
+    return this;
+  }
 
-    String getProjectId() {
-        return projectId;
-    }
+  public QueryBuilder setLocations(List<Location> locations) {
+    this.locations = locations;
+    return this;
+  }
 
-    String getLocationId() {
-        return locationId;
-    }
+  String getProjectId() {
+    return projectId;
+  }
 
-    public String getDatasetId() {
-        return datasetId;
-    }
+  String getLocationId() {
+    return locationId;
+  }
 
-    public String getDicomStoreId() {
-        return dicomStoreId;
-    }
+  public String getDatasetId() {
+    return datasetId;
+  }
 
-    String getStudyId() {
-        return studyId;
-    }
+  public String getDicomStoreId() {
+    return dicomStoreId;
+  }
 
-    String getSeriesId() {
-        return seriesId;
-    }
+  String getStudyId() {
+    return studyId;
+  }
 
-    String getInstanceId() {
-        return instanceId;
-    }
+  String getSeriesId() {
+    return seriesId;
+  }
 
-    int getFrameNumber() {
-        return frameNumber;
-    }
+  String getInstanceId() {
+    return instanceId;
+  }
 
-    public List<File> getFiles() {
-        return files;
-    }
+  int getFrameNumber() {
+    return frameNumber;
+  }
 
-    public File getDirectory() {
-        return directory;
-    }
+  public List<Path> getPaths() {
+    return paths;
+  }
 
-    public List<Instance> getInstances() {
-        return instances;
-    }
+  public File getDirectory() {
+    return directory;
+  }
 
-    public List<Location> getLocations() {
-        return locations;
-    }
+  public List<Instance> getInstances() {
+    return instances;
+  }
+
+  public List<Location> getLocations() {
+    return locations;
+  }
 }
