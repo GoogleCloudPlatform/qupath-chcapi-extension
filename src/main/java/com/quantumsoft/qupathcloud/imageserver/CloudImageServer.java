@@ -80,6 +80,7 @@ public class CloudImageServer extends AbstractImageServer<BufferedImage> {
         .rgb(true)
         .channels(ImageChannel.getDefaultRGBChannels())
         .preferredTileSize(pyramid.getTileWidth(), pyramid.getTileHeight())
+        .levelsFromDownsamples(pyramid.getDownsamples())
         .build();
   }
 
