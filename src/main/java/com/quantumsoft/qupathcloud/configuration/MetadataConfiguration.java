@@ -68,7 +68,7 @@ public class MetadataConfiguration {
   public void saveProjectMetadataIndexFile(List<Series> seriesListInProject)
       throws QuPathCloudException {
     try {
-      LOGGER.debug("Start saving metadata index file");
+      LOGGER.debug("Start saving metadata project file");
       mapper.writeValue(projectMetadataIndexFile.toFile(), seriesListInProject);
     } catch (IOException e) {
       throw new QuPathCloudException(e);
@@ -77,7 +77,7 @@ public class MetadataConfiguration {
 
   public List<Series> readProjectMetadataIndexFile() throws QuPathCloudException {
     try {
-      LOGGER.debug("Start reading metadata index file");
+      LOGGER.debug("Start reading metadata project file");
       return mapper.readValue(projectMetadataIndexFile.toFile(),
           new TypeReference<List<Series>>() {});
     } catch (IOException e) {

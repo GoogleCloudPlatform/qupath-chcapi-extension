@@ -52,6 +52,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import qupath.lib.gui.QuPathGUI;
 import qupath.lib.gui.helpers.DisplayHelpers;
+import qupath.lib.images.ImageData;
 import qupath.lib.projects.Project;
 import qupath.lib.projects.ProjectImageEntry;
 
@@ -68,6 +69,7 @@ public class SynchronizationProjectWithDicomStore {
   private SynchronizationWindow synchronizationWindow;
   private Project<BufferedImage> project;
   private Path projectDirectory;
+  private DicomStore dicomStore;
 
   public SynchronizationProjectWithDicomStore(QuPathGUI qupath, DicomStore dicomStore) {
     this.qupath = qupath;
@@ -79,6 +81,7 @@ public class SynchronizationProjectWithDicomStore {
     synchronizationWindow = new SynchronizationWindow();
     project = qupath.getProject();
     projectDirectory = project.getPath().getParent();
+    this.dicomStore = dicomStore;
   }
 
   public void synchronization() {
@@ -89,6 +92,8 @@ public class SynchronizationProjectWithDicomStore {
         synchronizeMetadata();
 //        synchronizeQpdata();
         project.syncChanges();
+//        qupath.refreshProject();
+//        ProjectBrowser.syncProject(project);
       } catch (QuPathCloudException | IOException e) {
         LOGGER.error("Synchronization error: ", e);
         DisplayHelpers.showErrorMessage("Synchronization error!", e);
@@ -230,11 +235,24 @@ public class SynchronizationProjectWithDicomStore {
           .setSeriesId(seriesId);
       List<Instance> instances = cloudDAO.getInstancesList(queryBuilder);
       Path metadataImageFile = metadataConfiguration.saveMetadataFile(series, instances);
+      String serverPath = metadataImageFile.toString();
 
       StubImageServer stubImageServer = new StubImageServer();
       stubImageServer.setDisplayedImageName(imageName);
-      stubImageServer.setPath(metadataImageFile.toString());
+      stubImageServer.setPath(serverPath);
+
+//      CloudImageServer cloudImageServer = new CloudImageServer(metadataImageFile,cloudDAO, dicomStore);
+
       project.addImage(stubImageServer);
+      ImageData<BufferedImage> imageData = qupath.createNewImageData(stubImageServer);
+      ProjectImageEntry<BufferedImage> entry = project.getImageEntry("file:" + serverPath);
+      try {
+        if (entry != null) {
+          entry.saveImageData(imageData);
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
       seriesListInProject.add(series);
     }
     metadataConfiguration.saveProjectMetadataIndexFile(seriesListInProject);
