@@ -31,7 +31,6 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,26 +68,21 @@ public class CloudImageServer extends AbstractImageServer<BufferedImage> {
   private Pyramid pyramid;
   private ExecutorService executorService;
 
-  public CloudImageServer(String path, CloudDAO cloudDAO, DicomStore dicomStore)
+  public CloudImageServer(URI uri, CloudDAO cloudDAO, DicomStore dicomStore)
       throws QuPathCloudException {
     this.cloudDAO = cloudDAO;
     this.dicomStore = dicomStore;
     this.executorService = Executors.newFixedThreadPool(THREADS_COUNT);
 
-    URI pathUri;
-    try {
-      pathUri = new URI(path);
-    } catch (URISyntaxException e) {
-      throw new QuPathCloudException(e);
-    }
-    pyramid = new LoadPyramidFileCallable(Paths.get(pathUri)).call();
+    pyramid = new LoadPyramidFileCallable(Paths.get(uri)).call();
 
-    originalMetadata = new ImageServerMetadata.Builder(getClass(), path,
-        pyramid.getWidth(), pyramid.getHeight())
-        .rgb(true)
+    originalMetadata = new ImageServerMetadata.Builder(getClass(), uri.toString())
+        .height(pyramid.getHeight())
+        .width(pyramid.getWidth())
         .channels(ImageChannel.getDefaultRGBChannels())
         .preferredTileSize(pyramid.getTileWidth(), pyramid.getTileHeight())
         .levelsFromDownsamples(pyramid.getDownsamples())
+        .rgb(true)
         .build();
   }
 
