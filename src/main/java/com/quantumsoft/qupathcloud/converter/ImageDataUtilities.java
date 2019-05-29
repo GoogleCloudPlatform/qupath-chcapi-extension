@@ -18,8 +18,8 @@ package com.quantumsoft.qupathcloud.converter;
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 import com.quantumsoft.qupathcloud.imageserver.StubImageServer;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Date;
 import qupath.lib.images.ImageData;
 import qupath.lib.images.servers.ImageServer;
@@ -30,11 +30,11 @@ public class ImageDataUtilities {
   public static final String LAST_CHANGE = "lastChange";
 
   // TODO this exploits bug in PathIO to avoid creating ImageServer with non-local filepath (which "naturally" happens when loading image for viewing normally)
-  public static Date getModificationDate(File file) throws QuPathCloudException {
+  public static Date getModificationDate(Path path) throws QuPathCloudException {
     ImageServer<BufferedImage> imageServer = new StubImageServer();
     ImageData<BufferedImage> imageData = new ImageData<>(imageServer);
     try {
-      PathIO.readImageData(file, imageData, imageServer, BufferedImage.class);
+      PathIO.readImageData(path.toFile(), imageData, imageServer, BufferedImage.class);
     } catch (IOException e) {
       throw new QuPathCloudException("Read image data error!");
     }

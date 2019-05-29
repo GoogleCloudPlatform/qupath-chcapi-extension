@@ -17,7 +17,6 @@ package com.quantumsoft.qupathcloud.dao.spec;
 
 import com.quantumsoft.qupathcloud.entities.Location;
 import com.quantumsoft.qupathcloud.entities.instance.Instance;
-import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class QueryBuilder {
   private String instanceId;
   private int frameNumber;
   private List<Path> paths;
-  private File directory;
+  private Path directory;
   private List<Location> locations;
   private List<Instance> instances;
 
@@ -100,7 +99,7 @@ public class QueryBuilder {
     return this;
   }
 
-  public QueryBuilder setDirectory(File directory) {
+  public QueryBuilder setDirectory(Path directory) {
     this.directory = directory;
     return this;
   }
@@ -151,7 +150,7 @@ public class QueryBuilder {
     return paths;
   }
 
-  public File getDirectory() {
+  public Path getDirectory() {
     return directory;
   }
 

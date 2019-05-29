@@ -289,9 +289,8 @@ public class CloudDAOImpl extends CloudDAO {
           .setHost(HEALTHCARE_HOST)
           .setPath(studiesPathBuilder.toPath() + studyValue + SERIES + seriesValue + INSTANCES
               + instanceValue);
-      File outputDirectory = queryBuilder.getDirectory();
-      File outputFile =
-          new File(outputDirectory.getAbsolutePath(), instanceValue + "." + DCM_EXTENSION);
+      Path outputDirectory = queryBuilder.getDirectory();
+      Path outputFile = outputDirectory.resolve(seriesValue + "." + DCM_EXTENSION);
       DownloadDicomCallable downloadInstance =
           new DownloadDicomCallable(getoAuth20(), outputFile, uriBuilderInstance);
       Future<Void> future = executorService.submit(downloadInstance);
