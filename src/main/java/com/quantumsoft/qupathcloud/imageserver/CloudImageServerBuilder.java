@@ -50,8 +50,7 @@ public class CloudImageServerBuilder implements ImageServerBuilder<BufferedImage
 
   @Override
   public ImageServer<BufferedImage> buildServer(URI uri) throws QuPathCloudException {
-    Path filePath = Paths.get(uri);
-    return new CloudImageServer(filePath, cloudDAO, Repository.INSTANCE.getDicomStore());
+    return new CloudImageServer(uri.toString(), cloudDAO, Repository.INSTANCE.getDicomStore());
   }
 
   @Override

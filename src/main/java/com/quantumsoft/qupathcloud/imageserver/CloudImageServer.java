@@ -30,7 +30,9 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.nio.file.Path;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -67,15 +69,21 @@ public class CloudImageServer extends AbstractImageServer<BufferedImage> {
   private Pyramid pyramid;
   private ExecutorService executorService;
 
-  public CloudImageServer(Path path, CloudDAO cloudDAO, DicomStore dicomStore)
+  public CloudImageServer(String path, CloudDAO cloudDAO, DicomStore dicomStore)
       throws QuPathCloudException {
     this.cloudDAO = cloudDAO;
     this.dicomStore = dicomStore;
     this.executorService = Executors.newFixedThreadPool(THREADS_COUNT);
 
-    pyramid = new LoadPyramidFileCallable(path).call();
+    URI pathUri;
+    try {
+      pathUri = new URI(path);
+    } catch (URISyntaxException e) {
+      throw new QuPathCloudException(e);
+    }
+    pyramid = new LoadPyramidFileCallable(Paths.get(pathUri)).call();
 
-    originalMetadata = new ImageServerMetadata.Builder(getClass(), path.toString(),
+    originalMetadata = new ImageServerMetadata.Builder(getClass(), path,
         pyramid.getWidth(), pyramid.getHeight())
         .rgb(true)
         .channels(ImageChannel.getDefaultRGBChannels())
