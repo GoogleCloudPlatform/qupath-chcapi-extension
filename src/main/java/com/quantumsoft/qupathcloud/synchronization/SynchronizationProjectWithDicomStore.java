@@ -62,6 +62,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import qupath.lib.gui.QuPathGUI;
 import qupath.lib.gui.helpers.DisplayHelpers;
+import qupath.lib.images.ImageData;
 import qupath.lib.projects.Project;
 import qupath.lib.projects.ProjectImageEntry;
 
@@ -138,15 +139,12 @@ public class SynchronizationProjectWithDicomStore {
         } catch (URISyntaxException e) {
           throw new QuPathCloudException(e);
         }
-        Path pathToImage = Paths.get(uri);
-        Path tempDirectory;
-        try {
-          tempDirectory = Files.createTempDirectory("QuPath-");
-          tempDirectories.add(tempDirectory);
-        } catch (IOException e) {
-          throw new QuPathCloudException(e);
-        }
+
+        Path tempDirectory = createTempDirectory("QuPath-");
         tempDirectory.toFile().deleteOnExit();
+        tempDirectories.add(tempDirectory);
+
+        Path pathToImage = Paths.get(uri);
         ImageToWsiDcmConverter converter = new ImageToWsiDcmConverter(pathToImage, tempDirectory);
         String checkedFileName = checkFileName(remoteImageSeriesList, imageName);
         converter.convertImageToWsiDcm(checkedFileName);
@@ -158,8 +156,8 @@ public class SynchronizationProjectWithDicomStore {
           throw new QuPathCloudException(e);
         }
         if (dicomizedFiles.size() == 0) {
-          String errorParameter = MessageFormat.format("Dicomization failed for: {0}", serverPath);
-          throw new QuPathCloudException(errorParameter);
+          String errorParam = MessageFormat.format("Dicomization failed for: {0}", serverPath);
+          throw new QuPathCloudException(errorParam);
         }
         queryBuilder.setPaths(dicomizedFiles);
         Callable<Void> callable = () -> {
@@ -181,12 +179,8 @@ public class SynchronizationProjectWithDicomStore {
     }
     executorService.shutdown();
 
-    try {
-      for (Path tempDirectory : tempDirectories) {
-        FileUtils.deleteDirectory(tempDirectory.toFile());
-      }
-    } catch (IOException e) {
-      throw new QuPathCloudException(e);
+    for (Path tempDirectory : tempDirectories) {
+      deleteDirectory(tempDirectory);
     }
   }
 
@@ -248,13 +242,13 @@ public class SynchronizationProjectWithDicomStore {
       stubImageServer.setPath(serverPath);
 
       project.addImage(stubImageServer);
+
       seriesListInProject.add(series);
     }
     metadataConfiguration.saveProjectMetadataIndexFile(seriesListInProject);
   }
 
   private void synchronizeQpdata() throws QuPathCloudException {
-    // TODO: check reading data in empty project
     List<Pair<ProjectImageEntry<BufferedImage>, Date>> localInfosToUpload = collectLocalDataFileInfos();
     List<Pair<Instance, Date>> remoteInfosToDownload = collectRemoteInstanceInfos();
 
@@ -272,7 +266,9 @@ public class SynchronizationProjectWithDicomStore {
       while (remoteIter.hasNext()) {
         remoteInfo = remoteIter.next();
         if (localName.equals(remoteInfo.getKey().getSopAuthorizationComment().getValue1())) {
-          int comparisonResult = localInfo.getValue().compareTo(remoteInfo.getValue());
+          Date localDate = localInfo.getValue();
+          Date remoteDate = remoteInfo.getValue();
+          int comparisonResult = localDate.compareTo(remoteDate);
           Conflict.Resolution resolution;
           if (comparisonResult > 0) {
             resolution = Conflict.Resolution.Local;
@@ -322,9 +318,13 @@ public class SynchronizationProjectWithDicomStore {
         .setDatasetId(datasetId)
         .setDicomStoreId(dicomStoreId);
 
-    processUploads(localInfosToUpload, baseQuery);
+    if (localInfosToUpload.size() > 0) {
+      processUploads(localInfosToUpload, baseQuery);
+    }
 
-    processDownloads(remoteInfosToDownload, baseQuery);
+    if (remoteInfosToDownload.size() > 0) {
+      processDownloads(remoteInfosToDownload, baseQuery);
+    }
 
     QueryBuilder query = new QueryBuilder(baseQuery).setInstances(remoteInstancesToDelete);
     cloudDAO.deleteInstances(query);
@@ -337,10 +337,12 @@ public class SynchronizationProjectWithDicomStore {
     for (ProjectImageEntry<BufferedImage> currentEntry : imageList) {
       Path pathToCurrentEntry = currentEntry.getEntryPath();
       Path pathToCurrentQpdataFile = pathToCurrentEntry.resolve(QU_PATH_DATA_FILE);
-      Date modificationDate = ImageDataUtilities.getModificationDate(pathToCurrentQpdataFile);
-      Pair<ProjectImageEntry<BufferedImage>, Date> fileInfo = new Pair<>(currentEntry,
-          modificationDate);
-      localDataFileInfos.add(fileInfo);
+      if (Files.exists(pathToCurrentQpdataFile)) {
+        Date modificationDate = ImageDataUtilities.getModificationDate(pathToCurrentQpdataFile);
+        Pair<ProjectImageEntry<BufferedImage>, Date> fileInfo =
+            new Pair<>(currentEntry, modificationDate);
+        localDataFileInfos.add(fileInfo);
+      }
     }
     return localDataFileInfos;
   }
@@ -363,12 +365,7 @@ public class SynchronizationProjectWithDicomStore {
   private void processUploads(List<Pair<ProjectImageEntry<BufferedImage>, Date>> localDataFileInfos,
       QueryBuilder baseQuery)
       throws QuPathCloudException {
-    Path uploadDirectory;
-    try {
-      uploadDirectory = Files.createTempDirectory("qpDataDcmUpload-");
-    } catch (IOException e) {
-      throw new QuPathCloudException(e);
-    }
+    Path directoryToUpload = createTempDirectory("qpDataDcmUpload-");
 
     List<Path> dataFilesForUpload = new ArrayList<>();
     for (Pair<ProjectImageEntry<BufferedImage>, Date> fileInfo : localDataFileInfos) {
@@ -377,7 +374,7 @@ public class SynchronizationProjectWithDicomStore {
       Date modificationDate = fileInfo.getValue();
       String imageName = fileInfo.getKey().getImageName();
       DataToDcmConverter dataToDcmConverter = new DataToDcmConverter(pathToCurrentQpdataFile,
-          uploadDirectory, modificationDate, imageName);
+          directoryToUpload, modificationDate, imageName);
       Path convertedFile = dataToDcmConverter.convertQuPathDataToDcm();
       dataFilesForUpload.add(convertedFile);
     }
@@ -385,14 +382,9 @@ public class SynchronizationProjectWithDicomStore {
     QueryBuilder query = new QueryBuilder(baseQuery).setPaths(dataFilesForUpload);
     cloudDAO.uploadToDicomStore(query);
 
-    try {
-      FileUtils.deleteDirectory(uploadDirectory.toFile());
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    deleteDirectory(directoryToUpload);
   }
 
-  // TODO: check this process
   private void processDownloads(List<Pair<Instance, Date>> remoteInstanceInfos,
       QueryBuilder baseQuery) throws QuPathCloudException {
 
@@ -400,45 +392,62 @@ public class SynchronizationProjectWithDicomStore {
     Map<String, Path> imageDirectories = new HashMap<>();
     for (ProjectImageEntry<BufferedImage> currentEntry : imageList) {
       Path pathToCurrentEntry = currentEntry.getEntryPath();
-      String imageName = FilenameUtils.getBaseName(currentEntry.getServerPath());
+      String imageName = currentEntry.getImageName();
+
+      if (Files.notExists(pathToCurrentEntry)) {
+        String serverPath = currentEntry.getServerPath();
+        StubImageServer stubImageServer = new StubImageServer();
+        stubImageServer.setDisplayedImageName(imageName);
+        stubImageServer.setPath(serverPath);
+
+        ImageData<BufferedImage> imageData = qupath.createNewImageData(stubImageServer);
+        ProjectImageEntry<BufferedImage> entry = project.getImageEntry(serverPath);
+        try {
+          entry.saveImageData(imageData);
+        } catch (IOException e) {
+          throw new QuPathCloudException(e);
+        }
+      }
+
       imageDirectories.put(imageName, pathToCurrentEntry);
     }
 
-    Path downloadDirectory;
-    try {
-      downloadDirectory = Files.createTempDirectory("qpDataDcmDownload-");
-    } catch (IOException e) {
-      throw new QuPathCloudException(e);
-    }
+    Path directoryToDownload = createTempDirectory("qpDataDcmDownload-");
 
-    List<Instance> remoteInstancesToDownload = remoteInstanceInfos.stream().map(Pair::getKey)
+    List<Instance> remoteQpdataInstances = remoteInstanceInfos.stream().map(Pair::getKey)
         .collect(Collectors.toList());
     QueryBuilder query = new QueryBuilder(baseQuery)
-        .setDirectory(downloadDirectory)
-        .setInstances(remoteInstancesToDownload);
-    cloudDAO.downloadDicomStore(query);
+        .setDirectory(directoryToDownload)
+        .setInstances(remoteQpdataInstances);
+    cloudDAO.downloadInstances(query);
 
-    List<Path> dcmDataFiles;
+    for (Instance instance : remoteQpdataInstances) {
+      String sopInstanceUID = instance.getSopInstanceUID().getValue1();
+      Path downloadedQpdataInstance = directoryToDownload.resolve(sopInstanceUID + ".dcm");
+      String imageName = instance.getSopAuthorizationComment().getValue1();
+      Path imageDirectory = imageDirectories.get(imageName);
+      Path qpdataFile = imageDirectory.resolve(QU_PATH_DATA_FILE);
+      DcmToDataConverter dcmToDataConverter =
+          new DcmToDataConverter(downloadedQpdataInstance, qpdataFile);
+      dcmToDataConverter.convertDcmToQuPathData();
+    }
+
+    deleteDirectory(directoryToDownload);
+  }
+
+  private Path createTempDirectory(String prefix) throws QuPathCloudException {
     try {
-      dcmDataFiles = Files.list(downloadDirectory).collect(Collectors.toList());
+      return Files.createTempDirectory(prefix);
     } catch (IOException e) {
       throw new QuPathCloudException(e);
     }
-    if (dcmDataFiles.size() > 0) {
-      for (Path dcmDataFile : dcmDataFiles) {
-        String dcmDataFileName = FilenameUtils.getBaseName(dcmDataFile.toString());
-        if (imageDirectories.get(dcmDataFileName) != null) {
-          DcmToDataConverter dcmToDataConverter = new DcmToDataConverter(dcmDataFile,
-              imageDirectories.get(dcmDataFileName));
-          dcmToDataConverter.convertDcmToQuPathData();
-        }
-      }
-    }
+  }
 
+  private void deleteDirectory(Path path) throws QuPathCloudException {
     try {
-      FileUtils.deleteDirectory(downloadDirectory.toFile());
+      FileUtils.deleteDirectory(path.toFile());
     } catch (IOException e) {
-      e.printStackTrace();
+      throw new QuPathCloudException(e);
     }
   }
 

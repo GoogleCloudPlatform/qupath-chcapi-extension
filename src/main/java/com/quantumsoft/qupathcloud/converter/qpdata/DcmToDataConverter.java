@@ -21,31 +21,25 @@ import java.io.IOException;
 import java.nio.file.Path;
 import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Fragments;
-import org.dcm4che3.data.Tag;
 import org.dcm4che3.io.DicomInputStream;
 
 public class DcmToDataConverter {
 
-  private Path inputFile;
-  private Path outputDirectory;
+  private final Path inputFile;
+  private final Path outputFile;
 
-  public DcmToDataConverter(Path inputFile, Path outputDirectory) {
+  public DcmToDataConverter(Path inputFile, Path outputFile) {
     this.inputFile = inputFile;
-    this.outputDirectory = outputDirectory;
+    this.outputFile = outputFile;
   }
 
-  public Path convertDcmToQuPathData() throws QuPathCloudException {
+  public void convertDcmToQuPathData() throws QuPathCloudException {
     try (DicomInputStream dis = new DicomInputStream(inputFile.toFile())) {
       Attributes attrs = dis.readDataset(-1, -1);
       byte[] qpdataBytes = (byte[]) ((Fragments) attrs.getValue(DataToDcmConverter.QPDATA_TAG))
           .get(0);
-      String qpdataName = attrs.getString(Tag.SOPAuthorizationComment);
-      // TODO: check qpdataName
-      Path outputFile = outputDirectory.resolve(qpdataName + ".qpdata");
       try (FileOutputStream fos = new FileOutputStream(outputFile.toFile(), false)) {
         fos.write(qpdataBytes, 0, qpdataBytes.length);
-        fos.close();
-        return outputFile;
       }
     } catch (IOException e) {
       throw new QuPathCloudException(e);

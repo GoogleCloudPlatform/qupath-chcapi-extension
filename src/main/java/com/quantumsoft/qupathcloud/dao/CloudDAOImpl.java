@@ -75,7 +75,6 @@ import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 import com.quantumsoft.qupathcloud.oauth20.OAuth20;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -275,7 +274,7 @@ public class CloudDAOImpl extends CloudDAO {
   }
 
   @Override
-  public void downloadDicomStore(QueryBuilder queryBuilder)
+  public void downloadInstances(QueryBuilder queryBuilder)
       throws QuPathCloudException {
     StudiesPathBuilder studiesPathBuilder = new StudiesPathBuilder(queryBuilder);
     ExecutorService executorService = Executors.newFixedThreadPool(THREADS_COUNT);
@@ -290,7 +289,7 @@ public class CloudDAOImpl extends CloudDAO {
           .setPath(studiesPathBuilder.toPath() + studyValue + SERIES + seriesValue + INSTANCES
               + instanceValue);
       Path outputDirectory = queryBuilder.getDirectory();
-      Path outputFile = outputDirectory.resolve(seriesValue + "." + DCM_EXTENSION);
+      Path outputFile = outputDirectory.resolve(instanceValue + "." + DCM_EXTENSION);
       DownloadDicomCallable downloadInstance =
           new DownloadDicomCallable(getoAuth20(), outputFile, uriBuilderInstance);
       Future<Void> future = executorService.submit(downloadInstance);

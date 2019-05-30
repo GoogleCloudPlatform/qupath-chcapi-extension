@@ -16,37 +16,57 @@
 package com.quantumsoft.qupathcloud.dao;
 
 import com.quantumsoft.qupathcloud.dao.spec.QueryBuilder;
-import com.quantumsoft.qupathcloud.entities.*;
+import com.quantumsoft.qupathcloud.entities.Dataset;
+import com.quantumsoft.qupathcloud.entities.DicomStore;
+import com.quantumsoft.qupathcloud.entities.Location;
+import com.quantumsoft.qupathcloud.entities.Project;
+import com.quantumsoft.qupathcloud.entities.Series;
+import com.quantumsoft.qupathcloud.entities.Study;
 import com.quantumsoft.qupathcloud.entities.instance.Instance;
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 import com.quantumsoft.qupathcloud.oauth20.OAuth20;
-
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-public abstract class CloudDAO{
-    private OAuth20 oAuth20;
+public abstract class CloudDAO {
 
-    CloudDAO(OAuth20 oAuth20){
-        this.oAuth20 = oAuth20;
-    }
+  private OAuth20 oAuth20;
 
-    public abstract List<Project> getProjectsList() throws QuPathCloudException;
-    public abstract List<Location> getLocationsList(QueryBuilder queryBuilder) throws QuPathCloudException;
-    public abstract List<Dataset> getDatasetsListInAllLocations(QueryBuilder queryBuilder) throws QuPathCloudException;
-    public abstract List<DicomStore> getDicomStoresList(QueryBuilder queryBuilder) throws QuPathCloudException;
-    public abstract List<Study> getStudiesList(QueryBuilder queryBuilder) throws QuPathCloudException;
-    public abstract List<Series> getSeriesList(QueryBuilder queryBuilder) throws QuPathCloudException;
-    public abstract List<Instance> getInstancesList(QueryBuilder queryBuilder) throws QuPathCloudException;
-    public abstract BufferedImage getFrame(QueryBuilder queryBuilder) throws QuPathCloudException;
+  CloudDAO(OAuth20 oAuth20) {
+    this.oAuth20 = oAuth20;
+  }
 
-    public abstract void createDataset(QueryBuilder queryBuilder) throws QuPathCloudException;
-    public abstract void createDicomStore(QueryBuilder queryBuilder) throws QuPathCloudException;
-    public abstract void uploadToDicomStore(QueryBuilder queryBuilder) throws QuPathCloudException;
-    public abstract void downloadDicomStore(QueryBuilder queryBuilder) throws QuPathCloudException;
-    public abstract void deleteInstances(QueryBuilder queryBuilder) throws QuPathCloudException;
+  public abstract List<Project> getProjectsList() throws QuPathCloudException;
 
-    public OAuth20 getoAuth20() {
-        return oAuth20;
-    }
+  public abstract List<Location> getLocationsList(QueryBuilder queryBuilder)
+      throws QuPathCloudException;
+
+  public abstract List<Dataset> getDatasetsListInAllLocations(QueryBuilder queryBuilder)
+      throws QuPathCloudException;
+
+  public abstract List<DicomStore> getDicomStoresList(QueryBuilder queryBuilder)
+      throws QuPathCloudException;
+
+  public abstract List<Study> getStudiesList(QueryBuilder queryBuilder) throws QuPathCloudException;
+
+  public abstract List<Series> getSeriesList(QueryBuilder queryBuilder) throws QuPathCloudException;
+
+  public abstract List<Instance> getInstancesList(QueryBuilder queryBuilder)
+      throws QuPathCloudException;
+
+  public abstract BufferedImage getFrame(QueryBuilder queryBuilder) throws QuPathCloudException;
+
+  public abstract void createDataset(QueryBuilder queryBuilder) throws QuPathCloudException;
+
+  public abstract void createDicomStore(QueryBuilder queryBuilder) throws QuPathCloudException;
+
+  public abstract void uploadToDicomStore(QueryBuilder queryBuilder) throws QuPathCloudException;
+
+  public abstract void downloadInstances(QueryBuilder queryBuilder) throws QuPathCloudException;
+
+  public abstract void deleteInstances(QueryBuilder queryBuilder) throws QuPathCloudException;
+
+  public OAuth20 getoAuth20() {
+    return oAuth20;
+  }
 }
