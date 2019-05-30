@@ -104,12 +104,12 @@ public class SynchronizationProjectWithDicomStore {
       } catch (QuPathCloudException | IOException e) {
         LOGGER.error("Synchronization error: ", e);
         DisplayHelpers.showErrorMessage("Synchronization error!", e);
+      } finally {
+        Platform.runLater(() -> {
+          qupath.refreshProject();
+          synchronizationWindow.close();
+        });
       }
-
-      Platform.runLater(() -> {
-        qupath.refreshProject();
-        synchronizationWindow.close();
-      });
     };
     Thread loadThread = new Thread(loader);
     loadThread.start();
