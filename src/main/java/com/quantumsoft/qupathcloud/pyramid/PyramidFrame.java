@@ -16,19 +16,20 @@
 package com.quantumsoft.qupathcloud.pyramid;
 
 public class PyramidFrame {
-    private int index;
-    private String instanceUID;
 
-    public PyramidFrame( String instanceUID, int index) {
-        this.index = index;
-        this.instanceUID = instanceUID;
-    }
+  private int index;
+  private String instanceUID;
 
-    public int getIndex() {
-        return index;
-    }
+  public PyramidFrame(String instanceUID, int index) {
+    this.index = index;
+    this.instanceUID = instanceUID;
+  }
 
-    public String getInstanceUID() {
-        return instanceUID;
-    }
+  public int getIndex() {
+    return index;
+  }
+
+  public String getInstanceUID() {
+    return instanceUID;
+  }
 }

@@ -19,6 +19,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import com.quantumsoft.qupathcloud.entities.Location;
+import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -34,87 +35,84 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import java.util.List;
-
-
 public class NewDatasetWindow {
 
-    private static final double STAGE_WIDTH = 300;
-    private static final double STAGE_HEIGHT = 150;
-    private static final double INDENT = 35;
-    private static final double WINDOW_WIDTH = STAGE_WIDTH - INDENT;
-    private static final double WINDOW_HEIGHT = STAGE_HEIGHT - INDENT;
-    private static final double SHADOW_RADIUS = 13;
-    private static final double RIGHT_PADDING = 13;
-    private static final double LEFT_PADDING = 13;
-    private static final double TOP_PADDING = 13;
-    private static final double BOTTOM_PADDING = 13;
-    private static final double SPACING = 13;
-    private static final String PROMPT_TEXT = "Enter new Id";
-    private Stage newDatasetStage;
-    private List<Location> locations;
+  private static final double STAGE_WIDTH = 300;
+  private static final double STAGE_HEIGHT = 150;
+  private static final double INDENT = 35;
+  private static final double WINDOW_WIDTH = STAGE_WIDTH - INDENT;
+  private static final double WINDOW_HEIGHT = STAGE_HEIGHT - INDENT;
+  private static final double SHADOW_RADIUS = 13;
+  private static final double RIGHT_PADDING = 13;
+  private static final double LEFT_PADDING = 13;
+  private static final double TOP_PADDING = 13;
+  private static final double BOTTOM_PADDING = 13;
+  private static final double SPACING = 13;
+  private static final String PROMPT_TEXT = "Enter new Id";
+  private Stage newDatasetStage;
+  private List<Location> locations;
 
-    NewDatasetWindow(List<Location> locations){
-        this.locations = locations;
-        newDatasetStage = new Stage();
+  NewDatasetWindow(List<Location> locations) {
+    this.locations = locations;
+    newDatasetStage = new Stage();
+  }
+
+  Pane showWindow() {
+    JFXButton createButton = new JFXButton("CREATE");
+    createButton.setId("createButton");
+    createButton.getStyleClass().add("createButton");
+
+    JFXButton cancelButton = new JFXButton("CANCEL");
+    cancelButton.setId("cancelButton");
+    cancelButton.getStyleClass().add("cancelButton");
+
+    JFXComboBox<Label> locationsComboBox = new JFXComboBox<>();
+    for (Location location : locations) {
+      locationsComboBox.getItems().add(new Label(location.getLocationId()));
     }
+    locationsComboBox.setId("locationsComboBoxId");
+    locationsComboBox.setPromptText("Select Locations");
+    locationsComboBox.setPrefWidth(Integer.MAX_VALUE);
 
-    Pane showWindow() {
-        JFXButton createButton = new JFXButton("CREATE");
-        createButton.setId("createButton");
-        createButton.getStyleClass().add("createButton");
+    BorderPane buttonsPanel = new BorderPane();
+    buttonsPanel.setLeft(cancelButton);
+    buttonsPanel.setRight(createButton);
 
-        JFXButton cancelButton = new JFXButton("CANCEL");
-        cancelButton.setId("cancelButton");
-        cancelButton.getStyleClass().add("cancelButton");
+    JFXTextField dicomStoreId = new JFXTextField();
+    dicomStoreId.setPromptText(PROMPT_TEXT);
+    dicomStoreId.setId("datasetId");
 
-        JFXComboBox<Label> locationsComboBox = new JFXComboBox<>();
-        for(Location location : locations){
-            locationsComboBox.getItems().add(new Label(location.getLocationId()));
-        }
-        locationsComboBox.setId("locationsComboBoxId");
-        locationsComboBox.setPromptText("Select Locations");
-        locationsComboBox.setPrefWidth(Integer.MAX_VALUE);
+    VBox vBox = new VBox(dicomStoreId, locationsComboBox, buttonsPanel);
+    vBox.setSpacing(SPACING);
+    vBox.setAlignment(Pos.CENTER);
+    vBox.setPadding(new Insets(TOP_PADDING, RIGHT_PADDING, BOTTOM_PADDING, LEFT_PADDING));
+    vBox.setStyle("-fx-background-color: white;");
+    vBox.setMaxWidth(WINDOW_WIDTH);
+    vBox.setMaxHeight(WINDOW_HEIGHT);
 
-        BorderPane buttonsPanel = new BorderPane();
-        buttonsPanel.setLeft(cancelButton);
-        buttonsPanel.setRight(createButton);
+    BorderPane borderPane = new BorderPane(vBox);
+    borderPane.setEffect(new DropShadow(SHADOW_RADIUS, 0, 0, Color.BLACK));
+    borderPane.setStyle("-fx-background-color: transparent;");
 
-        JFXTextField dicomStoreId = new JFXTextField();
-        dicomStoreId.setPromptText(PROMPT_TEXT);
-        dicomStoreId.setId("datasetId");
+    Scene newDicomStoreScene = new Scene(borderPane);
+    newDicomStoreScene.getStylesheets().add("styles/styles.css");
+    newDicomStoreScene.setFill(Color.TRANSPARENT);
 
-        VBox vBox = new VBox(dicomStoreId, locationsComboBox, buttonsPanel);
-        vBox.setSpacing(SPACING);
-        vBox.setAlignment(Pos.CENTER);
-        vBox.setPadding(new Insets(TOP_PADDING,RIGHT_PADDING,BOTTOM_PADDING,LEFT_PADDING));
-        vBox.setStyle("-fx-background-color: white;");
-        vBox.setMaxWidth(WINDOW_WIDTH);
-        vBox.setMaxHeight(WINDOW_HEIGHT);
+    newDatasetStage.setScene(newDicomStoreScene);
+    newDatasetStage.initStyle(StageStyle.TRANSPARENT);
+    Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+    newDatasetStage.setX((screenBounds.getWidth() - STAGE_WIDTH) / 2);
+    newDatasetStage.setY((screenBounds.getHeight() - STAGE_HEIGHT) / 2);
+    newDatasetStage.initModality(Modality.APPLICATION_MODAL);
+    newDatasetStage.setWidth(STAGE_WIDTH);
+    newDatasetStage.setHeight(STAGE_HEIGHT);
+    newDatasetStage.setResizable(false);
+    newDatasetStage.show();
 
-        BorderPane borderPane = new BorderPane(vBox);
-        borderPane.setEffect(new DropShadow(SHADOW_RADIUS, 0, 0, Color.BLACK));
-        borderPane.setStyle("-fx-background-color: transparent;");
+    return vBox;
+  }
 
-        Scene newDicomStoreScene = new Scene(borderPane);
-        newDicomStoreScene.getStylesheets().add("styles/styles.css");
-        newDicomStoreScene.setFill(Color.TRANSPARENT);
-
-        newDatasetStage.setScene(newDicomStoreScene);
-        newDatasetStage.initStyle(StageStyle.TRANSPARENT);
-        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        newDatasetStage.setX((screenBounds.getWidth() - STAGE_WIDTH) / 2);
-        newDatasetStage.setY((screenBounds.getHeight() - STAGE_HEIGHT) / 2);
-        newDatasetStage.initModality(Modality.APPLICATION_MODAL);
-        newDatasetStage.setWidth(STAGE_WIDTH);
-        newDatasetStage.setHeight(STAGE_HEIGHT);
-        newDatasetStage.setResizable(false);
-        newDatasetStage.show();
-
-        return vBox;
-    }
-
-    public Stage getStage(){
-        return newDatasetStage;
-    }
+  public Stage getStage() {
+    return newDatasetStage;
+  }
 }

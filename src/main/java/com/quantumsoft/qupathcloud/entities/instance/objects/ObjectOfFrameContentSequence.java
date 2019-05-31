@@ -19,14 +19,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.quantumsoft.qupathcloud.entities.DicomAttribute;
 
 public class ObjectOfFrameContentSequence {
-    @JsonProperty("00209157")
-    private DicomAttribute<Integer> dimensionIndexValues;
 
-    public DicomAttribute<Integer> getDimensionIndexValues() {
-        return dimensionIndexValues;
-    }
+  @JsonProperty("00209157")
+  private DicomAttribute<Integer> dimensionIndexValues;
 
-    public void setDimensionIndexValues(DicomAttribute<Integer> dimensionIndexValues) {
-        this.dimensionIndexValues = dimensionIndexValues;
-    }
+  public DicomAttribute<Integer> getDimensionIndexValues() {
+    return dimensionIndexValues;
+  }
+
+  public void setDimensionIndexValues(DicomAttribute<Integer> dimensionIndexValues) {
+    this.dimensionIndexValues = dimensionIndexValues;
+  }
 }

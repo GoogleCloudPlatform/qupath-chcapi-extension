@@ -19,24 +19,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.quantumsoft.qupathcloud.entities.DicomAttribute;
 
 public class ObjectOfPlanePositionSequence {
-    @JsonProperty("0048021E")
-    private DicomAttribute<Integer> columnPositionInTotalImagePixelMatrix;
-    @JsonProperty("0048021F")
-    private DicomAttribute<Integer> rowPositionInTotalImagePixelMatrix;
 
-    public DicomAttribute<Integer> getColumnPositionInTotalImagePixelMatrix() {
-        return columnPositionInTotalImagePixelMatrix;
-    }
+  @JsonProperty("0048021E")
+  private DicomAttribute<Integer> columnPositionInTotalImagePixelMatrix;
+  @JsonProperty("0048021F")
+  private DicomAttribute<Integer> rowPositionInTotalImagePixelMatrix;
 
-    public void setColumnPositionInTotalImagePixelMatrix(DicomAttribute<Integer> columnPositionInTotalImagePixelMatrix) {
-        this.columnPositionInTotalImagePixelMatrix = columnPositionInTotalImagePixelMatrix;
-    }
+  public DicomAttribute<Integer> getColumnPositionInTotalImagePixelMatrix() {
+    return columnPositionInTotalImagePixelMatrix;
+  }
 
-    public DicomAttribute<Integer> getRowPositionInTotalImagePixelMatrix() {
-        return rowPositionInTotalImagePixelMatrix;
-    }
+  public void setColumnPositionInTotalImagePixelMatrix(
+      DicomAttribute<Integer> columnPositionInTotalImagePixelMatrix) {
+    this.columnPositionInTotalImagePixelMatrix = columnPositionInTotalImagePixelMatrix;
+  }
 
-    public void setRowPositionInTotalImagePixelMatrix(DicomAttribute<Integer> rowPositionInTotalImagePixelMatrix) {
-        this.rowPositionInTotalImagePixelMatrix = rowPositionInTotalImagePixelMatrix;
-    }
+  public DicomAttribute<Integer> getRowPositionInTotalImagePixelMatrix() {
+    return rowPositionInTotalImagePixelMatrix;
+  }
+
+  public void setRowPositionInTotalImagePixelMatrix(
+      DicomAttribute<Integer> rowPositionInTotalImagePixelMatrix) {
+    this.rowPositionInTotalImagePixelMatrix = rowPositionInTotalImagePixelMatrix;
+  }
 }

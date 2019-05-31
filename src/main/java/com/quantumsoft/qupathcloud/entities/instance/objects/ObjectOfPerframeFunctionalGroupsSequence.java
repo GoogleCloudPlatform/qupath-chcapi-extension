@@ -19,24 +19,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.quantumsoft.qupathcloud.entities.DicomAttribute;
 
 public class ObjectOfPerframeFunctionalGroupsSequence {
-    @JsonProperty("00209111")
-    private DicomAttribute<ObjectOfFrameContentSequence> frameContentSequence;
-    @JsonProperty("0048021A")
-    private DicomAttribute<ObjectOfPlanePositionSequence> planePositionSequence;
 
-    public DicomAttribute<ObjectOfFrameContentSequence> getFrameContentSequence() {
-        return frameContentSequence;
-    }
+  @JsonProperty("00209111")
+  private DicomAttribute<ObjectOfFrameContentSequence> frameContentSequence;
+  @JsonProperty("0048021A")
+  private DicomAttribute<ObjectOfPlanePositionSequence> planePositionSequence;
 
-    public void setFrameContentSequence(DicomAttribute<ObjectOfFrameContentSequence> frameContentSequence) {
-        this.frameContentSequence = frameContentSequence;
-    }
+  public DicomAttribute<ObjectOfFrameContentSequence> getFrameContentSequence() {
+    return frameContentSequence;
+  }
 
-    public DicomAttribute<ObjectOfPlanePositionSequence> getPlanePositionSequence() {
-        return planePositionSequence;
-    }
+  public void setFrameContentSequence(
+      DicomAttribute<ObjectOfFrameContentSequence> frameContentSequence) {
+    this.frameContentSequence = frameContentSequence;
+  }
 
-    public void setPlanePositionSequence(DicomAttribute<ObjectOfPlanePositionSequence> planePositionSequence) {
-        this.planePositionSequence = planePositionSequence;
-    }
+  public DicomAttribute<ObjectOfPlanePositionSequence> getPlanePositionSequence() {
+    return planePositionSequence;
+  }
+
+  public void setPlanePositionSequence(
+      DicomAttribute<ObjectOfPlanePositionSequence> planePositionSequence) {
+    this.planePositionSequence = planePositionSequence;
+  }
 }

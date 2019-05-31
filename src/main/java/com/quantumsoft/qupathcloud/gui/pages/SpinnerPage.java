@@ -19,11 +19,12 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.BorderPane;
 
 public class SpinnerPage {
-    private static final double SPINNER_SIZE = 200;
 
-    public BorderPane getSpinnerPage(){
-        ProgressIndicator progressIndicator = new ProgressIndicator();
-        progressIndicator.setMaxSize(SPINNER_SIZE,SPINNER_SIZE);
-        return new BorderPane(progressIndicator);
-    }
+  private static final double SPINNER_SIZE = 200;
+
+  public BorderPane getSpinnerPage() {
+    ProgressIndicator progressIndicator = new ProgressIndicator();
+    progressIndicator.setMaxSize(SPINNER_SIZE, SPINNER_SIZE);
+    return new BorderPane(progressIndicator);
+  }
 }

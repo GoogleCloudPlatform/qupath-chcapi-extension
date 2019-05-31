@@ -15,23 +15,24 @@
 
 package com.quantumsoft.qupathcloud.entities;
 
-public class Project{
-    private String projectId;
-    private String name;
+public class Project {
 
-    public String getProjectId() {
-        return projectId;
-    }
+  private String projectId;
+  private String name;
 
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
-    }
+  public String getProjectId() {
+    return projectId;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public void setProjectId(String projectId) {
+    this.projectId = projectId;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
 }

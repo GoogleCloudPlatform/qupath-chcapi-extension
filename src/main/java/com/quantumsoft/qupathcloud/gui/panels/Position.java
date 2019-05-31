@@ -16,5 +16,5 @@
 package com.quantumsoft.qupathcloud.gui.panels;
 
 public enum Position {
-    PROJECTS, DATASETS, DICOM_STORES
+  PROJECTS, DATASETS, DICOM_STORES
 }

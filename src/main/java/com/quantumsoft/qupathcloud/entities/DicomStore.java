@@ -16,59 +16,63 @@
 package com.quantumsoft.qupathcloud.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.Objects;
 
-public class DicomStore{
-    private String name;
+public class DicomStore {
 
-    @JsonIgnore
-    public String getProjectId() {
-        String arr[] = name.split("/");
-        return arr[arr.length - 7];
-    }
+  private String name;
 
-    @JsonIgnore
-    public String getLocationId() {
-        String arr[] = name.split("/");
-        return arr[arr.length - 5];
-    }
+  @JsonIgnore
+  public String getProjectId() {
+    String arr[] = name.split("/");
+    return arr[arr.length - 7];
+  }
 
-    @JsonIgnore
-    public String getDatasetId() {
-        String arr[] = name.split("/");
-        return arr[arr.length - 3];
-    }
+  @JsonIgnore
+  public String getLocationId() {
+    String arr[] = name.split("/");
+    return arr[arr.length - 5];
+  }
 
-    @JsonIgnore
-    public String getDicomStoreId() {
-        String arr[] = name.split("/");
-        return arr[arr.length - 1];
-    }
+  @JsonIgnore
+  public String getDatasetId() {
+    String arr[] = name.split("/");
+    return arr[arr.length - 3];
+  }
 
-    public String getName(){
-        return name;
-    }
+  @JsonIgnore
+  public String getDicomStoreId() {
+    String arr[] = name.split("/");
+    return arr[arr.length - 1];
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String projectId, String locationId, String datasetId, String dicomStoreId){
-        name = "projects/" + projectId + "/locations/" + locationId + "/datasets/" + datasetId + "/dicomStores/" +
-        dicomStoreId;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        DicomStore that = (DicomStore) o;
-        return Objects.equals(name, that.name);
-    }
+  public void setName(String projectId, String locationId, String datasetId, String dicomStoreId) {
+    name = "projects/" + projectId + "/locations/" + locationId + "/datasets/" + datasetId
+        + "/dicomStores/" + dicomStoreId;
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    DicomStore that = (DicomStore) o;
+    return Objects.equals(name, that.name);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name);
+  }
 }

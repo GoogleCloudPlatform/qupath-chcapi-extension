@@ -18,82 +18,82 @@ package com.quantumsoft.qupathcloud.pyramid;
 import com.quantumsoft.qupathcloud.entities.DicomAttribute;
 import com.quantumsoft.qupathcloud.entities.instance.Instance;
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 public class Pyramid {
-    private List<PyramidLevel> levels = new ArrayList<>();
-    private double[] downsamples;
 
-    private String studyUID;
-    private String seriesUID;
+  private List<PyramidLevel> levels = new ArrayList<>();
+  private double[] downsamples;
 
-    public Pyramid(List<Instance> instances) throws QuPathCloudException {
-        if(instances.get(0).isFullTiled()){
-            instances.sort(Comparator.comparingInt(Pyramid::getInstanceFrameOffset));
-        }
-        instances.sort(Comparator.comparingInt(Pyramid::getInstanceWidth).reversed());
+  private String studyUID;
+  private String seriesUID;
 
-        PyramidLevel currentLevel = null;
-        for(Instance instance : instances){
-            if (currentLevel == null || currentLevel.getWidth() != getInstanceWidth(instance)){
-                currentLevel = new PyramidLevel(instance);
-                levels.add(currentLevel);
-            } else {
-                currentLevel.addInstance(instance);
-            }
-        }
+  public Pyramid(List<Instance> instances) throws QuPathCloudException {
+    if (instances.get(0).isFullTiled()) {
+      instances.sort(Comparator.comparingInt(Pyramid::getInstanceFrameOffset));
+    }
+    instances.sort(Comparator.comparingInt(Pyramid::getInstanceWidth).reversed());
 
-        downsamples = new double[levels.size()];
-        downsamples[0] = 1.0;
-        for(int i=1; i< levels.size();i++){
-            downsamples[i] = (double) getWidth() / levels.get(i).getWidth();
-        }
-
-        studyUID = instances.get(0).getStudyInstanceUID().getValue1();
-        seriesUID = instances.get(0).getSeriesInstanceUID().getValue1();
+    PyramidLevel currentLevel = null;
+    for (Instance instance : instances) {
+      if (currentLevel == null || currentLevel.getWidth() != getInstanceWidth(instance)) {
+        currentLevel = new PyramidLevel(instance);
+        levels.add(currentLevel);
+      } else {
+        currentLevel.addInstance(instance);
+      }
     }
 
-    public double[] getDownsamples() {
-        return downsamples;
+    downsamples = new double[levels.size()];
+    downsamples[0] = 1.0;
+    for (int i = 1; i < levels.size(); i++) {
+      downsamples[i] = (double) getWidth() / levels.get(i).getWidth();
     }
 
-    public int getWidth(){
-        return levels.get(0).getWidth();
-    }
+    studyUID = instances.get(0).getStudyInstanceUID().getValue1();
+    seriesUID = instances.get(0).getSeriesInstanceUID().getValue1();
+  }
 
-    public int getHeight(){
-        return levels.get(0).getHeight();
-    }
+  public double[] getDownsamples() {
+    return downsamples;
+  }
 
-    public int getTileWidth(){
-        return levels.get(0).getTileWidth();
-    }
+  public int getWidth() {
+    return levels.get(0).getWidth();
+  }
 
-    public int getTileHeight(){
-        return levels.get(0).getTileHeight();
-    }
+  public int getHeight() {
+    return levels.get(0).getHeight();
+  }
 
-    public String getStudyUID() {
-        return studyUID;
-    }
+  public int getTileWidth() {
+    return levels.get(0).getTileWidth();
+  }
 
-    public String getSeriesUID() {
-        return seriesUID;
-    }
+  public int getTileHeight() {
+    return levels.get(0).getTileHeight();
+  }
 
-    public PyramidFrame getFrame(int tileX, int tileY, int level){
-        return levels.get(level).getFrame(tileX, tileY);
-    }
+  public String getStudyUID() {
+    return studyUID;
+  }
 
-    private static int getInstanceWidth(Instance instance){
-        return instance.getTotalPixelMatrixColumns().getValue1();
-    }
+  public String getSeriesUID() {
+    return seriesUID;
+  }
 
-    private static int getInstanceFrameOffset(Instance instance) {
-        DicomAttribute<Integer> offset = instance.getConcatenationFrameOffsetNumber();
-        return offset == null ? 0 : offset.getValue1();
-    }
+  public PyramidFrame getFrame(int tileX, int tileY, int level) {
+    return levels.get(level).getFrame(tileX, tileY);
+  }
+
+  private static int getInstanceWidth(Instance instance) {
+    return instance.getTotalPixelMatrixColumns().getValue1();
+  }
+
+  private static int getInstanceFrameOffset(Instance instance) {
+    DicomAttribute<Integer> offset = instance.getConcatenationFrameOffsetNumber();
+    return offset == null ? 0 : offset.getValue1();
+  }
 }

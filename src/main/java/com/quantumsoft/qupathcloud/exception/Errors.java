@@ -16,5 +16,6 @@
 package com.quantumsoft.qupathcloud.exception;
 
 public class Errors {
-    public static final String FAILED_HTTP = "Failed HTTP! Status code: ";
+
+  public static final String FAILED_HTTP = "Failed HTTP! Status code: ";
 }

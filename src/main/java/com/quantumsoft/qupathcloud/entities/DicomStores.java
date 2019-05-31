@@ -19,14 +19,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DicomStores {
-    private List<DicomStore> dicomStores = new ArrayList<>();
-    private String nextPageToken;
 
-    public List<DicomStore> getDicomStores(){
-        return dicomStores;
-    }
+  private List<DicomStore> dicomStores = new ArrayList<>();
+  private String nextPageToken;
 
-    public String getNextPageToken() {
-        return nextPageToken;
-    }
+  public List<DicomStore> getDicomStores() {
+    return dicomStores;
+  }
+
+  public String getNextPageToken() {
+    return nextPageToken;
+  }
 }

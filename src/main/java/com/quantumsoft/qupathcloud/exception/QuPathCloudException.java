@@ -15,12 +15,13 @@
 
 package com.quantumsoft.qupathcloud.exception;
 
-public class QuPathCloudException extends Exception{
-    public QuPathCloudException(String message) {
-        super(message);
-    }
+public class QuPathCloudException extends Exception {
 
-    public QuPathCloudException(Throwable e) {
-        super(e);
-    }
+  public QuPathCloudException(String message) {
+    super(message);
+  }
+
+  public QuPathCloudException(Throwable e) {
+    super(e);
+  }
 }

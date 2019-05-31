@@ -17,55 +17,58 @@ package com.quantumsoft.qupathcloud.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Arrays;
 import java.util.Objects;
 
-public class DicomAttribute<T>{
-    private String vr;
-    @JsonProperty
-    private T[] Value;
+public class DicomAttribute<T> {
 
-    public String getVr() {
-        return vr;
-    }
+  private String vr;
+  @JsonProperty
+  private T[] Value;
 
-    public void setVr(String vr) {
-        this.vr = vr;
-    }
+  public String getVr() {
+    return vr;
+  }
 
-    public void setValue(T[] Value) {
-        this.Value = Value;
-    }
+  public void setVr(String vr) {
+    this.vr = vr;
+  }
 
-    @JsonIgnore
-    public T getValue1() {
-        return Value[0];
-    }
+  public void setValue(T[] Value) {
+    this.Value = Value;
+  }
 
-    @JsonIgnore
-    public T getValue2() {
-        return Value[1];
-    }
+  @JsonIgnore
+  public T getValue1() {
+    return Value[0];
+  }
 
-    @JsonIgnore
-    public T[] getValue() {
-        return Value;
-    }
+  @JsonIgnore
+  public T getValue2() {
+    return Value[1];
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        DicomAttribute<?> that = (DicomAttribute<?>) o;
-        return Objects.equals(vr, that.vr) &&
-                Arrays.equals(Value, that.Value);
-    }
+  @JsonIgnore
+  public T[] getValue() {
+    return Value;
+  }
 
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(vr);
-        result = 31 * result + Arrays.hashCode(Value);
-        return result;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    DicomAttribute<?> that = (DicomAttribute<?>) o;
+    return Objects.equals(vr, that.vr) && Arrays.equals(Value, that.Value);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = Objects.hash(vr);
+    result = 31 * result + Arrays.hashCode(Value);
+    return result;
+  }
 }

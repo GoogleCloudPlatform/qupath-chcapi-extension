@@ -20,75 +20,79 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.RowConstraints;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class SynchronizationWindow {
-    private static final double STAGE_WIDTH = 620;
-    private static final double STAGE_HEIGHT = 500;
-    private static final double HEADER_HEIGHT_IN_PERCENT = 15;
-    private static final double PAGE_HEIGHT_IN_PERCENT = 85;
-    private static final String STAGE_TITLE= "QuPath cloud";
 
-    private Label headerLabel;
-    private GridPane root;
-    private Pane currentPage;
-    private Stage primaryStage;
+  private static final double STAGE_WIDTH = 620;
+  private static final double STAGE_HEIGHT = 500;
+  private static final double HEADER_HEIGHT_IN_PERCENT = 15;
+  private static final double PAGE_HEIGHT_IN_PERCENT = 85;
+  private static final String STAGE_TITLE = "QuPath cloud";
+  private Label headerLabel;
+  private GridPane root;
+  private Pane currentPage;
+  private Stage primaryStage;
 
-    public SynchronizationWindow(){
-        primaryStage = new Stage();
-        headerLabel = new Label("Synchronization");
-        root = new GridPane();
-    }
+  public SynchronizationWindow() {
+    primaryStage = new Stage();
+    headerLabel = new Label("Synchronization");
+    root = new GridPane();
+  }
 
-    public void showSynchronizationWindow(){
-        headerLabel.getStyleClass().add("cloudWindowHeaderLabel");
-        BorderPane header = new BorderPane(headerLabel);
-        header.getStyleClass().add("cloudWindowHeaderBackgroundColor");
+  public void showSynchronizationWindow() {
+    headerLabel.getStyleClass().add("cloudWindowHeaderLabel");
+    BorderPane header = new BorderPane(headerLabel);
+    header.getStyleClass().add("cloudWindowHeaderBackgroundColor");
 
-        ColumnConstraints column = new ColumnConstraints();
-        column.setPercentWidth(100);
-        root.getColumnConstraints().add(column);
+    ColumnConstraints column = new ColumnConstraints();
+    column.setPercentWidth(100);
+    root.getColumnConstraints().add(column);
 
-        RowConstraints headerRow = new RowConstraints();
-        headerRow.setPercentHeight(HEADER_HEIGHT_IN_PERCENT);
-        root.getRowConstraints().add(headerRow);
+    RowConstraints headerRow = new RowConstraints();
+    headerRow.setPercentHeight(HEADER_HEIGHT_IN_PERCENT);
+    root.getRowConstraints().add(headerRow);
 
-        RowConstraints contentRow = new RowConstraints();
-        contentRow.setPercentHeight(PAGE_HEIGHT_IN_PERCENT);
-        root.getRowConstraints().add(contentRow);
+    RowConstraints contentRow = new RowConstraints();
+    contentRow.setPercentHeight(PAGE_HEIGHT_IN_PERCENT);
+    root.getRowConstraints().add(contentRow);
 
-        root.add(header, 0, 0);
-        currentPage = getSpinnerPage();
-        showPage();
+    root.add(header, 0, 0);
+    currentPage = getSpinnerPage();
+    showPage();
 
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add("styles/styles.css");
+    Scene scene = new Scene(root);
+    scene.getStylesheets().add("styles/styles.css");
 
-        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        primaryStage.setX((screenBounds.getWidth() - STAGE_WIDTH) / 2);
-        primaryStage.setY((screenBounds.getHeight() - STAGE_HEIGHT) / 2);
-        primaryStage.getIcons().add(new Image("/Images/cloud-icon.png"));
-        primaryStage.initModality(Modality.APPLICATION_MODAL);
-        primaryStage.setWidth(STAGE_WIDTH);
-        primaryStage.setHeight(STAGE_HEIGHT);
-        primaryStage.setTitle(STAGE_TITLE);
-        primaryStage.setResizable(false);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
+    Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+    primaryStage.setX((screenBounds.getWidth() - STAGE_WIDTH) / 2);
+    primaryStage.setY((screenBounds.getHeight() - STAGE_HEIGHT) / 2);
+    primaryStage.getIcons().add(new Image("/Images/cloud-icon.png"));
+    primaryStage.initModality(Modality.APPLICATION_MODAL);
+    primaryStage.setWidth(STAGE_WIDTH);
+    primaryStage.setHeight(STAGE_HEIGHT);
+    primaryStage.setTitle(STAGE_TITLE);
+    primaryStage.setResizable(false);
+    primaryStage.setScene(scene);
+    primaryStage.show();
+  }
 
-    public void close(){
-        primaryStage.close();
-    }
+  public void close() {
+    primaryStage.close();
+  }
 
-    private Pane getSpinnerPage(){
-        return new SpinnerPage().getSpinnerPage();
-    }
+  private Pane getSpinnerPage() {
+    return new SpinnerPage().getSpinnerPage();
+  }
 
-    private void showPage(){
-        root.add(currentPage, 0, 1);
-    }
+  private void showPage() {
+    root.add(currentPage, 0, 1);
+  }
 }

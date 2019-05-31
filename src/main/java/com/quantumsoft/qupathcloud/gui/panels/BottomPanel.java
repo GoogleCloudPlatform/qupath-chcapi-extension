@@ -20,49 +20,50 @@ import javafx.geometry.Insets;
 import javafx.scene.layout.BorderPane;
 
 public class BottomPanel {
-    private static final double RIGHT_PADDING = 0;
-    private static final double LEFT_PADDING = 0;
-    private static final double TOP_PADDING = 13;
-    private static final double BOTTOM_PADDING = 13;
 
-    public BorderPane getNextPanel(Position position){
+  private static final double RIGHT_PADDING = 0;
+  private static final double LEFT_PADDING = 0;
+  private static final double TOP_PADDING = 13;
+  private static final double BOTTOM_PADDING = 13;
 
-        JFXButton nextButton = new JFXButton("NEXT");
-        nextButton.setId("nextButton");
+  public BorderPane getNextPanel(Position position) {
 
-        JFXButton backButton = new JFXButton("BACK");
-        backButton.setId("backButton");
+    JFXButton nextButton = new JFXButton("NEXT");
+    nextButton.setId("nextButton");
 
-        JFXButton okButton = new JFXButton("OK");
-        okButton.setId("okButton");
+    JFXButton backButton = new JFXButton("BACK");
+    backButton.setId("backButton");
 
-        JFXButton newDatasetButton = new JFXButton("New Dataset");
-        newDatasetButton.setId("newDatasetButton");
-        newDatasetButton.getStyleClass().add("newDatasetButton");
+    JFXButton okButton = new JFXButton("OK");
+    okButton.setId("okButton");
 
-        JFXButton newDicomStoreButton = new JFXButton("New DICOM Store");
-        newDicomStoreButton.setId("newDicomStoreButton");
-        newDicomStoreButton.getStyleClass().add("newDicomStoreButton");
+    JFXButton newDatasetButton = new JFXButton("New Dataset");
+    newDatasetButton.setId("newDatasetButton");
+    newDatasetButton.getStyleClass().add("newDatasetButton");
 
-        BorderPane borderPane = new BorderPane();
+    JFXButton newDicomStoreButton = new JFXButton("New DICOM Store");
+    newDicomStoreButton.setId("newDicomStoreButton");
+    newDicomStoreButton.getStyleClass().add("newDicomStoreButton");
 
-        switch(position){
-            case PROJECTS:
-                borderPane.setRight(nextButton);
-                break;
-            case DATASETS:
-                borderPane.setLeft(backButton);
-                borderPane.setCenter(newDatasetButton);
-                borderPane.setRight(nextButton);
-                break;
-            case DICOM_STORES:
-                borderPane.setLeft(backButton);
-                borderPane.setCenter(newDicomStoreButton);
-                borderPane.setRight(okButton);
-        }
+    BorderPane borderPane = new BorderPane();
 
-        borderPane.setPadding(new Insets(TOP_PADDING,RIGHT_PADDING,BOTTOM_PADDING,LEFT_PADDING));
-
-        return borderPane;
+    switch (position) {
+      case PROJECTS:
+        borderPane.setRight(nextButton);
+        break;
+      case DATASETS:
+        borderPane.setLeft(backButton);
+        borderPane.setCenter(newDatasetButton);
+        borderPane.setRight(nextButton);
+        break;
+      case DICOM_STORES:
+        borderPane.setLeft(backButton);
+        borderPane.setCenter(newDicomStoreButton);
+        borderPane.setRight(okButton);
     }
+
+    borderPane.setPadding(new Insets(TOP_PADDING, RIGHT_PADDING, BOTTOM_PADDING, LEFT_PADDING));
+
+    return borderPane;
+  }
 }

@@ -18,28 +18,29 @@ package com.quantumsoft.qupathcloud.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Location {
-    private String name;
-    private String locationId;
 
-    @JsonIgnore
-    public String getProjectId() {
-        String arr[] = name.split("/");
-        return arr[arr.length - 3];
-    }
+  private String name;
+  private String locationId;
 
-    public String getLocationId() {
-        return locationId;
-    }
+  @JsonIgnore
+  public String getProjectId() {
+    String arr[] = name.split("/");
+    return arr[arr.length - 3];
+  }
 
-    public void setLocationId(String locationId) {
-        this.locationId = locationId;
-    }
+  public String getLocationId() {
+    return locationId;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public void setLocationId(String locationId) {
+    this.locationId = locationId;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
 }

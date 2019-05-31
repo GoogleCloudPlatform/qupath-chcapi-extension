@@ -19,61 +19,62 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Objects;
 
 public class Dataset {
-    private String name;
-    private String timeZone;
 
-    @JsonIgnore
-    public String getProjectId(){
-        String arr[] = name.split("/");
-        return arr[arr.length - 5];
-    }
+  private String name;
+  private String timeZone;
 
-    @JsonIgnore
-    public String getLocationId(){
-        String arr[] = name.split("/");
-        return arr[arr.length - 3];
-    }
+  @JsonIgnore
+  public String getProjectId() {
+    String arr[] = name.split("/");
+    return arr[arr.length - 5];
+  }
 
-    @JsonIgnore
-    public String getDatasetId() {
-        String arr[] = name.split("/");
-        return arr[arr.length - 1];
-    }
+  @JsonIgnore
+  public String getLocationId() {
+    String arr[] = name.split("/");
+    return arr[arr.length - 3];
+  }
 
-    public String getName(){
-        return name;
-    }
+  @JsonIgnore
+  public String getDatasetId() {
+    String arr[] = name.split("/");
+    return arr[arr.length - 1];
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String projectId, String locationId, String datasetId) {
-        name = "projects/" + projectId + "/locations/" + locationId + "/datasets/" + datasetId;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getTimeZone() {
-        return timeZone;
-    }
+  public void setName(String projectId, String locationId, String datasetId) {
+    name = "projects/" + projectId + "/locations/" + locationId + "/datasets/" + datasetId;
+  }
 
-    public void setTimeZone(String timeZone) {
-        this.timeZone = timeZone;
-    }
+  public String getTimeZone() {
+    return timeZone;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Dataset dataset = (Dataset) o;
-        return name.equals(dataset.name);
-    }
+  public void setTimeZone(String timeZone) {
+    this.timeZone = timeZone;
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Dataset dataset = (Dataset) o;
+    return name.equals(dataset.name);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name);
+  }
 }

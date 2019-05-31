@@ -19,14 +19,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Datasets {
-    private List<Dataset> datasets = new ArrayList<>();
-    private String nextPageToken;
 
-    public List<Dataset> getDatasets() {
-        return datasets;
-    }
+  private List<Dataset> datasets = new ArrayList<>();
+  private String nextPageToken;
 
-    public String getNextPageToken() {
-        return nextPageToken;
-    }
+  public List<Dataset> getDatasets() {
+    return datasets;
+  }
+
+  public String getNextPageToken() {
+    return nextPageToken;
+  }
 }

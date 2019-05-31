@@ -19,14 +19,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Locations {
-    private List<Location> locations = new ArrayList<>();
-    private String nextPageToken;
 
-    public List<Location> getLocations() {
-        return locations;
-    }
+  private List<Location> locations = new ArrayList<>();
+  private String nextPageToken;
 
-    public String getNextPageToken() {
-        return nextPageToken;
-    }
+  public List<Location> getLocations() {
+    return locations;
+  }
+
+  public String getNextPageToken() {
+    return nextPageToken;
+  }
 }
