@@ -34,6 +34,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.List;
@@ -43,21 +45,28 @@ import org.apache.logging.log4j.Logger;
 public class OAuth20 {
 
   private static final Logger LOGGER = LogManager.getLogger();
-  private static final File DATA_STORE_DIR =
-      new File(System.getProperty("user.home") + "/QuPath/.store/oauth20");
   private static final String CLIENT_SECRETS_FILE_NAME = "client_secrets.json";
+  private static final Path STORE_DIRECTORY = Paths.get(".store/oauth20-0.2.0-m2");
   private static final List<String> SCOPES = Arrays.asList(
       "https://www.googleapis.com/auth/cloud-healthcare",
       "https://www.googleapis.com/auth/cloudplatformprojects.readonly");
   private static final String USER_ID = "user";
   private static final int TIME_WHEN_REFRESH_TOKEN_IN_SECONDS = 60;
   private final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+  private final File DATA_STORE_DIR;
   private AuthorizationCodeInstalledApp authenticator;
   private Credential credential;
+
+  public OAuth20(Path baseQupathDirectory) {
+    DATA_STORE_DIR = baseQupathDirectory.resolve(STORE_DIRECTORY).toFile();
+  }
 
   private AuthorizationCodeInstalledApp getAuthenticator()
       throws QuPathCloudException, IOException, GeneralSecurityException {
     InputStream is = getClass().getClassLoader().getResourceAsStream(CLIENT_SECRETS_FILE_NAME);
+    if (is == null) {
+      throw new QuPathCloudException("Failed to load " + CLIENT_SECRETS_FILE_NAME);
+    }
     GoogleClientSecrets clientSecrets = GoogleClientSecrets
         .load(JSON_FACTORY, new InputStreamReader(is, StandardCharsets.UTF_8));
     Details details = clientSecrets.getDetails();

@@ -27,6 +27,7 @@ import com.quantumsoft.qupathcloud.synchronization.SynchronizationProjectWithDic
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -37,6 +38,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import qupath.lib.gui.QuPathGUI;
 import qupath.lib.gui.helpers.DisplayHelpers;
+import qupath.lib.gui.prefs.PathPrefs;
 import qupath.lib.images.ImageData;
 import qupath.lib.objects.hierarchy.events.PathObjectHierarchyEvent;
 import qupath.lib.objects.hierarchy.events.PathObjectHierarchyListener;
@@ -92,7 +94,9 @@ public enum Repository {
     });
 
     cloudDao = new SimpleObjectProperty<>();
-    cloudDao.set(new CloudDAOImpl(new OAuth20()));
+    Path baseQupathDirectory = Paths.get(PathPrefs.getUserPath());
+    OAuth20 oAuth20 = new OAuth20(baseQupathDirectory);
+    cloudDao.set(new CloudDAOImpl(oAuth20));
 
     hierarchyListener = new QuPathHierarchyListener();
     qupath.addImageDataChangeListener((source, imageDataOld, imageDataNew) -> {
