@@ -17,6 +17,7 @@ package com.quantumsoft.qupathcloud.dao.spec;
 
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 
-public interface PathBuilder{
-    String toPath() throws QuPathCloudException;
+public interface PathBuilder {
+
+  String toPath() throws QuPathCloudException;
 }

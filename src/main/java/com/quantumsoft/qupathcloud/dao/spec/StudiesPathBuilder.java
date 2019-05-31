@@ -15,29 +15,37 @@
 
 package com.quantumsoft.qupathcloud.dao.spec;
 
+import static com.quantumsoft.qupathcloud.dao.Constants.DATASETS;
+import static com.quantumsoft.qupathcloud.dao.Constants.DICOM_STORES;
+import static com.quantumsoft.qupathcloud.dao.Constants.DICOM_WEB;
+import static com.quantumsoft.qupathcloud.dao.Constants.LOCATIONS;
+import static com.quantumsoft.qupathcloud.dao.Constants.PROJECTS;
+import static com.quantumsoft.qupathcloud.dao.Constants.STAGE;
+import static com.quantumsoft.qupathcloud.dao.Constants.STUDIES;
+
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 
-import static com.quantumsoft.qupathcloud.dao.Constants.*;
+public class StudiesPathBuilder implements PathBuilder {
 
-public class StudiesPathBuilder implements PathBuilder{
-    private QueryBuilder queryBuilder;
+  private QueryBuilder queryBuilder;
 
-    public StudiesPathBuilder(QueryBuilder queryBuilder){
-        this.queryBuilder = queryBuilder;
+  public StudiesPathBuilder(QueryBuilder queryBuilder) {
+    this.queryBuilder = queryBuilder;
+  }
+
+  @Override
+  public String toPath() throws QuPathCloudException {
+    if (queryBuilder.getLocationId() == null) {
+      throw new QuPathCloudException("Location must not be null!");
     }
-
-    @Override
-    public String toPath() throws QuPathCloudException {
-        if(queryBuilder.getLocationId() == null){
-            throw new QuPathCloudException("Location must not be null!");
-        }
-        if(queryBuilder.getDatasetId() == null){
-            throw new QuPathCloudException("Dataset must not be null!");
-        }
-        if(queryBuilder.getDicomStoreId() == null){
-            throw new QuPathCloudException("DicomStore must not be null!");
-        }
-        return STAGE + PROJECTS + queryBuilder.getProjectId() + LOCATIONS + queryBuilder.getLocationId() + DATASETS +
-                queryBuilder.getDatasetId() + DICOM_STORES + queryBuilder.getDicomStoreId() + DICOM_WEB + STUDIES;
+    if (queryBuilder.getDatasetId() == null) {
+      throw new QuPathCloudException("Dataset must not be null!");
     }
+    if (queryBuilder.getDicomStoreId() == null) {
+      throw new QuPathCloudException("DicomStore must not be null!");
+    }
+    return STAGE + PROJECTS + queryBuilder.getProjectId() + LOCATIONS + queryBuilder.getLocationId()
+        + DATASETS + queryBuilder.getDatasetId() + DICOM_STORES + queryBuilder.getDicomStoreId() +
+        DICOM_WEB + STUDIES;
+  }
 }

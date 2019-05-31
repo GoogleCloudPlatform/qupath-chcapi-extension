@@ -15,21 +15,27 @@
 
 package com.quantumsoft.qupathcloud.dao.spec;
 
+import static com.quantumsoft.qupathcloud.dao.Constants.DATASETS;
+import static com.quantumsoft.qupathcloud.dao.Constants.LOCATIONS;
+import static com.quantumsoft.qupathcloud.dao.Constants.PROJECTS;
+import static com.quantumsoft.qupathcloud.dao.Constants.STAGE;
+
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 
-import static com.quantumsoft.qupathcloud.dao.Constants.*;
+public class DatasetsPathBuilder implements PathBuilder {
 
-public class DatasetsPathBuilder implements PathBuilder{
-    private QueryBuilder queryBuilder;
+  private QueryBuilder queryBuilder;
 
-    public DatasetsPathBuilder(QueryBuilder queryBuilder){
-        this.queryBuilder = queryBuilder;
+  public DatasetsPathBuilder(QueryBuilder queryBuilder) {
+    this.queryBuilder = queryBuilder;
+  }
+
+  @Override
+  public String toPath() throws QuPathCloudException {
+    if (queryBuilder.getLocationId() == null) {
+      throw new QuPathCloudException("Location must not be null!");
     }
-    @Override
-    public String toPath() throws QuPathCloudException {
-        if (queryBuilder.getLocationId() == null) {
-            throw new QuPathCloudException("Location must not be null!");
-        }
-        return STAGE + PROJECTS + queryBuilder.getProjectId() + LOCATIONS + queryBuilder.getLocationId() + DATASETS;
-    }
+    return STAGE + PROJECTS + queryBuilder.getProjectId() + LOCATIONS + queryBuilder.getLocationId()
+        + DATASETS;
+  }
 }

@@ -16,6 +16,7 @@
 package com.quantumsoft.qupathcloud.dao;
 
 import static com.quantumsoft.qupathcloud.dao.Constants.BEARER;
+import static com.quantumsoft.qupathcloud.dao.Constants.MULTIPART_RELATED_TYPE_APPLICATION_DICOM_BOUNDARY;
 import static com.quantumsoft.qupathcloud.exception.Errors.FAILED_HTTP;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 import static org.apache.http.entity.mime.MIME.CONTENT_TYPE;
@@ -71,8 +72,7 @@ public class UploadDicomCallable implements Callable<Void> {
           .build();
       request.setEntity(httpEntity);
 
-      request.addHeader(CONTENT_TYPE,
-          "multipart/related; type=application/dicom; boundary=" + boundary);
+      request.addHeader(CONTENT_TYPE, MULTIPART_RELATED_TYPE_APPLICATION_DICOM_BOUNDARY + boundary);
       Credential credential = oAuth20.getCredential();
       request.addHeader(AUTHORIZATION, BEARER + credential.getAccessToken());
       LOGGER.debug("Start uploading DICOM file");

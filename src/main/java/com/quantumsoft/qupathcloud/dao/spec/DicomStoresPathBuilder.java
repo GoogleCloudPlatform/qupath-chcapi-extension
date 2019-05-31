@@ -15,26 +15,31 @@
 
 package com.quantumsoft.qupathcloud.dao.spec;
 
+import static com.quantumsoft.qupathcloud.dao.Constants.DATASETS;
+import static com.quantumsoft.qupathcloud.dao.Constants.DICOM_STORES;
+import static com.quantumsoft.qupathcloud.dao.Constants.LOCATIONS;
+import static com.quantumsoft.qupathcloud.dao.Constants.PROJECTS;
+import static com.quantumsoft.qupathcloud.dao.Constants.STAGE;
+
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 
-import static com.quantumsoft.qupathcloud.dao.Constants.*;
+public class DicomStoresPathBuilder implements PathBuilder {
 
-public class DicomStoresPathBuilder implements PathBuilder{
-    private QueryBuilder queryBuilder;
+  private QueryBuilder queryBuilder;
 
-    public DicomStoresPathBuilder(QueryBuilder queryBuilder){
-        this.queryBuilder = queryBuilder;
+  public DicomStoresPathBuilder(QueryBuilder queryBuilder) {
+    this.queryBuilder = queryBuilder;
+  }
+
+  @Override
+  public String toPath() throws QuPathCloudException {
+    if (queryBuilder.getLocationId() == null) {
+      throw new QuPathCloudException("Location must not be null!");
     }
-
-    @Override
-    public String toPath() throws QuPathCloudException {
-        if(queryBuilder.getLocationId() == null){
-            throw new QuPathCloudException("Location must not be null!");
-        }
-        if(queryBuilder.getDatasetId() == null){
-            throw new QuPathCloudException("Dataset must not be null!");
-        }
-        return STAGE + PROJECTS + queryBuilder.getProjectId() + LOCATIONS + queryBuilder.getLocationId() + DATASETS +
-                queryBuilder.getDatasetId() + DICOM_STORES;
+    if (queryBuilder.getDatasetId() == null) {
+      throw new QuPathCloudException("Dataset must not be null!");
     }
+    return STAGE + PROJECTS + queryBuilder.getProjectId() + LOCATIONS + queryBuilder.getLocationId()
+        + DATASETS + queryBuilder.getDatasetId() + DICOM_STORES;
+  }
 }

@@ -15,10 +15,12 @@
 
 package com.quantumsoft.qupathcloud.dao;
 
+import static com.quantumsoft.qupathcloud.dao.Constants.APPLICATION_JSON_CHARSET_UTF8;
 import static com.quantumsoft.qupathcloud.dao.Constants.BEARER;
 import static com.quantumsoft.qupathcloud.dao.Constants.CLOUD_RESOURCE_MANAGER_HOST;
 import static com.quantumsoft.qupathcloud.dao.Constants.HEALTHCARE_HOST;
 import static com.quantumsoft.qupathcloud.dao.Constants.INSTANCES;
+import static com.quantumsoft.qupathcloud.dao.Constants.MULTIPART_RELATED_TYPE_IMAGE_JPEG_TRANSFER_SYNTAX;
 import static com.quantumsoft.qupathcloud.dao.Constants.PARAM_DATASET_ID;
 import static com.quantumsoft.qupathcloud.dao.Constants.PARAM_DICOM_STORE_ID;
 import static com.quantumsoft.qupathcloud.dao.Constants.PARAM_INCLUDE_FIELD;
@@ -95,14 +97,14 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class CloudDAOImpl extends CloudDAO {
 
-  private static final Logger LOGGER = LogManager.getLogger();
   private static final String DCM_EXTENSION = "dcm";
   private static final int THREADS_COUNT = 4;
+  private static final int R = 0x0d; // "\r"
+  private static final int N = 0x0a; // "\n"
+  private static final int H = 0x2d; // "-"
 
   public CloudDAOImpl(OAuth20 oAuth20) {
     super(oAuth20);
@@ -343,7 +345,7 @@ public class CloudDAOImpl extends CloudDAO {
     try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
       URI uri = uriBuilder.build();
       HttpGet request = new HttpGet(uri);
-      request.addHeader(CONTENT_TYPE, "application/json; charset=utf-8");
+      request.addHeader(CONTENT_TYPE, APPLICATION_JSON_CHARSET_UTF8);
       Credential credential = getoAuth20().getCredential();
       request.addHeader(AUTHORIZATION, BEARER + credential.getAccessToken());
       try (CloseableHttpResponse response = httpclient.execute(request)) {
@@ -363,7 +365,7 @@ public class CloudDAOImpl extends CloudDAO {
     try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
       URI uri = uriBuilder.build();
       HttpPost request = new HttpPost(uri);
-      request.addHeader(CONTENT_TYPE, "application/json; charset=utf-8");
+      request.addHeader(CONTENT_TYPE, APPLICATION_JSON_CHARSET_UTF8);
       Credential credential = getoAuth20().getCredential();
       request.addHeader(AUTHORIZATION, BEARER + credential.getAccessToken());
       try (CloseableHttpResponse response = httpclient.execute(request)) {
@@ -378,26 +380,16 @@ public class CloudDAOImpl extends CloudDAO {
     try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
       URI uri = uriBuilder.build();
       HttpGet request = new HttpGet(uri);
-      request.addHeader(CONTENT_TYPE, "application/json; charset=utf-8");
-      request.addHeader(ACCEPT,
-          "multipart/related; type=image/jpeg; transfer-syntax=1.2.840.10008.1.2.4.50");
+      request.addHeader(CONTENT_TYPE, APPLICATION_JSON_CHARSET_UTF8);
+      request.addHeader(ACCEPT, MULTIPART_RELATED_TYPE_IMAGE_JPEG_TRANSFER_SYNTAX);
       Credential credential = getoAuth20().getCredential();
       request.addHeader(AUTHORIZATION, BEARER + credential.getAccessToken());
-      long requestStart = System.currentTimeMillis();
       try (CloseableHttpResponse response = httpclient.execute(request)) {
-        long responseEnd = System.currentTimeMillis();
-        long requestDelay = responseEnd - requestStart;
-        LOGGER.trace("HTTP request delay is " + requestDelay + " milliseconds");
-
         checkStatusCode(response);
         HttpEntity entity = response.getEntity();
 
         try (InputStream inputStream = entity.getContent()) {
-          long startCutting = System.currentTimeMillis();
           InputStream imageInputStream = cutHeadersAndTopBoundary(inputStream);
-          long endCutting = System.currentTimeMillis();
-          long cuttingDelay = endCutting - startCutting;
-          LOGGER.trace("Cutting frame delay is " + cuttingDelay + " milliseconds");
           return ImageIO.read(imageInputStream);
         }
       }
@@ -436,16 +428,14 @@ public class CloudDAOImpl extends CloudDAO {
    */
   private InputStream cutHeadersAndTopBoundary(InputStream inputStream) throws IOException {
     int b;
-    int r = 0x0d; //"\r"
-    int n = 0x0a; //"\n"
     while ((b = inputStream.read()) != -1) {
-      if (b == r) {
+      if (b == R) {
         b = inputStream.read();
-        if (b == n) {
+        if (b == N) {
           b = inputStream.read();
-          if (b == r) {
+          if (b == R) {
             b = inputStream.read();
-            if (b == n) {
+            if (b == N) {
               break;
             }
           }
@@ -468,14 +458,14 @@ public class CloudDAOImpl extends CloudDAO {
     int bodyLength = body.length;
     int startImageBody = 0;
     for (int i = 0; i < bodyLength - 1; i++) {
-      if (body[i] == 0x0d && body[i + 1] == 0x0a && body[i + 2] == 0x0d && body[i + 3] == 0x0a) {
+      if (body[i] == R && body[i + 1] == N && body[i + 2] == R && body[i + 3] == N) {
         startImageBody = i + 4; //inclusive
         break;
       }
     }
     int endImageBody = 0;
     for (int i = bodyLength - 1; i > 0; i--) {
-      if (body[i] == 0x2d && body[i - 1] == 0x2d && body[i - 2] == 0x0a && body[i - 3] == 0x0d) {
+      if (body[i] == H && body[i - 1] == H && body[i - 2] == N && body[i - 3] == R) {
         endImageBody = i - 3; //not inclusive
         break;
       }

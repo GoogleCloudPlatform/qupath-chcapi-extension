@@ -16,7 +16,9 @@
 package com.quantumsoft.qupathcloud.dao;
 
 import static com.quantumsoft.qupathcloud.dao.CloudDAOImpl.cutHeadersAndBoundary;
+import static com.quantumsoft.qupathcloud.dao.Constants.APPLICATION_DICOM_JSON_CHARSET_UTF8;
 import static com.quantumsoft.qupathcloud.dao.Constants.BEARER;
+import static com.quantumsoft.qupathcloud.dao.Constants.MULTIPART_RELATED_TYPE_APPLICATION_DICOM_TRANSFER_SYNTAX;
 import static com.quantumsoft.qupathcloud.exception.Errors.FAILED_HTTP;
 import static org.apache.http.HttpHeaders.ACCEPT;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
@@ -60,8 +62,8 @@ public class DownloadDicomCallable implements Callable<Void> {
     try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
       URI uri = uriBuilder.build();
       HttpGet request = new HttpGet(uri);
-      request.addHeader(ACCEPT, "multipart/related; type=application/dicom; transfer-syntax=*");
-      request.addHeader(CONTENT_TYPE, "application/dicom+json; charset=utf-8");
+      request.addHeader(ACCEPT, MULTIPART_RELATED_TYPE_APPLICATION_DICOM_TRANSFER_SYNTAX);
+      request.addHeader(CONTENT_TYPE, APPLICATION_DICOM_JSON_CHARSET_UTF8);
       Credential credential = oAuth20.getCredential();
       request.addHeader(AUTHORIZATION, BEARER + credential.getAccessToken());
       LOGGER.debug("Start downloading DICOM file");

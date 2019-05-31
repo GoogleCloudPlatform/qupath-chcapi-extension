@@ -15,43 +15,53 @@
 
 package com.quantumsoft.qupathcloud.dao.spec;
 
+import static com.quantumsoft.qupathcloud.dao.Constants.DATASETS;
+import static com.quantumsoft.qupathcloud.dao.Constants.DICOM_STORES;
+import static com.quantumsoft.qupathcloud.dao.Constants.DICOM_WEB;
+import static com.quantumsoft.qupathcloud.dao.Constants.FRAMES;
+import static com.quantumsoft.qupathcloud.dao.Constants.INSTANCES;
+import static com.quantumsoft.qupathcloud.dao.Constants.LOCATIONS;
+import static com.quantumsoft.qupathcloud.dao.Constants.PROJECTS;
+import static com.quantumsoft.qupathcloud.dao.Constants.SERIES;
+import static com.quantumsoft.qupathcloud.dao.Constants.STAGE;
+import static com.quantumsoft.qupathcloud.dao.Constants.STUDIES;
+
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 
-import static com.quantumsoft.qupathcloud.dao.Constants.*;
+public class FramePathBuilder implements PathBuilder {
 
-public class FramePathBuilder implements PathBuilder{
-    private QueryBuilder queryBuilder;
+  private QueryBuilder queryBuilder;
 
-    public FramePathBuilder(QueryBuilder queryBuilder){
-        this.queryBuilder = queryBuilder;
+  public FramePathBuilder(QueryBuilder queryBuilder) {
+    this.queryBuilder = queryBuilder;
+  }
+
+  @Override
+  public String toPath() throws QuPathCloudException {
+    if (queryBuilder.getLocationId() == null) {
+      throw new QuPathCloudException("Location must not be null!");
     }
-
-    @Override
-    public String toPath() throws QuPathCloudException {
-        if(queryBuilder.getLocationId() == null){
-            throw new QuPathCloudException("Location must not be null!");
-        }
-        if(queryBuilder.getDatasetId() == null){
-            throw new QuPathCloudException("Dataset must not be null!");
-        }
-        if(queryBuilder.getDicomStoreId() == null){
-            throw new QuPathCloudException("DicomStore must not be null!");
-        }
-        if(queryBuilder.getStudyId() == null){
-            throw new QuPathCloudException("Study must not be null!");
-        }
-        if(queryBuilder.getSeriesId() == null){
-            throw new QuPathCloudException("Series must not be null!");
-        }
-        if(queryBuilder.getInstanceId() == null){
-            throw new QuPathCloudException("Instance must not be null!");
-        }
-        if(queryBuilder.getFrameNumber() <= 0){
-            throw new QuPathCloudException("Frame must be > 0!");
-        }
-        return STAGE + PROJECTS + queryBuilder.getProjectId() + LOCATIONS + queryBuilder.getLocationId() + DATASETS +
-                queryBuilder.getDatasetId() + DICOM_STORES + queryBuilder.getDicomStoreId() + DICOM_WEB +
-                STUDIES + queryBuilder.getStudyId() + SERIES + queryBuilder.getSeriesId() + INSTANCES +
-                queryBuilder.getInstanceId() + FRAMES + queryBuilder.getFrameNumber();
+    if (queryBuilder.getDatasetId() == null) {
+      throw new QuPathCloudException("Dataset must not be null!");
     }
+    if (queryBuilder.getDicomStoreId() == null) {
+      throw new QuPathCloudException("DicomStore must not be null!");
+    }
+    if (queryBuilder.getStudyId() == null) {
+      throw new QuPathCloudException("Study must not be null!");
+    }
+    if (queryBuilder.getSeriesId() == null) {
+      throw new QuPathCloudException("Series must not be null!");
+    }
+    if (queryBuilder.getInstanceId() == null) {
+      throw new QuPathCloudException("Instance must not be null!");
+    }
+    if (queryBuilder.getFrameNumber() <= 0) {
+      throw new QuPathCloudException("Frame must be > 0!");
+    }
+    return STAGE + PROJECTS + queryBuilder.getProjectId() + LOCATIONS + queryBuilder.getLocationId()
+        + DATASETS + queryBuilder.getDatasetId() + DICOM_STORES + queryBuilder.getDicomStoreId() +
+        DICOM_WEB + STUDIES + queryBuilder.getStudyId() + SERIES + queryBuilder.getSeriesId() +
+        INSTANCES + queryBuilder.getInstanceId() + FRAMES + queryBuilder.getFrameNumber();
+  }
 }
