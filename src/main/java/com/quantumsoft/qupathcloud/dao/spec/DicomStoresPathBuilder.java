@@ -23,10 +23,18 @@ import static com.quantumsoft.qupathcloud.dao.Constants.STAGE;
 
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 
+/**
+ * Path builder for DICOM Stores.
+ */
 public class DicomStoresPathBuilder implements PathBuilder {
 
   private QueryBuilder queryBuilder;
 
+  /**
+   * Instantiates a new Dicom stores path builder.
+   *
+   * @param queryBuilder the query builder
+   */
   public DicomStoresPathBuilder(QueryBuilder queryBuilder) {
     this.queryBuilder = queryBuilder;
   }

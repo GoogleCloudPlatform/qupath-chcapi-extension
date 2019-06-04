@@ -37,12 +37,21 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Delete instance callable.
+ */
 public class DeleteInstanceCallable implements Callable<Void> {
 
   private static final Logger LOGGER = LogManager.getLogger();
   private OAuth20 oAuth20;
   private URIBuilder uriBuilder;
 
+  /**
+   * Instantiates a new Delete instance callable.
+   *
+   * @param oAuth20 the o auth 20
+   * @param uriBuilder the uri builder
+   */
   DeleteInstanceCallable(OAuth20 oAuth20, URIBuilder uriBuilder) {
     this.oAuth20 = oAuth20;
     this.uriBuilder = uriBuilder;

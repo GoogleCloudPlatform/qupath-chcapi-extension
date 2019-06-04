@@ -18,8 +18,8 @@ package com.quantumsoft.qupathcloud.repository;
 import static com.quantumsoft.qupathcloud.converter.ImageDataUtilities.LAST_CHANGE;
 
 import com.quantumsoft.qupathcloud.configuration.DicomStoreConfiguration;
-import com.quantumsoft.qupathcloud.dao.CloudDAO;
-import com.quantumsoft.qupathcloud.dao.CloudDAOImpl;
+import com.quantumsoft.qupathcloud.dao.CloudDao;
+import com.quantumsoft.qupathcloud.dao.CloudDaoImpl;
 import com.quantumsoft.qupathcloud.entities.DicomStore;
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 import com.quantumsoft.qupathcloud.oauth20.OAuth20;
@@ -48,7 +48,7 @@ public enum Repository {
 
   private final Logger LOGGER = LogManager.getLogger();
   private final ObjectProperty<DicomStore> dicomStore;
-  private final ObjectProperty<CloudDAO> cloudDao;
+  private final ObjectProperty<CloudDao> cloudDao;
   private final BooleanProperty isLoggedInProperty = new SimpleBooleanProperty();
 
   private final QuPathHierarchyListener hierarchyListener;
@@ -96,7 +96,7 @@ public enum Repository {
     cloudDao = new SimpleObjectProperty<>();
     Path baseQupathDirectory = Paths.get(PathPrefs.getUserPath());
     OAuth20 oAuth20 = new OAuth20(baseQupathDirectory);
-    cloudDao.set(new CloudDAOImpl(oAuth20));
+    cloudDao.set(new CloudDaoImpl(oAuth20));
 
     hierarchyListener = new QuPathHierarchyListener();
     qupath.addImageDataChangeListener((source, imageDataOld, imageDataNew) -> {
@@ -117,7 +117,7 @@ public enum Repository {
     dicomStore.set(value);
   }
 
-  public CloudDAO getCloudDao() {
+  public CloudDao getCloudDao() {
     return cloudDao.get();
   }
 

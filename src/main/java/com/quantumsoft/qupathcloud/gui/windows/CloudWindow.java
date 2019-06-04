@@ -23,7 +23,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import com.quantumsoft.qupathcloud.configuration.DicomStoreConfiguration;
-import com.quantumsoft.qupathcloud.dao.CloudDAO;
+import com.quantumsoft.qupathcloud.dao.CloudDao;
 import com.quantumsoft.qupathcloud.dao.spec.QueryBuilder;
 import com.quantumsoft.qupathcloud.entities.Dataset;
 import com.quantumsoft.qupathcloud.entities.DicomStore;
@@ -71,7 +71,7 @@ public class CloudWindow {
   private static final double PAGE_HEIGHT_IN_PERCENT = 85;
   private static final String STAGE_TITLE = "QuPath cloud";
 
-  private final CloudDAO cloudDAO;
+  private final CloudDao cloudDao;
   private Label headerLabel;
   private GridPane root;
   private Pane currentPage;
@@ -86,7 +86,7 @@ public class CloudWindow {
     Path projectDirectory = qupath.getProject().getPath().getParent();
     dicomStoreConfiguration = new DicomStoreConfiguration(projectDirectory);
     primaryStage = new Stage();
-    cloudDAO = Repository.INSTANCE.getCloudDao();
+    cloudDao = Repository.INSTANCE.getCloudDao();
     headerLabel = new Label();
     root = new GridPane();
   }
@@ -150,7 +150,7 @@ public class CloudWindow {
         QueryBuilder queryBuilder = QueryBuilder.forProject(projectId)
             .setLocationId(locationId)
             .setDatasetId(datasetId);
-        List<DicomStore> dicomStores = cloudDAO.getDicomStoresList(queryBuilder);
+        List<DicomStore> dicomStores = cloudDao.getDicomStoresList(queryBuilder);
         currentTable = new DicomStoresTable().getDicomstoresTable(dicomStores);
         currentTable.getSelectionModel().select(dicomStore);
 
@@ -168,7 +168,7 @@ public class CloudWindow {
     headerLabel.setText("Authorization");
     Runnable loader1 = () -> {
       try {
-        List<Project> projects = cloudDAO.getProjectsList();
+        List<Project> projects = cloudDao.getProjectsList();
         if (projects.isEmpty()) {
           throw new QuPathCloudException("Empty list of projects!");
         }
@@ -216,9 +216,9 @@ public class CloudWindow {
       Runnable loader = () -> {
         try {
           QueryBuilder queryBuilder = QueryBuilder.forProject(projectId);
-          List<Location> locations = cloudDAO.getLocationsList(queryBuilder);
+          List<Location> locations = cloudDao.getLocationsList(queryBuilder);
           queryBuilder.setLocations(locations);
-          List<Dataset> datasets = cloudDAO.getDatasetsListInAllLocations(queryBuilder);
+          List<Dataset> datasets = cloudDao.getDatasetsListInAllLocations(queryBuilder);
           currentTable = new DatasetsTable().getDatasetsTable(datasets);
 
           Platform.runLater(() -> showDatasetsPage(locations));
@@ -257,7 +257,7 @@ public class CloudWindow {
 
       Runnable loader = () -> {
         try {
-          List<Project> projects = cloudDAO.getProjectsList();
+          List<Project> projects = cloudDao.getProjectsList();
 
           Platform.runLater(() -> {
             currentTable = new ProjectsTable().getProjectsTable(projects);
@@ -292,7 +292,7 @@ public class CloudWindow {
           QueryBuilder queryBuilder = QueryBuilder.forProject(projectId)
               .setLocationId(locationId)
               .setDatasetId(datasetId);
-          List<DicomStore> dicomStores = cloudDAO.getDicomStoresList(queryBuilder);
+          List<DicomStore> dicomStores = cloudDao.getDicomStoresList(queryBuilder);
           currentTable = new DicomStoresTable().getDicomstoresTable(dicomStores);
 
           Platform.runLater(this::showDicomStoresPage);
@@ -321,9 +321,9 @@ public class CloudWindow {
         try {
           String projectId = choseDataset.getProjectId();
           QueryBuilder queryBuilder = QueryBuilder.forProject(projectId);
-          List<Location> locations = cloudDAO.getLocationsList(queryBuilder);
+          List<Location> locations = cloudDao.getLocationsList(queryBuilder);
           queryBuilder.setLocations(locations);
-          List<Dataset> datasets = cloudDAO.getDatasetsListInAllLocations(queryBuilder);
+          List<Dataset> datasets = cloudDao.getDatasetsListInAllLocations(queryBuilder);
           currentTable = new DatasetsTable().getDatasetsTable(datasets);
 
           Platform.runLater(() -> showDatasetsPage(locations));
@@ -381,8 +381,8 @@ public class CloudWindow {
                 .setLocationId(locationId)
                 .setDatasetId(datasetId)
                 .setDicomStoreId(newDicomStoreId);
-            cloudDAO.createDicomStore(queryBuilder);
-            List<DicomStore> dicomStores = cloudDAO.getDicomStoresList(queryBuilder);
+            cloudDao.createDicomStore(queryBuilder);
+            List<DicomStore> dicomStores = cloudDao.getDicomStoresList(queryBuilder);
             currentTable = new DicomStoresTable().getDicomstoresTable(dicomStores);
 
             Platform.runLater(() -> {
@@ -430,8 +430,8 @@ public class CloudWindow {
                 .setLocationId(selectedLocationId)
                 .setDatasetId(newDatasetId)
                 .setLocations(locations);
-            cloudDAO.createDataset(queryBuilder);
-            List<Dataset> datasets = cloudDAO.getDatasetsListInAllLocations(queryBuilder);
+            cloudDao.createDataset(queryBuilder);
+            List<Dataset> datasets = cloudDao.getDatasetsListInAllLocations(queryBuilder);
             currentTable = new DatasetsTable().getDatasetsTable(datasets);
 
             Platform.runLater(() -> {

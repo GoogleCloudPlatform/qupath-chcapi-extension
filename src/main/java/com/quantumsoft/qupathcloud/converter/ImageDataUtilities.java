@@ -25,11 +25,21 @@ import qupath.lib.images.ImageData;
 import qupath.lib.images.servers.ImageServer;
 import qupath.lib.io.PathIO;
 
+/**
+ * Image data utilities.
+ */
 public class ImageDataUtilities {
 
   public static final String LAST_CHANGE = "lastChange";
 
-  // TODO this exploits bug in PathIO to avoid creating ImageServer with non-local filepath (which "naturally" happens when loading image for viewing normally)
+  /**
+   * Gets modification date of qpdata.
+   *
+   * @param path the path
+   * @return the modification date
+   * @throws QuPathCloudException if IOException occurs
+   */
+// TODO this exploits bug in PathIO to avoid creating ImageServer with non-local filepath (which "naturally" happens when loading image for viewing normally)
   public static Date getModificationDate(Path path) throws QuPathCloudException {
     ImageServer<BufferedImage> imageServer = new StubImageServer();
     ImageData<BufferedImage> imageData = new ImageData<>(imageServer);

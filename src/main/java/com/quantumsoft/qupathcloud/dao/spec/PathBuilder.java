@@ -17,7 +17,16 @@ package com.quantumsoft.qupathcloud.dao.spec;
 
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 
+/**
+ * The interface Path builder.
+ */
 public interface PathBuilder {
 
+  /**
+   * Convert path to String.
+   *
+   * @return the string
+   * @throws QuPathCloudException the qu path cloud exception
+   */
   String toPath() throws QuPathCloudException;
 }

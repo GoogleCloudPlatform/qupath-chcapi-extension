@@ -23,16 +23,30 @@ import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Fragments;
 import org.dcm4che3.io.DicomInputStream;
 
+/**
+ * Dcm to qpdata converter.
+ */
 public class DcmToDataConverter {
 
   private final Path inputFile;
   private final Path outputFile;
 
+  /**
+   * Instantiates a new Dcm to data converter.
+   *
+   * @param inputFile the input file
+   * @param outputFile the output file
+   */
   public DcmToDataConverter(Path inputFile, Path outputFile) {
     this.inputFile = inputFile;
     this.outputFile = outputFile;
   }
 
+  /**
+   * Convert dcm to qpdata.
+   *
+   * @throws QuPathCloudException if IOException occurs
+   */
   public void convertDcmToQuPathData() throws QuPathCloudException {
     try (DicomInputStream dis = new DicomInputStream(inputFile.toFile())) {
       Attributes attrs = dis.readDataset(-1, -1);

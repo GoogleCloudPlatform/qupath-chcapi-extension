@@ -27,21 +27,37 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Class for saving metadata of all images for the current project.
+ */
 public class MetadataConfiguration {
 
+  public static final String METADATA_FILE_EXTENSION = "mtd";
   private static final Logger LOGGER = LogManager.getLogger();
   private static final Path PROJECT_METADATA_INDEX_FILE = Paths.get("project.mtdp");
-  public static final String METADATA_FILE_EXTENSION = "mtd";
   private Path metadataDirectory;
   private Path projectMetadataIndexFile;
   private ObjectMapper mapper;
 
+  /**
+   * Instantiates a new Metadata configuration.
+   *
+   * @param metadataDirectory the metadata directory of the current project
+   */
   public MetadataConfiguration(Path metadataDirectory) {
     this.metadataDirectory = metadataDirectory;
     projectMetadataIndexFile = metadataDirectory.resolve(PROJECT_METADATA_INDEX_FILE);
     mapper = new ObjectMapper();
   }
 
+  /**
+   * Save metadata file of the current image.
+   *
+   * @param series the series
+   * @param instancesInSeries the instances in series
+   * @return path to the saved metadata file
+   * @throws QuPathCloudException if IOException occurs
+   */
   public Path saveMetadataFile(Series series, List<Instance> instancesInSeries)
       throws QuPathCloudException {
     String seriesId = series.getSeriesInstanceUID().getValue1();
@@ -56,6 +72,13 @@ public class MetadataConfiguration {
     }
   }
 
+  /**
+   * Read metadata file of the current image.
+   *
+   * @param metadataFile the metadata file
+   * @return list of instances of the current image
+   * @throws QuPathCloudException if IOException occurs
+   */
   public List<Instance> readMetadataFile(Path metadataFile) throws QuPathCloudException {
     try {
       LOGGER.debug("Start reading metadata file");
@@ -65,6 +88,12 @@ public class MetadataConfiguration {
     }
   }
 
+  /**
+   * Save the project metadata index file which contains information of all images in the project.
+   *
+   * @param seriesListInProject the series list in project
+   * @throws QuPathCloudException if IOException occurs
+   */
   public void saveProjectMetadataIndexFile(List<Series> seriesListInProject)
       throws QuPathCloudException {
     try {
@@ -75,6 +104,12 @@ public class MetadataConfiguration {
     }
   }
 
+  /**
+   * Read project metadata index file list.
+   *
+   * @return the list
+   * @throws QuPathCloudException if IOException occurs
+   */
   public List<Series> readProjectMetadataIndexFile() throws QuPathCloudException {
     try {
       LOGGER.debug("Start reading metadata project file");

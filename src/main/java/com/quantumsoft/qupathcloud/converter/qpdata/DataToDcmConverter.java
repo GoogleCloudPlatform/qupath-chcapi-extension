@@ -32,6 +32,9 @@ import org.dcm4che3.io.DicomOutputStream;
 import org.dcm4che3.util.StreamUtils;
 import org.dcm4che3.util.UIDUtils;
 
+/**
+ * Qpdata to dcm converter.
+ */
 public class DataToDcmConverter {
 
   static final int QPDATA_TAG = 0xff010001;
@@ -41,6 +44,14 @@ public class DataToDcmConverter {
   private Date modificationDate;
   private String imageName;
 
+  /**
+   * Instantiates a new Data to dcm converter.
+   *
+   * @param inputFile the input qpdata file
+   * @param outputDirectory the output directory
+   * @param modificationDate the modification date
+   * @param imageName the image name
+   */
   public DataToDcmConverter(Path inputFile, Path outputDirectory, Date modificationDate,
       String imageName) {
     this.inputFile = inputFile;
@@ -49,6 +60,12 @@ public class DataToDcmConverter {
     this.imageName = imageName;
   }
 
+  /**
+   * Convert qpdata to dcm file.
+   *
+   * @return the to the converted qpdata file
+   * @throws QuPathCloudException if IOException occurs
+   */
   public Path convertQuPathDataToDcm() throws QuPathCloudException {
     try {
       Attributes attributes = new Attributes();

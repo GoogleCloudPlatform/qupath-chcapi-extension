@@ -98,7 +98,10 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
-public class CloudDAOImpl extends CloudDAO {
+/**
+ * Implementation of Cloud dao.
+ */
+public class CloudDaoImpl extends CloudDao {
 
   private static final String DCM_EXTENSION = "dcm";
   private static final int THREADS_COUNT = 4;
@@ -106,7 +109,12 @@ public class CloudDAOImpl extends CloudDAO {
   private static final int N = 0x0a; // "\n"
   private static final int H = 0x2d; // "-"
 
-  public CloudDAOImpl(OAuth20 oAuth20) {
+  /**
+   * Instantiates a new Cloud dao.
+   *
+   * @param oAuth20 the o auth 20
+   */
+  public CloudDaoImpl(OAuth20 oAuth20) {
     super(oAuth20);
   }
 

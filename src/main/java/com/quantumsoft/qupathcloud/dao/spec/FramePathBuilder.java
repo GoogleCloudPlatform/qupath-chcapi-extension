@@ -28,10 +28,18 @@ import static com.quantumsoft.qupathcloud.dao.Constants.STUDIES;
 
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 
+/**
+ * Path builder for Frame.
+ */
 public class FramePathBuilder implements PathBuilder {
 
   private QueryBuilder queryBuilder;
 
+  /**
+   * Instantiates a new Frame path builder.
+   *
+   * @param queryBuilder the query builder
+   */
   public FramePathBuilder(QueryBuilder queryBuilder) {
     this.queryBuilder = queryBuilder;
   }

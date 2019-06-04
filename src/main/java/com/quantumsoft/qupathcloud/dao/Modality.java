@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * The enum Modality.
+ */
 public enum Modality {
   COMPUTED_RADIOGRAPHY("CR"),
   COMPUTED_TOMOGRAPHY("CT"),
@@ -55,10 +58,20 @@ public enum Modality {
     this.modalityValue = modalityValue;
   }
 
+  /**
+   * Gets all values.
+   *
+   * @return the values
+   */
   public static List<String> getValues() {
     return Collections.unmodifiableList(VALUES);
   }
 
+  /**
+   * Gets value.
+   *
+   * @return the value
+   */
   public String getValue() {
     return modalityValue;
   }

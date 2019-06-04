@@ -25,10 +25,18 @@ import static com.quantumsoft.qupathcloud.dao.Constants.STUDIES;
 
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 
+/**
+ * Path builder for Studies.
+ */
 public class StudiesPathBuilder implements PathBuilder {
 
   private QueryBuilder queryBuilder;
 
+  /**
+   * Instantiates a new Studies path builder.
+   *
+   * @param queryBuilder the query builder
+   */
   public StudiesPathBuilder(QueryBuilder queryBuilder) {
     this.queryBuilder = queryBuilder;
   }

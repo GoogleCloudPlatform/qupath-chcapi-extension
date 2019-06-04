@@ -21,8 +21,17 @@ import java.nio.DoubleBuffer;
 import java.nio.charset.StandardCharsets;
 import org.dcm4che3.util.UIDUtils;
 
+/**
+ * Dicomizer for dicomization images.
+ */
 public class Dicomizer {
 
+  /**
+   * Run Dicomizer.
+   *
+   * @param options the options
+   * @throws IOException if IOException occurs
+   */
   public static void run(Options options) throws IOException {
     int exitCode = Wsi2dcmLibrary.INSTANCE.wsi2dcm(
         StandardCharsets.UTF_8.encode(options.getInputPath()),
@@ -47,6 +56,9 @@ public class Dicomizer {
     }
   }
 
+  /**
+   * Dicomizer options.
+   */
   public static class Options {
 
     private String inputPath;
@@ -60,11 +72,23 @@ public class Dicomizer {
     private Compression compression = Compression.JPEG;
     private int compressionQuality = 80;
 
+    /**
+     * Input path options.
+     *
+     * @param value the input path
+     * @return the options
+     */
     public Options inputPath(String value) {
       inputPath = value;
       return this;
     }
 
+    /**
+     * Threads options.
+     *
+     * @param count the count of threads
+     * @return the options
+     */
     public Options threads(int count) {
       threadCount = count;
       return this;
@@ -72,6 +96,9 @@ public class Dicomizer {
 
     /**
      * Generate pyramid with n levels, default 0 means 'use as is'
+     *
+     * @param levels the levels of pyramid
+     * @return the options
      */
     public Options generatePyramid(int levels) {
       pyramidLevels = levels;
@@ -80,6 +107,9 @@ public class Dicomizer {
 
     /**
      * Width of the tiles in the target image
+     *
+     * @param width the tile width
+     * @return the options
      */
     public Options tileWidth(int width) {
       tileWidth = width;
@@ -88,6 +118,9 @@ public class Dicomizer {
 
     /**
      * Height of the tiles in the target image
+     *
+     * @param height the tile height
+     * @return the options
      */
     public Options tileHeight(int height) {
       tileHeight = height;
@@ -96,6 +129,9 @@ public class Dicomizer {
 
     /**
      * Compression of the target image
+     *
+     * @param value the compression value
+     * @return the options
      */
     public Options compression(Compression value) {
       compression = value;
@@ -104,12 +140,21 @@ public class Dicomizer {
 
     /**
      * Quality of the target image (0..100)
+     *
+     * @param value the compression quality value
+     * @return the options
      */
     public Options compressionQuality(int value) {
       compressionQuality = value;
       return this;
     }
 
+    /**
+     * Output folder options.
+     *
+     * @param path the output folder path
+     * @return the options
+     */
     public Options outputFolder(String path) {
       outputFolder = path;
       return this;
@@ -117,6 +162,9 @@ public class Dicomizer {
 
     /**
      * Image name is set as SeriesDescription tag
+     *
+     * @param name the image name
+     * @return the options
      */
     public Options imageName(String name) {
       imageName = name;
@@ -124,42 +172,92 @@ public class Dicomizer {
 
     }
 
+    /**
+     * Gets input path.
+     *
+     * @return the input path
+     */
     public String getInputPath() {
       return inputPath;
     }
 
+    /**
+     * Gets thread count.
+     *
+     * @return the thread count
+     */
     public Integer getThreadCount() {
       return threadCount;
     }
 
+    /**
+     * Gets pyramid levels.
+     *
+     * @return the pyramid levels
+     */
     public Integer getPyramidLevels() {
       return pyramidLevels;
     }
 
+    /**
+     * Gets tile width.
+     *
+     * @return the tile width
+     */
     public Integer getTileWidth() {
       return tileWidth;
     }
 
+    /**
+     * Gets tile height.
+     *
+     * @return the tile height
+     */
     public Integer getTileHeight() {
       return tileHeight;
     }
 
+    /**
+     * Gets compression.
+     *
+     * @return the compression
+     */
     public Compression getCompression() {
       return compression;
     }
 
+    /**
+     * Gets output folder.
+     *
+     * @return the output folder
+     */
     public String getOutputFolder() {
       return outputFolder;
     }
 
+    /**
+     * Gets compression quality.
+     *
+     * @return the compression quality
+     */
     public int getCompressionQuality() {
       return compressionQuality;
     }
 
+    /**
+     * Gets image name.
+     *
+     * @return the image name
+     */
     public String getImageName() {
       return imageName;
     }
 
+    /**
+     * Get downsamples double [ ].
+     *
+     * @return the double [ ]
+     */
     public double[] getDownsamples() {
       double[] result = new double[pyramidLevels];
       for (int i = 0; i < pyramidLevels; i++) {
@@ -168,9 +266,21 @@ public class Dicomizer {
       return result;
     }
 
+    /**
+     * The enum Compression.
+     */
     public enum Compression {
+      /**
+       * None compression.
+       */
       NONE("raw"),
+      /**
+       * Jpeg compression.
+       */
       JPEG("jpeg"),
+      /**
+       * Jpeg 2000 compression.
+       */
       JPEG2000("jpeg2000");
 
       private String value;
@@ -179,6 +289,11 @@ public class Dicomizer {
         this.value = value;
       }
 
+      /**
+       * Gets value.
+       *
+       * @return the compression value
+       */
       public String getValue() {
         return value;
       }

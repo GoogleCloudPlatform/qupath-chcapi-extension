@@ -22,7 +22,7 @@ import com.quantumsoft.qupathcloud.converter.ImageDataUtilities;
 import com.quantumsoft.qupathcloud.converter.dicomizer.ImageToWsiDcmConverter;
 import com.quantumsoft.qupathcloud.converter.qpdata.DataToDcmConverter;
 import com.quantumsoft.qupathcloud.converter.qpdata.DcmToDataConverter;
-import com.quantumsoft.qupathcloud.dao.CloudDAO;
+import com.quantumsoft.qupathcloud.dao.CloudDao;
 import com.quantumsoft.qupathcloud.dao.DAOHelper;
 import com.quantumsoft.qupathcloud.dao.spec.QueryBuilder;
 import com.quantumsoft.qupathcloud.entities.DicomStore;
@@ -71,7 +71,7 @@ public class SynchronizationProjectWithDicomStore {
   private static final Path METADATA_FOLDER = Paths.get("metadata");
   private static final Path QU_PATH_DATA_FILE = Paths.get("data.qpdata");
   private static final Logger LOGGER = LogManager.getLogger();
-  private CloudDAO cloudDAO;
+  private CloudDao cloudDao;
   private String projectId;
   private String locationId;
   private String datasetId;
@@ -83,7 +83,7 @@ public class SynchronizationProjectWithDicomStore {
 
   public SynchronizationProjectWithDicomStore(QuPathGUI qupath, DicomStore dicomStore) {
     this.qupath = qupath;
-    cloudDAO = Repository.INSTANCE.getCloudDao();
+    cloudDao = Repository.INSTANCE.getCloudDao();
     projectId = dicomStore.getProjectId();
     locationId = dicomStore.getLocationId();
     datasetId = dicomStore.getDatasetId();
@@ -123,7 +123,7 @@ public class SynchronizationProjectWithDicomStore {
         .setLocationId(locationId)
         .setDatasetId(datasetId)
         .setDicomStoreId(dicomStoreId);
-    List<Series> remoteSeriesList = cloudDAO.getSeriesList(queryBuilder);
+    List<Series> remoteSeriesList = cloudDao.getSeriesList(queryBuilder);
     List<Series> remoteImageSeriesList = DAOHelper.getImageSeriesList(remoteSeriesList);
 
     List<Path> tempDirectories = new ArrayList<>();
@@ -161,7 +161,7 @@ public class SynchronizationProjectWithDicomStore {
         }
         queryBuilder.setPaths(dicomizedFiles);
         Callable<Void> callable = () -> {
-          cloudDAO.uploadToDicomStore(queryBuilder);
+          cloudDao.uploadToDicomStore(queryBuilder);
           return null;
         };
         Future<Void> future = executorService.submit(callable);
@@ -192,7 +192,7 @@ public class SynchronizationProjectWithDicomStore {
         .setLocationId(locationId)
         .setDatasetId(datasetId)
         .setDicomStoreId(dicomStoreId);
-    List<Series> remoteSeriesList = cloudDAO.getSeriesList(queryBuilder);
+    List<Series> remoteSeriesList = cloudDao.getSeriesList(queryBuilder);
     List<Series> remoteImageSeriesList = DAOHelper.getImageSeriesList(remoteSeriesList);
 
     List<Series> seriesListInProject;
@@ -233,7 +233,7 @@ public class SynchronizationProjectWithDicomStore {
           .setDicomStoreId(dicomStoreId)
           .setStudyId(studyId)
           .setSeriesId(seriesId);
-      List<Instance> instances = cloudDAO.getInstancesList(queryBuilder);
+      List<Instance> instances = cloudDao.getInstancesList(queryBuilder);
       Path metadataImageFile = metadataConfiguration.saveMetadataFile(series, instances);
       String serverPath = metadataImageFile.toString();
 
@@ -327,7 +327,7 @@ public class SynchronizationProjectWithDicomStore {
     }
 
     QueryBuilder query = new QueryBuilder(baseQuery).setInstances(remoteInstancesToDelete);
-    cloudDAO.deleteInstances(query);
+    cloudDao.deleteInstances(query);
   }
 
   private List<Pair<ProjectImageEntry<BufferedImage>, Date>> collectLocalDataFileInfos()
@@ -353,7 +353,7 @@ public class SynchronizationProjectWithDicomStore {
         .setLocationId(locationId)
         .setDatasetId(datasetId)
         .setDicomStoreId(dicomStoreId);
-    List<Instance> instances = cloudDAO.getInstancesList(queryBuilder);
+    List<Instance> instances = cloudDao.getInstancesList(queryBuilder);
     List<Instance> remoteInstances = DAOHelper.getQpdataInstanceListInDicomStore(instances);
     for (Instance instance : remoteInstances) {
       Pair<Instance, Date> instanceInfo = new Pair<>(instance, instance.getCreationDate());
@@ -380,7 +380,7 @@ public class SynchronizationProjectWithDicomStore {
     }
 
     QueryBuilder query = new QueryBuilder(baseQuery).setPaths(dataFilesForUpload);
-    cloudDAO.uploadToDicomStore(query);
+    cloudDao.uploadToDicomStore(query);
 
     deleteDirectory(directoryToUpload);
   }
@@ -419,7 +419,7 @@ public class SynchronizationProjectWithDicomStore {
     QueryBuilder query = new QueryBuilder(baseQuery)
         .setDirectory(directoryToDownload)
         .setInstances(remoteQpdataInstances);
-    cloudDAO.downloadInstances(query);
+    cloudDao.downloadInstances(query);
 
     for (Instance instance : remoteQpdataInstances) {
       String sopInstanceUID = instance.getSopInstanceUID().getValue1();

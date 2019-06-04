@@ -15,7 +15,7 @@
 
 package com.quantumsoft.qupathcloud.dao;
 
-import static com.quantumsoft.qupathcloud.dao.CloudDAOImpl.cutHeadersAndBoundary;
+import static com.quantumsoft.qupathcloud.dao.CloudDaoImpl.cutHeadersAndBoundary;
 import static com.quantumsoft.qupathcloud.dao.Constants.APPLICATION_DICOM_JSON_CHARSET_UTF8;
 import static com.quantumsoft.qupathcloud.dao.Constants.BEARER;
 import static com.quantumsoft.qupathcloud.dao.Constants.MULTIPART_RELATED_TYPE_APPLICATION_DICOM_TRANSFER_SYNTAX;
@@ -44,6 +44,9 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Download dicom callable.
+ */
 public class DownloadDicomCallable implements Callable<Void> {
 
   private static final Logger LOGGER = LogManager.getLogger();
@@ -51,6 +54,13 @@ public class DownloadDicomCallable implements Callable<Void> {
   private Path outputFile;
   private URIBuilder uriBuilder;
 
+  /**
+   * Instantiates a new Download dicom callable.
+   *
+   * @param oAuth20 the o auth 20
+   * @param outputFile the output file
+   * @param uriBuilder the uri builder
+   */
   DownloadDicomCallable(OAuth20 oAuth20, Path outputFile, URIBuilder uriBuilder) {
     this.oAuth20 = oAuth20;
     this.outputFile = outputFile;

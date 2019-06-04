@@ -27,6 +27,9 @@ import java.nio.file.Paths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * DICOM Store configuration for current project in QuPath.
+ */
 public class DicomStoreConfiguration {
 
   private static final Logger LOGGER = LogManager.getLogger();
@@ -34,11 +37,22 @@ public class DicomStoreConfiguration {
   private Path configurationFileInProjectDirectory;
   private ObjectMapper mapper;
 
+  /**
+   * Instantiates a new DICOM Store configuration.
+   *
+   * @param projectDirectory the project directory for the current project
+   */
   public DicomStoreConfiguration(Path projectDirectory) {
     configurationFileInProjectDirectory = projectDirectory.resolve(configurationFileName);
     mapper = new ObjectMapper();
   }
 
+  /**
+   * Read configuration DICOM Store.
+   *
+   * @return the DICOM Store
+   * @throws QuPathCloudException if IOException occurs
+   */
   public DicomStore readConfiguration() throws QuPathCloudException {
     if (Files.exists(configurationFileInProjectDirectory, NOFOLLOW_LINKS)) {
       try {
@@ -51,6 +65,12 @@ public class DicomStoreConfiguration {
     return null;
   }
 
+  /**
+   * Save configuration.
+   *
+   * @param selectedDicomStore the selected DICOM Store for the current project
+   * @throws QuPathCloudException if IOException occurs
+   */
   public void saveConfiguration(DicomStore selectedDicomStore) throws QuPathCloudException {
     try {
       LOGGER.debug("Start writing configuration");

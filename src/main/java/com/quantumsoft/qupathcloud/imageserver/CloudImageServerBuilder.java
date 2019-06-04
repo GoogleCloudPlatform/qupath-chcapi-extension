@@ -17,7 +17,7 @@ package com.quantumsoft.qupathcloud.imageserver;
 
 import static com.quantumsoft.qupathcloud.configuration.MetadataConfiguration.METADATA_FILE_EXTENSION;
 
-import com.quantumsoft.qupathcloud.dao.CloudDAO;
+import com.quantumsoft.qupathcloud.dao.CloudDao;
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 import com.quantumsoft.qupathcloud.repository.Repository;
 import java.awt.image.BufferedImage;
@@ -31,10 +31,10 @@ import qupath.lib.images.servers.ImageServerBuilder;
 
 public class CloudImageServerBuilder implements ImageServerBuilder<BufferedImage> {
 
-  private final CloudDAO cloudDAO;
+  private final CloudDao cloudDao;
 
   public CloudImageServerBuilder() {
-    cloudDAO = Repository.INSTANCE.getCloudDao();
+    cloudDao = Repository.INSTANCE.getCloudDao();
   }
 
   @Override
@@ -50,7 +50,7 @@ public class CloudImageServerBuilder implements ImageServerBuilder<BufferedImage
 
   @Override
   public ImageServer<BufferedImage> buildServer(URI uri) throws QuPathCloudException {
-    return new CloudImageServer(uri, cloudDAO, Repository.INSTANCE.getDicomStore());
+    return new CloudImageServer(uri, cloudDao, Repository.INSTANCE.getDicomStore());
   }
 
   @Override

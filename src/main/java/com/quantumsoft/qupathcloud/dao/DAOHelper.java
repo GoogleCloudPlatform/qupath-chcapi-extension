@@ -20,8 +20,17 @@ import com.quantumsoft.qupathcloud.entities.instance.Instance;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Dao helper for filtering qpdata and images in Series.
+ */
 public class DAOHelper {
 
+  /**
+   * Gets image Series list.
+   *
+   * @param series current Series for filtering
+   * @return the image Series list
+   */
   public static List<Series> getImageSeriesList(List<Series> series) {
     return series.stream()
         .filter((p) -> p.getModality() == null || !p.getModality().getValue1()
@@ -29,6 +38,12 @@ public class DAOHelper {
         .collect(Collectors.toList());
   }
 
+  /**
+   * Gets qpdata Instance list.
+   *
+   * @param instances Instances for filtering
+   * @return the qpdata Instance list
+   */
   public static List<Instance> getQpdataInstanceListInDicomStore(List<Instance> instances) {
     return instances.stream()
         .filter((p) -> p.getModality() != null && p.getModality().getValue1()

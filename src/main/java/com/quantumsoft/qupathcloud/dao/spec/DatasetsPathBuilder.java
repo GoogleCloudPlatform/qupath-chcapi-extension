@@ -22,10 +22,18 @@ import static com.quantumsoft.qupathcloud.dao.Constants.STAGE;
 
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 
+/**
+ * Path builder for Datasets.
+ */
 public class DatasetsPathBuilder implements PathBuilder {
 
   private QueryBuilder queryBuilder;
 
+  /**
+   * Instantiates a new Datasets path builder.
+   *
+   * @param queryBuilder the query builder
+   */
   public DatasetsPathBuilder(QueryBuilder queryBuilder) {
     this.queryBuilder = queryBuilder;
   }

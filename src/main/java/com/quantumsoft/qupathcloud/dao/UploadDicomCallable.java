@@ -42,6 +42,9 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Upload dicom callable.
+ */
 public class UploadDicomCallable implements Callable<Void> {
 
   private static final Logger LOGGER = LogManager.getLogger();
@@ -49,6 +52,13 @@ public class UploadDicomCallable implements Callable<Void> {
   private Path inputFile;
   private URIBuilder uriBuilder;
 
+  /**
+   * Instantiates a new Upload dicom callable.
+   *
+   * @param oAuth20 the o auth 20
+   * @param inputFile the input file
+   * @param uriBuilder the uri builder
+   */
   UploadDicomCallable(OAuth20 oAuth20, Path inputFile, URIBuilder uriBuilder) {
     this.oAuth20 = oAuth20;
     this.inputFile = inputFile;

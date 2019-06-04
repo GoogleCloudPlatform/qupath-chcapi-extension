@@ -22,6 +22,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openslide.OpenSlide;
 
+/**
+ * Wsi to dcm converter.
+ */
 public class ImageToWsiDcmConverter {
 
   private static final Logger LOGGER = LogManager.getLogger();
@@ -32,11 +35,23 @@ public class ImageToWsiDcmConverter {
   private final Path pathToImage;
   private final Path pathToFolder;
 
+  /**
+   * Instantiates a new Image to wsi dcm converter.
+   *
+   * @param pathToImage the path to the image
+   * @param pathToFolder the path to the folder
+   */
   public ImageToWsiDcmConverter(Path pathToImage, Path pathToFolder) {
     this.pathToImage = pathToImage;
     this.pathToFolder = pathToFolder;
   }
 
+  /**
+   * Convert image to dcm.
+   *
+   * @param imageName the image name
+   * @throws QuPathCloudException if an error occurs
+   */
   public void convertImageToWsiDcm(String imageName) throws QuPathCloudException {
     try {
       Dicomizer.Options options = new Dicomizer.Options()

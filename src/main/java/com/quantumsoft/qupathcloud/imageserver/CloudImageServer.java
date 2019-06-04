@@ -15,7 +15,7 @@
 
 package com.quantumsoft.qupathcloud.imageserver;
 
-import com.quantumsoft.qupathcloud.dao.CloudDAO;
+import com.quantumsoft.qupathcloud.dao.CloudDao;
 import com.quantumsoft.qupathcloud.dao.spec.QueryBuilder;
 import com.quantumsoft.qupathcloud.entities.DicomStore;
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
@@ -61,16 +61,16 @@ public class CloudImageServer extends AbstractImageServer<BufferedImage> {
   private static final boolean DRAW_DEBUG_INFO = Boolean.getBoolean(DRAW_DEBUG_INFO_PROPERTY);
   private static final boolean DRAW_PLACEHOLDER_TILES =
       Boolean.getBoolean(DRAW_PLACEHOLDER_TILES_PROPERTY);
-  private final CloudDAO cloudDAO;
+  private final CloudDao cloudDao;
   private ImageServerMetadata originalMetadata;
   private ImageServerMetadata userMetadata;
   private DicomStore dicomStore;
   private Pyramid pyramid;
   private ExecutorService executorService;
 
-  public CloudImageServer(URI uri, CloudDAO cloudDAO, DicomStore dicomStore)
+  public CloudImageServer(URI uri, CloudDao cloudDao, DicomStore dicomStore)
       throws QuPathCloudException {
-    this.cloudDAO = cloudDAO;
+    this.cloudDao = cloudDao;
     this.dicomStore = dicomStore;
     this.executorService = Executors.newFixedThreadPool(THREADS_COUNT);
 
@@ -158,7 +158,7 @@ public class CloudImageServer extends AbstractImageServer<BufferedImage> {
               QueryBuilder query = new QueryBuilder(baseQuery)
                   .setInstanceId(frame.getInstanceUID())
                   .setFrameNumber(frame.getIndex());
-              BufferedImage tileImage = cloudDAO.getFrame(query);
+              BufferedImage tileImage = cloudDao.getFrame(query);
 
               if (tileImage != null) {
                 synchronized (tileImagesMap) {

@@ -19,10 +19,18 @@ import static com.quantumsoft.qupathcloud.dao.Constants.LOCATIONS;
 import static com.quantumsoft.qupathcloud.dao.Constants.PROJECTS;
 import static com.quantumsoft.qupathcloud.dao.Constants.STAGE;
 
+/**
+ * Path builder for Locations.
+ */
 public class LocationsPathBuilder implements PathBuilder {
 
   private QueryBuilder queryBuilder;
 
+  /**
+   * Instantiates a new Locations path builder.
+   *
+   * @param queryBuilder the query builder
+   */
   public LocationsPathBuilder(QueryBuilder queryBuilder) {
     this.queryBuilder = queryBuilder;
   }
