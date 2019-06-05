@@ -37,7 +37,7 @@ public class Pyramid {
    * Instantiates a new Pyramid.
    *
    * @param instances the instances
-   * @throws QuPathCloudException the qu path cloud exception
+   * @throws QuPathCloudException the qupath cloud exception
    */
   public Pyramid(List<Instance> instances) throws QuPathCloudException {
     if (instances.get(0).isFullTiled()) {
@@ -67,6 +67,7 @@ public class Pyramid {
 
   /**
    * Get a double array of downsamples [ ].
+   * Downsamples are factors by which each level is smaller than level 0
    *
    * @return the double array [ ]
    */

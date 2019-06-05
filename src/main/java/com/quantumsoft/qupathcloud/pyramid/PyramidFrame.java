@@ -16,7 +16,7 @@
 package com.quantumsoft.qupathcloud.pyramid;
 
 /**
- * The type Pyramid frame.
+ * The type Pyramid frame. Used to located frames within Instances.
  */
 public class PyramidFrame {
 
