@@ -18,15 +18,28 @@ package com.quantumsoft.qupathcloud.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type DICOM Stores.
+ */
 public class DicomStores {
 
   private List<DicomStore> dicomStores = new ArrayList<>();
   private String nextPageToken;
 
+  /**
+   * Gets DICOM Stores.
+   *
+   * @return the DICOM Stores
+   */
   public List<DicomStore> getDicomStores() {
     return dicomStores;
   }
 
+  /**
+   * Gets next page token.
+   *
+   * @return the next page token
+   */
   public String getNextPageToken() {
     return nextPageToken;
   }

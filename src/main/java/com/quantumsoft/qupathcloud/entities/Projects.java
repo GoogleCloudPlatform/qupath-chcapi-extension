@@ -18,15 +18,28 @@ package com.quantumsoft.qupathcloud.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Projects.
+ */
 public class Projects {
 
   private List<Project> projects = new ArrayList<>();
   private String nextPageToken;
 
+  /**
+   * Gets Projects.
+   *
+   * @return the Projects
+   */
   public List<Project> getProjects() {
     return projects;
   }
 
+  /**
+   * Gets next page token.
+   *
+   * @return the next page token
+   */
   public String getNextPageToken() {
     return nextPageToken;
   }

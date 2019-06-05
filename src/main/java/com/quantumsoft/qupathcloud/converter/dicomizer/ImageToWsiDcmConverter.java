@@ -23,7 +23,7 @@ import org.apache.logging.log4j.Logger;
 import org.openslide.OpenSlide;
 
 /**
- * Wsi to dcm converter.
+ * Converter for dicomization whole-slide images.
  */
 public class ImageToWsiDcmConverter {
 
@@ -47,7 +47,7 @@ public class ImageToWsiDcmConverter {
   }
 
   /**
-   * Convert image to dcm.
+   * Convert image to DICOM.
    *
    * @param imageName the image name
    * @throws QuPathCloudException if an error occurs

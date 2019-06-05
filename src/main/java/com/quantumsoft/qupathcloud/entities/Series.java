@@ -18,6 +18,9 @@ package com.quantumsoft.qupathcloud.entities;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
+/**
+ * The type Series.
+ */
 public class Series {
 
   @JsonProperty("0020000D")
@@ -29,22 +32,47 @@ public class Series {
   @JsonProperty("00080060")
   private DicomAttribute<String> modality;
 
+  /**
+   * Gets Study Instance UID.
+   *
+   * @return the Study Instance UID
+   */
   public DicomAttribute<String> getStudyInstanceUID() {
     return studyInstanceUID;
   }
 
+  /**
+   * Sets Study Instance UID.
+   *
+   * @param studyInstanceUID the Study Instance UID
+   */
   public void setStudyInstanceUID(DicomAttribute<String> studyInstanceUID) {
     this.studyInstanceUID = studyInstanceUID;
   }
 
+  /**
+   * Gets Series Instance UID.
+   *
+   * @return the Series Instance UID
+   */
   public DicomAttribute<String> getSeriesInstanceUID() {
     return seriesInstanceUID;
   }
 
+  /**
+   * Sets Series Instance UID.
+   *
+   * @param seriesInstanceUID the Series Instance UID
+   */
   public void setSeriesInstanceUID(DicomAttribute<String> seriesInstanceUID) {
     this.seriesInstanceUID = seriesInstanceUID;
   }
 
+  /**
+   * Gets Series Description.
+   *
+   * @return the Series Description
+   */
   public DicomAttribute<String> getSeriesDescription() {
     if (seriesDescription == null) {
       String temp = studyInstanceUID.getValue1() + seriesInstanceUID.getValue1();
@@ -54,14 +82,29 @@ public class Series {
     return seriesDescription;
   }
 
+  /**
+   * Sets Series Description.
+   *
+   * @param seriesDescription the Series Description
+   */
   public void setSeriesDescription(DicomAttribute<String> seriesDescription) {
     this.seriesDescription = seriesDescription;
   }
 
+  /**
+   * Gets Modality.
+   *
+   * @return the Modality
+   */
   public DicomAttribute<String> getModality() {
     return modality;
   }
 
+  /**
+   * Sets Modality.
+   *
+   * @param modality the Modality
+   */
   public void setModality(DicomAttribute<String> modality) {
     this.modality = modality;
   }

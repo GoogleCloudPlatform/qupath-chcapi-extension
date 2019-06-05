@@ -18,15 +18,28 @@ package com.quantumsoft.qupathcloud.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Locations.
+ */
 public class Locations {
 
   private List<Location> locations = new ArrayList<>();
   private String nextPageToken;
 
+  /**
+   * Gets Locations.
+   *
+   * @return the Locations
+   */
   public List<Location> getLocations() {
     return locations;
   }
 
+  /**
+   * Gets next page token.
+   *
+   * @return the next page token
+   */
   public String getNextPageToken() {
     return nextPageToken;
   }

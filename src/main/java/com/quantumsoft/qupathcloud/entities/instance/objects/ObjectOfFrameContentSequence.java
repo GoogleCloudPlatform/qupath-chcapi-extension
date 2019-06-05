@@ -18,15 +18,28 @@ package com.quantumsoft.qupathcloud.entities.instance.objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.quantumsoft.qupathcloud.entities.DicomAttribute;
 
+/**
+ * The type Object of Frame Content Sequence.
+ */
 public class ObjectOfFrameContentSequence {
 
   @JsonProperty("00209157")
   private DicomAttribute<Integer> dimensionIndexValues;
 
+  /**
+   * Gets Dimension Index Values.
+   *
+   * @return the Dimension Index Values
+   */
   public DicomAttribute<Integer> getDimensionIndexValues() {
     return dimensionIndexValues;
   }
 
+  /**
+   * Sets Dimension Index Values.
+   *
+   * @param dimensionIndexValues the Dimension Index Values
+   */
   public void setDimensionIndexValues(DicomAttribute<Integer> dimensionIndexValues) {
     this.dimensionIndexValues = dimensionIndexValues;
   }

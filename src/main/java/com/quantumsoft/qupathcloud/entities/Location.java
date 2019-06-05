@@ -17,29 +17,57 @@ package com.quantumsoft.qupathcloud.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * The type Location.
+ */
 public class Location {
 
   private String name;
   private String locationId;
 
+  /**
+   * Gets Project id.
+   *
+   * @return the Project id
+   */
   @JsonIgnore
   public String getProjectId() {
     String arr[] = name.split("/");
     return arr[arr.length - 3];
   }
 
+  /**
+   * Gets Location id.
+   *
+   * @return the Location id
+   */
   public String getLocationId() {
     return locationId;
   }
 
+  /**
+   * Sets Location id.
+   *
+   * @param locationId the Location id
+   */
   public void setLocationId(String locationId) {
     this.locationId = locationId;
   }
 
+  /**
+   * Gets name.
+   *
+   * @return the name
+   */
   public String getName() {
     return name;
   }
 
+  /**
+   * Sets name.
+   *
+   * @param name the name
+   */
   public void setName(String name) {
     this.name = name;
   }

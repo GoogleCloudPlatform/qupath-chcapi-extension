@@ -51,7 +51,7 @@ public class MetadataConfiguration {
   }
 
   /**
-   * Save metadata file of the current image.
+   * Save the current image metadata file.
    *
    * @param series the series
    * @param instancesInSeries the instances in series
@@ -73,7 +73,7 @@ public class MetadataConfiguration {
   }
 
   /**
-   * Read metadata file of the current image.
+   * Read the current image metadata file.
    *
    * @param metadataFile the metadata file
    * @return list of instances of the current image
@@ -89,12 +89,12 @@ public class MetadataConfiguration {
   }
 
   /**
-   * Save the project metadata index file which contains information of all images in the project.
+   * Save the project metadata file which contains information about all images in the project.
    *
    * @param seriesListInProject the series list in project
    * @throws QuPathCloudException if IOException occurs
    */
-  public void saveProjectMetadataIndexFile(List<Series> seriesListInProject)
+  public void saveProjectMetadataFile(List<Series> seriesListInProject)
       throws QuPathCloudException {
     try {
       LOGGER.debug("Start saving metadata project file");
@@ -105,12 +105,12 @@ public class MetadataConfiguration {
   }
 
   /**
-   * Read project metadata index file list.
+   * Read the project metadata file.
    *
    * @return the list
    * @throws QuPathCloudException if IOException occurs
    */
-  public List<Series> readProjectMetadataIndexFile() throws QuPathCloudException {
+  public List<Series> readProjectMetadataFile() throws QuPathCloudException {
     try {
       LOGGER.debug("Start reading metadata project file");
       return mapper.readValue(projectMetadataIndexFile.toFile(),

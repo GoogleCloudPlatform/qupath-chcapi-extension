@@ -205,7 +205,7 @@ public class SynchronizationProjectWithDicomStore {
       seriesListInProject = new ArrayList<>();
       seriesProcess(remoteImageSeriesList, metadataConfiguration, seriesListInProject);
     } else {
-      seriesListInProject = metadataConfiguration.readProjectMetadataIndexFile();
+      seriesListInProject = metadataConfiguration.readProjectMetadataFile();
       List<Series> localImageSeriesList = new ArrayList<>();
       for (Series series : seriesListInProject) {
         if (remoteImageSeriesList.contains(series)) {
@@ -245,7 +245,7 @@ public class SynchronizationProjectWithDicomStore {
 
       seriesListInProject.add(series);
     }
-    metadataConfiguration.saveProjectMetadataIndexFile(seriesListInProject);
+    metadataConfiguration.saveProjectMetadataFile(seriesListInProject);
   }
 
   private void synchronizeQpdata() throws QuPathCloudException {

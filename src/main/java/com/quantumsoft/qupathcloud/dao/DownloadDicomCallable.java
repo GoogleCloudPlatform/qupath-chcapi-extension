@@ -45,7 +45,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Download dicom callable.
+ * Download chosen Instance from DICOM Store.
  */
 public class DownloadDicomCallable implements Callable<Void> {
 
@@ -57,7 +57,7 @@ public class DownloadDicomCallable implements Callable<Void> {
   /**
    * Instantiates a new Download dicom callable.
    *
-   * @param oAuth20 the o auth 20
+   * @param oAuth20 the oAuth20
    * @param outputFile the output file
    * @param uriBuilder the uri builder
    */

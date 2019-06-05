@@ -38,7 +38,7 @@ public abstract class CloudDao {
   /**
    * Instantiates a new Cloud dao.
    *
-   * @param oAuth20 the o auth 20
+   * @param oAuth20 the oAuth20
    */
   CloudDao(OAuth20 oAuth20) {
     this.oAuth20 = oAuth20;
@@ -136,7 +136,7 @@ public abstract class CloudDao {
   public abstract void createDicomStore(QueryBuilder queryBuilder) throws QuPathCloudException;
 
   /**
-   * Upload to DICOM Store.
+   * Upload DICOM files to DICOM Store.
    *
    * @param queryBuilder the query builder
    * @throws QuPathCloudException if an error occurs
@@ -144,7 +144,7 @@ public abstract class CloudDao {
   public abstract void uploadToDicomStore(QueryBuilder queryBuilder) throws QuPathCloudException;
 
   /**
-   * Download Instances.
+   * Download Instances list from DICOM Store.
    *
    * @param queryBuilder the query builder
    * @throws QuPathCloudException if an error occurs
@@ -152,7 +152,7 @@ public abstract class CloudDao {
   public abstract void downloadInstances(QueryBuilder queryBuilder) throws QuPathCloudException;
 
   /**
-   * Delete Instances.
+   * Delete Instances list in DICOM Store.
    *
    * @param queryBuilder the query builder
    * @throws QuPathCloudException if an error occurs
@@ -160,9 +160,9 @@ public abstract class CloudDao {
   public abstract void deleteInstances(QueryBuilder queryBuilder) throws QuPathCloudException;
 
   /**
-   * Gets auth 20.
+   * Gets oAuth20.
    *
-   * @return the auth 20
+   * @return the oAuth20
    */
   public OAuth20 getoAuth20() {
     return oAuth20;

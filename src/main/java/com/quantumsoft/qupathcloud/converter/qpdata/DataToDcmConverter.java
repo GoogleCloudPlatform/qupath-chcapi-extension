@@ -33,7 +33,7 @@ import org.dcm4che3.util.StreamUtils;
 import org.dcm4che3.util.UIDUtils;
 
 /**
- * Qpdata to dcm converter.
+ * Qpdata to DICOM converter.
  */
 public class DataToDcmConverter {
 
@@ -45,7 +45,7 @@ public class DataToDcmConverter {
   private String imageName;
 
   /**
-   * Instantiates a new Data to dcm converter.
+   * Instantiates a new qpdata to DICOM converter.
    *
    * @param inputFile the input qpdata file
    * @param outputDirectory the output directory
@@ -61,7 +61,7 @@ public class DataToDcmConverter {
   }
 
   /**
-   * Convert qpdata to dcm file.
+   * Convert qpdata to DICOM file.
    *
    * @return the to the converted qpdata file
    * @throws QuPathCloudException if IOException occurs

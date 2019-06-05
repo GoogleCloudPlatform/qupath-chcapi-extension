@@ -18,42 +18,83 @@ package com.quantumsoft.qupathcloud.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Objects;
 
+/**
+ * The type DICOM Store.
+ */
 public class DicomStore {
 
   private String name;
 
+  /**
+   * Gets Project id.
+   *
+   * @return the Project id
+   */
   @JsonIgnore
   public String getProjectId() {
     String arr[] = name.split("/");
     return arr[arr.length - 7];
   }
 
+  /**
+   * Gets Location id.
+   *
+   * @return the Location id
+   */
   @JsonIgnore
   public String getLocationId() {
     String arr[] = name.split("/");
     return arr[arr.length - 5];
   }
 
+  /**
+   * Gets Dataset id.
+   *
+   * @return the Dataset id
+   */
   @JsonIgnore
   public String getDatasetId() {
     String arr[] = name.split("/");
     return arr[arr.length - 3];
   }
 
+  /**
+   * Gets DICOM Store id.
+   *
+   * @return the DICOM Store id
+   */
   @JsonIgnore
   public String getDicomStoreId() {
     String arr[] = name.split("/");
     return arr[arr.length - 1];
   }
 
+  /**
+   * Gets name.
+   *
+   * @return the name
+   */
   public String getName() {
     return name;
   }
 
+  /**
+   * Sets name.
+   *
+   * @param name the name
+   */
   public void setName(String name) {
     this.name = name;
   }
 
+  /**
+   * Sets name.
+   *
+   * @param projectId the project id
+   * @param locationId the location id
+   * @param datasetId the dataset id
+   * @param dicomStoreId the dicom store id
+   */
   public void setName(String projectId, String locationId, String datasetId, String dicomStoreId) {
     name = "projects/" + projectId + "/locations/" + locationId + "/datasets/" + datasetId
         + "/dicomStores/" + dicomStoreId;

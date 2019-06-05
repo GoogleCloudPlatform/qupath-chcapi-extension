@@ -22,7 +22,7 @@ import java.nio.charset.StandardCharsets;
 import org.dcm4che3.util.UIDUtils;
 
 /**
- * Dicomizer for dicomization images.
+ * Wrapper for the wsi2dcm library.
  */
 public class Dicomizer {
 

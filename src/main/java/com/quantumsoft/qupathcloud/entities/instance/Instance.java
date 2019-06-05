@@ -25,6 +25,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * The type Instance.
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Instance {
 
@@ -66,79 +69,175 @@ public class Instance {
   private DicomAttribute<Integer> numberOfFrames;
 
 
+  /**
+   * Gets Study Instance UID.
+   *
+   * @return the Study Instance UID
+   */
   public DicomAttribute<String> getStudyInstanceUID() {
     return studyInstanceUID;
   }
 
+  /**
+   * Sets Study Instance UID.
+   *
+   * @param studyInstanceUID the Study Instance UID
+   */
   public void setStudyInstanceUID(DicomAttribute<String> studyInstanceUID) {
     this.studyInstanceUID = studyInstanceUID;
   }
 
+  /**
+   * Gets Series Instance UID.
+   *
+   * @return the Series Instance UID
+   */
   public DicomAttribute<String> getSeriesInstanceUID() {
     return seriesInstanceUID;
   }
 
+  /**
+   * Sets Series Instance UID.
+   *
+   * @param seriesInstanceUID the Series Instance UID
+   */
   public void setSeriesInstanceUID(DicomAttribute<String> seriesInstanceUID) {
     this.seriesInstanceUID = seriesInstanceUID;
   }
 
+  /**
+   * Gets SOP Instance UID.
+   *
+   * @return the SOP Instance UID
+   */
   public DicomAttribute<String> getSopInstanceUID() {
     return sopInstanceUID;
   }
 
+  /**
+   * Sets SOP Instance UID.
+   *
+   * @param sopInstanceUID the SOP Instance UID
+   */
   public void setSopInstanceUID(DicomAttribute<String> sopInstanceUID) {
     this.sopInstanceUID = sopInstanceUID;
   }
 
+  /**
+   * Gets Modality.
+   *
+   * @return the Modality
+   */
   public DicomAttribute<String> getModality() {
     return modality;
   }
 
+  /**
+   * Sets Modality.
+   *
+   * @param modality the Modality
+   */
   public void setModality(DicomAttribute<String> modality) {
     this.modality = modality;
   }
 
+  /**
+   * Gets Total Pixel Matrix Columns.
+   *
+   * @return the Total Pixel Matrix Columns
+   */
   public DicomAttribute<Integer> getTotalPixelMatrixColumns() {
     return totalPixelMatrixColumns;
   }
 
+  /**
+   * Sets Total Pixel Matrix Columns.
+   *
+   * @param totalPixelMatrixColumns the Total Pixel Matrix Columns
+   */
   public void setTotalPixelMatrixColumns(DicomAttribute<Integer> totalPixelMatrixColumns) {
     this.totalPixelMatrixColumns = totalPixelMatrixColumns;
   }
 
+  /**
+   * Gets Total Pixel Matrix Rows.
+   *
+   * @return the Total Pixel Matrix Rows
+   */
   public DicomAttribute<Integer> getTotalPixelMatrixRows() {
     return totalPixelMatrixRows;
   }
 
+  /**
+   * Sets Total Pixel Matrix Rows.
+   *
+   * @param totalPixelMatrixRows the Total Pixel Matrix Rows
+   */
   public void setTotalPixelMatrixRows(DicomAttribute<Integer> totalPixelMatrixRows) {
     this.totalPixelMatrixRows = totalPixelMatrixRows;
   }
 
+  /**
+   * Gets Rows.
+   *
+   * @return the Rows
+   */
   public DicomAttribute<Integer> getRows() {
     return rows;
   }
 
+  /**
+   * Sets Rows.
+   *
+   * @param rows the Rows
+   */
   public void setRows(DicomAttribute<Integer> rows) {
     this.rows = rows;
   }
 
+  /**
+   * Gets Columns.
+   *
+   * @return the Columns
+   */
   public DicomAttribute<Integer> getColumns() {
     return columns;
   }
 
+  /**
+   * Sets Columns.
+   *
+   * @param columns the Columns
+   */
   public void setColumns(DicomAttribute<Integer> columns) {
     this.columns = columns;
   }
 
+  /**
+   * Gets Per-frame Functional Groups Sequence.
+   *
+   * @return the Per-frame Functional Groups Sequence
+   */
   public DicomAttribute<ObjectOfPerframeFunctionalGroupsSequence> getPerframeFunctionalGroupsSequence() {
     return perframeFunctionalGroupsSequence;
   }
 
+  /**
+   * Sets Per-frame Functional Groups Sequence.
+   *
+   * @param perframeFunctionalGroupsSequence the Per-frame Functional Groups Sequence
+   */
   public void setPerframeFunctionalGroupsSequence(
       DicomAttribute<ObjectOfPerframeFunctionalGroupsSequence> perframeFunctionalGroupsSequence) {
     this.perframeFunctionalGroupsSequence = perframeFunctionalGroupsSequence;
   }
 
+  /**
+   * Gets creation date.
+   *
+   * @return the creation date
+   * @throws QuPathCloudException if ParseException occurs
+   */
   @JsonIgnore
   public Date getCreationDate() throws QuPathCloudException {
     String format = "yyyyMMdd HHmmss.SSS Z";
@@ -152,26 +251,56 @@ public class Instance {
     }
   }
 
+  /**
+   * Gets Instance Creation Date.
+   *
+   * @return the Instance Creation Date
+   */
   public DicomAttribute<String> getInstanceCreationDate() {
     return instanceCreationDate;
   }
 
+  /**
+   * Gets Instance Creation Time.
+   *
+   * @return the Instance Creation Time
+   */
   public DicomAttribute<String> getInstanceCreationTime() {
     return instanceCreationTime;
   }
 
+  /**
+   * Gets timezone offset from UTC.
+   *
+   * @return the timezone offset from UTC
+   */
   public DicomAttribute<String> getTimezoneOffsetFromUTC() {
     return timezoneOffsetFromUTC;
   }
 
+  /**
+   * Gets SOP Authorization Comment.
+   *
+   * @return the SOP Authorization Comment
+   */
   public DicomAttribute<String> getSopAuthorizationComment() {
     return sopAuthorizationComment;
   }
 
+  /**
+   * Gets Dimension Organization Type.
+   *
+   * @return the Dimension Organization Type
+   */
   public DicomAttribute<String> getDimensionOrganizationType() {
     return dimensionOrganizationType;
   }
 
+  /**
+   * Is full tiled boolean.
+   *
+   * @return the boolean
+   */
   @JsonIgnore
   public boolean isFullTiled() {
     if (dimensionOrganizationType == null) {
@@ -184,14 +313,29 @@ public class Instance {
     return values[0].equals(TILED_FULL);
   }
 
+  /**
+   * Gets Concatenation UID.
+   *
+   * @return the Concatenation UID
+   */
   public DicomAttribute<String> getConcatenationUID() {
     return concatenationUID;
   }
 
+  /**
+   * Gets Concatenation Frame Offset Number.
+   *
+   * @return the Concatenation Frame Offset Number
+   */
   public DicomAttribute<Integer> getConcatenationFrameOffsetNumber() {
     return concatenationFrameOffsetNumber;
   }
 
+  /**
+   * Gets Number of Frames.
+   *
+   * @return the Number of Frames
+   */
   public DicomAttribute<Integer> getNumberOfFrames() {
     return numberOfFrames;
   }

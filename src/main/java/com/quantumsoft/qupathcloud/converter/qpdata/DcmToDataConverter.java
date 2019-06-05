@@ -24,7 +24,7 @@ import org.dcm4che3.data.Fragments;
 import org.dcm4che3.io.DicomInputStream;
 
 /**
- * Dcm to qpdata converter.
+ * DICOM to qpdata converter.
  */
 public class DcmToDataConverter {
 
@@ -32,7 +32,7 @@ public class DcmToDataConverter {
   private final Path outputFile;
 
   /**
-   * Instantiates a new Dcm to data converter.
+   * Instantiates a new DICOM to qpdata converter.
    *
    * @param inputFile the input file
    * @param outputFile the output file
@@ -43,7 +43,7 @@ public class DcmToDataConverter {
   }
 
   /**
-   * Convert dcm to qpdata.
+   * Convert DICOM to qpdata.
    *
    * @throws QuPathCloudException if IOException occurs
    */

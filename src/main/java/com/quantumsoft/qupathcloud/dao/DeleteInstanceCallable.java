@@ -38,7 +38,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Delete instance callable.
+ * Delete chosen Instance in DICOM Store.
  */
 public class DeleteInstanceCallable implements Callable<Void> {
 
@@ -49,7 +49,7 @@ public class DeleteInstanceCallable implements Callable<Void> {
   /**
    * Instantiates a new Delete instance callable.
    *
-   * @param oAuth20 the o auth 20
+   * @param oAuth20 the oAuth20
    * @param uriBuilder the uri builder
    */
   DeleteInstanceCallable(OAuth20 oAuth20, URIBuilder uriBuilder) {

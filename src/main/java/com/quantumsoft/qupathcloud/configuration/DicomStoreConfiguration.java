@@ -48,7 +48,7 @@ public class DicomStoreConfiguration {
   }
 
   /**
-   * Read configuration DICOM Store.
+   * Read DICOM Store configuration.
    *
    * @return the DICOM Store
    * @throws QuPathCloudException if IOException occurs
@@ -66,7 +66,7 @@ public class DicomStoreConfiguration {
   }
 
   /**
-   * Save configuration.
+   * Save DICOM Store configuration.
    *
    * @param selectedDicomStore the selected DICOM Store for the current project
    * @throws QuPathCloudException if IOException occurs

@@ -18,6 +18,9 @@ package com.quantumsoft.qupathcloud.entities.instance.objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.quantumsoft.qupathcloud.entities.DicomAttribute;
 
+/**
+ * The type Object of Per-frame Functional Groups Sequence.
+ */
 public class ObjectOfPerframeFunctionalGroupsSequence {
 
   @JsonProperty("00209111")
@@ -25,19 +28,39 @@ public class ObjectOfPerframeFunctionalGroupsSequence {
   @JsonProperty("0048021A")
   private DicomAttribute<ObjectOfPlanePositionSequence> planePositionSequence;
 
+  /**
+   * Gets Frame Content Sequence.
+   *
+   * @return the Frame Content Sequence
+   */
   public DicomAttribute<ObjectOfFrameContentSequence> getFrameContentSequence() {
     return frameContentSequence;
   }
 
+  /**
+   * Sets Frame Content Sequence.
+   *
+   * @param frameContentSequence the Frame Content Sequence
+   */
   public void setFrameContentSequence(
       DicomAttribute<ObjectOfFrameContentSequence> frameContentSequence) {
     this.frameContentSequence = frameContentSequence;
   }
 
+  /**
+   * Gets Plane Position Sequence.
+   *
+   * @return the Plane Position Sequence
+   */
   public DicomAttribute<ObjectOfPlanePositionSequence> getPlanePositionSequence() {
     return planePositionSequence;
   }
 
+  /**
+   * Sets Plane Position Sequence.
+   *
+   * @param planePositionSequence the Plane Position Sequence
+   */
   public void setPlanePositionSequence(
       DicomAttribute<ObjectOfPlanePositionSequence> planePositionSequence) {
     this.planePositionSequence = planePositionSequence;

@@ -20,34 +20,69 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Arrays;
 import java.util.Objects;
 
+/**
+ * The type DICOM Attribute.
+ *
+ * @param <T> the type parameter
+ */
 public class DicomAttribute<T> {
 
   private String vr;
   @JsonProperty
   private T[] Value;
 
+  /**
+   * Gets vr.
+   *
+   * @return the vr
+   */
   public String getVr() {
     return vr;
   }
 
+  /**
+   * Sets vr.
+   *
+   * @param vr the vr
+   */
   public void setVr(String vr) {
     this.vr = vr;
   }
 
+  /**
+   * Sets value.
+   *
+   * @param Value the value
+   */
   public void setValue(T[] Value) {
     this.Value = Value;
   }
 
+  /**
+   * Gets value 1.
+   *
+   * @return the first value in the array
+   */
   @JsonIgnore
   public T getValue1() {
     return Value[0];
   }
 
+  /**
+   * Gets value 2.
+   *
+   * @return the second value in the array
+   */
   @JsonIgnore
   public T getValue2() {
     return Value[1];
   }
 
+  /**
+   * Get value t [ ].
+   *
+   * @return the array of values [ ]
+   */
   @JsonIgnore
   public T[] getValue() {
     return Value;

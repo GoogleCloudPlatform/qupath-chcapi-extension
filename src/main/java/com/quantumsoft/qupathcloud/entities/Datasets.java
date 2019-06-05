@@ -18,15 +18,28 @@ package com.quantumsoft.qupathcloud.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Datasets.
+ */
 public class Datasets {
 
   private List<Dataset> datasets = new ArrayList<>();
   private String nextPageToken;
 
+  /**
+   * Gets Datasets.
+   *
+   * @return the Datasets
+   */
   public List<Dataset> getDatasets() {
     return datasets;
   }
 
+  /**
+   * Gets next page token.
+   *
+   * @return the next page token
+   */
   public String getNextPageToken() {
     return nextPageToken;
   }

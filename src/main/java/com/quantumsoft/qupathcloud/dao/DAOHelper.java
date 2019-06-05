@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Dao helper for filtering qpdata and images in Series.
+ * Dao helper for filtering qpdata and images in lists.
  */
 public class DAOHelper {
 

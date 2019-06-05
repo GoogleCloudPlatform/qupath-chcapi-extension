@@ -18,6 +18,9 @@ package com.quantumsoft.qupathcloud.entities.instance.objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.quantumsoft.qupathcloud.entities.DicomAttribute;
 
+/**
+ * The type Object of Plane Position Sequence.
+ */
 public class ObjectOfPlanePositionSequence {
 
   @JsonProperty("0048021E")
@@ -25,19 +28,39 @@ public class ObjectOfPlanePositionSequence {
   @JsonProperty("0048021F")
   private DicomAttribute<Integer> rowPositionInTotalImagePixelMatrix;
 
+  /**
+   * Gets Column Position In Total Image Pixel Matrix.
+   *
+   * @return the Column Position In Total Image Pixel Matrix
+   */
   public DicomAttribute<Integer> getColumnPositionInTotalImagePixelMatrix() {
     return columnPositionInTotalImagePixelMatrix;
   }
 
+  /**
+   * Sets Column Position In Total Image Pixel Matrix.
+   *
+   * @param columnPositionInTotalImagePixelMatrix the Column Position In Total Image Pixel Matrix
+   */
   public void setColumnPositionInTotalImagePixelMatrix(
       DicomAttribute<Integer> columnPositionInTotalImagePixelMatrix) {
     this.columnPositionInTotalImagePixelMatrix = columnPositionInTotalImagePixelMatrix;
   }
 
+  /**
+   * Gets Row Position In Total Image Pixel Matrix.
+   *
+   * @return the Row Position In Total Image Pixel Matrix
+   */
   public DicomAttribute<Integer> getRowPositionInTotalImagePixelMatrix() {
     return rowPositionInTotalImagePixelMatrix;
   }
 
+  /**
+   * Sets Row Position In Total Image Pixel Matrix.
+   *
+   * @param rowPositionInTotalImagePixelMatrix the Row Position In Total Image Pixel Matrix
+   */
   public void setRowPositionInTotalImagePixelMatrix(
       DicomAttribute<Integer> rowPositionInTotalImagePixelMatrix) {
     this.rowPositionInTotalImagePixelMatrix = rowPositionInTotalImagePixelMatrix;
