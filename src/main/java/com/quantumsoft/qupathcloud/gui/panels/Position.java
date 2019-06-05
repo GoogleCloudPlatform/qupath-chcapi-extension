@@ -15,6 +15,20 @@
 
 package com.quantumsoft.qupathcloud.gui.panels;
 
+/**
+ * The enum Position for different pages.
+ */
 public enum Position {
-  PROJECTS, DATASETS, DICOM_STORES
+  /**
+   * Projects position.
+   */
+  PROJECTS,
+  /**
+   * Datasets position.
+   */
+  DATASETS,
+  /**
+   * Dicom Stores position.
+   */
+  DICOM_STORES
 }

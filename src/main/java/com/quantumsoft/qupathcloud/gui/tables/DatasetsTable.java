@@ -24,8 +24,17 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+/**
+ * Datasets table contains a list of Dataset in the table on the Dataset page.
+ */
 public class DatasetsTable {
 
+  /**
+   * Gets Datasets table.
+   *
+   * @param datasets the Dataset list
+   * @return the Datasets table
+   */
   public TableView getDatasetsTable(List<Dataset> datasets) {
 
     datasets.sort(Comparator.comparing(Dataset::getLocationId));

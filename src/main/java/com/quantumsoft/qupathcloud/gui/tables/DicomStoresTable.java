@@ -24,8 +24,17 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+/**
+ * The type DICOM Stores table.
+ */
 public class DicomStoresTable {
 
+  /**
+   * Gets DICOM Stores table.
+   *
+   * @param dicomStores the DICOM Store list
+   * @return the dicomstores table
+   */
   public TableView getDicomstoresTable(List<DicomStore> dicomStores) {
 
     dicomStores.sort(Comparator.comparing(DicomStore::getDicomStoreId));

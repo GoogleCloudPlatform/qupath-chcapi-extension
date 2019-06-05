@@ -29,10 +29,16 @@ import qupath.lib.images.servers.FileFormatInfo;
 import qupath.lib.images.servers.ImageServer;
 import qupath.lib.images.servers.ImageServerBuilder;
 
+/**
+ * The type Cloud image server builder.
+ */
 public class CloudImageServerBuilder implements ImageServerBuilder<BufferedImage> {
 
   private final CloudDao cloudDao;
 
+  /**
+   * Instantiates a new Cloud image server builder.
+   */
   public CloudImageServerBuilder() {
     cloudDao = Repository.INSTANCE.getCloudDao();
   }

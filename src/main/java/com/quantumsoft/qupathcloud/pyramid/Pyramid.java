@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * The type Pyramid.
+ */
 public class Pyramid {
 
   private List<PyramidLevel> levels = new ArrayList<>();
@@ -30,6 +33,12 @@ public class Pyramid {
   private String studyUID;
   private String seriesUID;
 
+  /**
+   * Instantiates a new Pyramid.
+   *
+   * @param instances the instances
+   * @throws QuPathCloudException the qu path cloud exception
+   */
   public Pyramid(List<Instance> instances) throws QuPathCloudException {
     if (instances.get(0).isFullTiled()) {
       instances.sort(Comparator.comparingInt(Pyramid::getInstanceFrameOffset));
@@ -56,34 +65,77 @@ public class Pyramid {
     seriesUID = instances.get(0).getSeriesInstanceUID().getValue1();
   }
 
+  /**
+   * Get a double array of downsamples [ ].
+   *
+   * @return the double array [ ]
+   */
   public double[] getDownsamples() {
     return downsamples;
   }
 
+  /**
+   * Gets width.
+   *
+   * @return the width
+   */
   public int getWidth() {
     return levels.get(0).getWidth();
   }
 
+  /**
+   * Gets height.
+   *
+   * @return the height
+   */
   public int getHeight() {
     return levels.get(0).getHeight();
   }
 
+  /**
+   * Gets tile width.
+   *
+   * @return the tile width
+   */
   public int getTileWidth() {
     return levels.get(0).getTileWidth();
   }
 
+  /**
+   * Gets tile height.
+   *
+   * @return the tile height
+   */
   public int getTileHeight() {
     return levels.get(0).getTileHeight();
   }
 
+  /**
+   * Gets Study UID.
+   *
+   * @return the Study UID
+   */
   public String getStudyUID() {
     return studyUID;
   }
 
+  /**
+   * Gets Series UID.
+   *
+   * @return the Series UID
+   */
   public String getSeriesUID() {
     return seriesUID;
   }
 
+  /**
+   * Gets frame.
+   *
+   * @param tileX the tile x
+   * @param tileY the tile y
+   * @param level the level
+   * @return the frame
+   */
   public PyramidFrame getFrame(int tileX, int tileY, int level) {
     return levels.get(level).getFrame(tileX, tileY);
   }

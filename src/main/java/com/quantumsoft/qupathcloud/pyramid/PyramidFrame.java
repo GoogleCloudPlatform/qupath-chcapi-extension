@@ -15,20 +15,39 @@
 
 package com.quantumsoft.qupathcloud.pyramid;
 
+/**
+ * The type Pyramid frame.
+ */
 public class PyramidFrame {
 
   private int index;
   private String instanceUID;
 
+  /**
+   * Instantiates a new Pyramid frame.
+   *
+   * @param instanceUID the Instance UID
+   * @param index the index
+   */
   public PyramidFrame(String instanceUID, int index) {
     this.index = index;
     this.instanceUID = instanceUID;
   }
 
+  /**
+   * Gets index.
+   *
+   * @return the index
+   */
   public int getIndex() {
     return index;
   }
 
+  /**
+   * Gets Instance UID.
+   *
+   * @return the Instance UID
+   */
   public String getInstanceUID() {
     return instanceUID;
   }

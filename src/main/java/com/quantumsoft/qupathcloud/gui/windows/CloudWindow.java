@@ -62,6 +62,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import qupath.lib.gui.QuPathGUI;
 
+/**
+ * Cloud window to choose DICOM Store for a project.
+ */
 public class CloudWindow {
 
   private static final Logger LOGGER = LogManager.getLogger();
@@ -82,6 +85,11 @@ public class CloudWindow {
   private Stage primaryStage;
   private Dataset choseDataset;
 
+  /**
+   * Instantiates a new Cloud window.
+   *
+   * @param qupath the qupath
+   */
   public CloudWindow(QuPathGUI qupath) {
     Path projectDirectory = qupath.getProject().getPath().getParent();
     dicomStoreConfiguration = new DicomStoreConfiguration(projectDirectory);
@@ -91,6 +99,9 @@ public class CloudWindow {
     root = new GridPane();
   }
 
+  /**
+   * Show cloud window.
+   */
   public void showCloudWindow() {
     headerLabel.getStyleClass().add("cloudWindowHeaderLabel");
     BorderPane header = new BorderPane(headerLabel);

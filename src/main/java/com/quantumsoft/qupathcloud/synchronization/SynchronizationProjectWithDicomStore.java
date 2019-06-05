@@ -66,6 +66,9 @@ import qupath.lib.images.ImageData;
 import qupath.lib.projects.Project;
 import qupath.lib.projects.ProjectImageEntry;
 
+/**
+ * Sync a project with chosen DICOM Store.
+ */
 public class SynchronizationProjectWithDicomStore {
 
   private static final Path METADATA_FOLDER = Paths.get("metadata");
@@ -81,6 +84,12 @@ public class SynchronizationProjectWithDicomStore {
   private Project<BufferedImage> project;
   private Path projectDirectory;
 
+  /**
+   * Instantiates a new Synchronization project with DICOM Store.
+   *
+   * @param qupath the qupath
+   * @param dicomStore the chosen DICOM Store
+   */
   public SynchronizationProjectWithDicomStore(QuPathGUI qupath, DicomStore dicomStore) {
     this.qupath = qupath;
     cloudDao = Repository.INSTANCE.getCloudDao();
@@ -93,6 +102,9 @@ public class SynchronizationProjectWithDicomStore {
     projectDirectory = project.getPath().getParent();
   }
 
+  /**
+   * Synchronization process.
+   */
   public void synchronization() {
     synchronizationWindow.showSynchronizationWindow();
     Runnable loader = () -> {

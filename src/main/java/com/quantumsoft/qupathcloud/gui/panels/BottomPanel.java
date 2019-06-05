@@ -19,6 +19,9 @@ import com.jfoenix.controls.JFXButton;
 import javafx.geometry.Insets;
 import javafx.scene.layout.BorderPane;
 
+/**
+ * The bottom panel contains control buttons for different pages.
+ */
 public class BottomPanel {
 
   private static final double RIGHT_PADDING = 0;
@@ -26,6 +29,12 @@ public class BottomPanel {
   private static final double TOP_PADDING = 13;
   private static final double BOTTOM_PADDING = 13;
 
+  /**
+   * Gets next bottom panel.
+   *
+   * @param position the position
+   * @return the next bottom panel
+   */
   public BorderPane getNextPanel(Position position) {
 
     JFXButton nextButton = new JFXButton("NEXT");

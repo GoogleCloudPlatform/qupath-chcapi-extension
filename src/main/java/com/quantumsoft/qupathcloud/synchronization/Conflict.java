@@ -23,11 +23,26 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.util.Pair;
 import qupath.lib.projects.ProjectImageEntry;
 
+/**
+ * The type Conflict for qpdata files.
+ */
 public class Conflict {
 
+  /**
+   * The enum Resolution.
+   */
   public enum Resolution {
+    /**
+     * Local resolution.
+     */
     Local,
+    /**
+     * Remote resolution.
+     */
     Remote,
+    /**
+     * Cancel resolution.
+     */
     Cancel
   }
 
@@ -36,6 +51,14 @@ public class Conflict {
   private final Pair<Instance, Date> remote;
   private final ObjectProperty<Resolution> resolution;
 
+  /**
+   * Instantiates a new Conflict.
+   *
+   * @param imageName the image name
+   * @param local the local
+   * @param remote the remote
+   * @param resolution the resolution
+   */
   public Conflict(String imageName, Pair<ProjectImageEntry<BufferedImage>, Date> local,
       Pair<Instance, Date> remote, Resolution resolution) {
     this.imageName = imageName;
@@ -45,30 +68,65 @@ public class Conflict {
     this.resolution.set(resolution);
   }
 
+  /**
+   * Gets local.
+   *
+   * @return the local
+   */
   public Pair<ProjectImageEntry<BufferedImage>, Date> getLocal() {
     return local;
   }
 
+  /**
+   * Gets remote.
+   *
+   * @return the remote
+   */
   public Pair<Instance, Date> getRemote() {
     return remote;
   }
 
+  /**
+   * Gets resolution property.
+   *
+   * @return the resolution property
+   */
   public ObjectProperty<Resolution> getResolutionProperty() {
     return resolution;
   }
 
+  /**
+   * Gets resolution.
+   *
+   * @return the resolution
+   */
   public Resolution getResolution() {
     return resolution.getValue();
   }
 
+  /**
+   * Gets local date.
+   *
+   * @return the local date
+   */
   public Date getLocalDate() {
     return local.getValue();
   }
 
+  /**
+   * Gets remote date.
+   *
+   * @return the remote date
+   */
   public Date getRemoteDate() {
     return remote.getValue();
   }
 
+  /**
+   * Gets image name.
+   *
+   * @return the image name
+   */
   public String getImageName() {
     return imageName;
   }

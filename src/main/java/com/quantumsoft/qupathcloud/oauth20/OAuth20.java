@@ -42,6 +42,9 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * OAuth20 class for access to the Google Cloud Healthcare API.
+ */
 public class OAuth20 {
 
   private static final Logger LOGGER = LogManager.getLogger();
@@ -57,8 +60,48 @@ public class OAuth20 {
   private AuthorizationCodeInstalledApp authenticator;
   private Credential credential;
 
+  /**
+   * Instantiates a new OAuth20.
+   *
+   * @param baseQupathDirectory the base QuPath directory
+   */
   public OAuth20(Path baseQupathDirectory) {
     DATA_STORE_DIR = baseQupathDirectory.resolve(STORE_DIRECTORY).toFile();
+  }
+
+  /**
+   * Gets credential.
+   *
+   * @return the credential
+   * @throws QuPathCloudException if an error occurs
+   */
+  public synchronized Credential getCredential() throws QuPathCloudException {
+    try {
+      if (authenticator == null) {
+        login();
+      }
+      if (credential.getExpiresInSeconds() < TIME_WHEN_REFRESH_TOKEN_IN_SECONDS) {
+        credential.refreshToken();
+        credential = authenticator.authorize(USER_ID);
+      }
+    } catch (IOException | GeneralSecurityException e) {
+      throw new QuPathCloudException(e);
+    }
+    LOGGER.trace("Got credential");
+    return credential;
+  }
+
+  /**
+   * Invalidate credentials.
+   *
+   * @throws IOException if IOException occurs
+   */
+  public void invalidateCredentials() throws IOException {
+    if (authenticator != null) {
+      authenticator.getReceiver().stop();
+      authenticator.getFlow().getCredentialDataStore().clear();
+      authenticator = null;
+    }
   }
 
   private AuthorizationCodeInstalledApp getAuthenticator()
@@ -86,30 +129,6 @@ public class OAuth20 {
         .build();
     Repository.INSTANCE.getIsLoggedInProperty().set(false);
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver());
-  }
-
-  public synchronized Credential getCredential() throws QuPathCloudException {
-    try {
-      if (authenticator == null) {
-        login();
-      }
-      if (credential.getExpiresInSeconds() < TIME_WHEN_REFRESH_TOKEN_IN_SECONDS) {
-        credential.refreshToken();
-        credential = authenticator.authorize(USER_ID);
-      }
-    } catch (IOException | GeneralSecurityException e) {
-      throw new QuPathCloudException(e);
-    }
-    LOGGER.trace("Got credential");
-    return credential;
-  }
-
-  public void invalidateCredentials() throws IOException {
-    if (authenticator != null) {
-      authenticator.getReceiver().stop();
-      authenticator.getFlow().getCredentialDataStore().clear();
-      authenticator = null;
-    }
   }
 
   private void login() throws QuPathCloudException, IOException, GeneralSecurityException {

@@ -52,6 +52,9 @@ import qupath.lib.images.servers.ImageServerMetadata;
 import qupath.lib.images.servers.ServerTools;
 import qupath.lib.regions.RegionRequest;
 
+/**
+ * Cloud image server for displaying images in QuPath and retrieving tiles from the server.
+ */
 public class CloudImageServer extends AbstractImageServer<BufferedImage> {
 
   private static final Logger LOGGER = LogManager.getLogger();
@@ -68,6 +71,14 @@ public class CloudImageServer extends AbstractImageServer<BufferedImage> {
   private Pyramid pyramid;
   private ExecutorService executorService;
 
+  /**
+   * Instantiates a new Cloud image server.
+   *
+   * @param uri the uri
+   * @param cloudDao the cloud dao
+   * @param dicomStore the DICOM Store
+   * @throws QuPathCloudException if an error occurs
+   */
   public CloudImageServer(URI uri, CloudDao cloudDao, DicomStore dicomStore)
       throws QuPathCloudException {
     this.cloudDao = cloudDao;

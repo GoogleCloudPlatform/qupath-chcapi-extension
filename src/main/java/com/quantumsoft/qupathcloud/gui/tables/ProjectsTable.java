@@ -24,8 +24,17 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+/**
+ * The type Projects table.
+ */
 public class ProjectsTable {
 
+  /**
+   * Gets Projects table.
+   *
+   * @param projects the Project list
+   * @return the Projects table
+   */
   public TableView getProjectsTable(List<Project> projects) {
 
     projects.sort(Comparator.comparing(Project::getProjectId));

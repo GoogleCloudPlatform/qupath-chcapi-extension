@@ -25,6 +25,9 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
+/**
+ * Page to display objects.
+ */
 public class Page {
 
   private static final double RIGHT_PADDING = 13;
@@ -32,6 +35,14 @@ public class Page {
   private static final double TOP_PADDING = 0;
   private static final double BOTTOM_PADDING = 0;
 
+  /**
+   * Gets page.
+   *
+   * @param table the table
+   * @param position the position
+   * @see Position
+   * @return the page
+   */
   public GridPane getPage(TableView table, Position position) {
 
     GridPane pageGrid = new GridPane();

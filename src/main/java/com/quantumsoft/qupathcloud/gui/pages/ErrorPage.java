@@ -31,6 +31,9 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
+/**
+ * Error page with a stack trace in the text field.
+ */
 public class ErrorPage {
 
   private static final double RIGHT_PADDING = 13;
@@ -39,7 +42,13 @@ public class ErrorPage {
   private static final double BOTTOM_PADDING = 13;
   private static final double GLYPH_SIZE = 140;
 
-  public GridPane showErrorPage(QuPathCloudException e) {
+  /**
+   * Show error page grid pane.
+   *
+   * @param exception the exception
+   * @return the grid pane
+   */
+  public GridPane showErrorPage(QuPathCloudException exception) {
     String svgPathContent = "M438.857 877.714q119.429 0 220.286-58.857t159.714-159.714 58.857-220."
         + "286-58.857-220.286-159.714-159.714-220.286-58.857-220.286 58.857-159.714 159.714-58.857"
         + " 220.286 58.857 220.286 159.714 159.714 220.286 58.857zM512 165.143v108.571q0 8-5.143 "
@@ -59,7 +68,7 @@ public class ErrorPage {
 
     StringWriter sw = new StringWriter();
     PrintWriter pw = new PrintWriter(sw, true);
-    e.printStackTrace(pw);
+    exception.printStackTrace(pw);
     String message = sw.getBuffer().toString();
 
     TextArea textArea = new TextArea(message);

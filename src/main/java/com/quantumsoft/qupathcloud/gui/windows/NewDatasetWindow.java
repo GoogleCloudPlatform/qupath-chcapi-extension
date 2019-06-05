@@ -35,6 +35,10 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+/**
+ * If you click the New Dataset button, new Dataset window will appear where you can create new
+ * Dataset.
+ */
 public class NewDatasetWindow {
 
   private static final double STAGE_WIDTH = 300;
@@ -52,11 +56,21 @@ public class NewDatasetWindow {
   private Stage newDatasetStage;
   private List<Location> locations;
 
+  /**
+   * Instantiates a new New dataset window.
+   *
+   * @param locations the locations
+   */
   NewDatasetWindow(List<Location> locations) {
     this.locations = locations;
     newDatasetStage = new Stage();
   }
 
+  /**
+   * Show window pane.
+   *
+   * @return the pane
+   */
   Pane showWindow() {
     JFXButton createButton = new JFXButton("CREATE");
     createButton.setId("createButton");
@@ -112,6 +126,11 @@ public class NewDatasetWindow {
     return vBox;
   }
 
+  /**
+   * Gets stage.
+   *
+   * @return the stage
+   */
   public Stage getStage() {
     return newDatasetStage;
   }

@@ -29,6 +29,9 @@ import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+/**
+ * Synchronization window for resolving qpdata conflicts during synchronization with the server.
+ */
 public class SynchronizationWindow {
 
   private static final double STAGE_WIDTH = 620;
@@ -41,12 +44,18 @@ public class SynchronizationWindow {
   private Pane currentPage;
   private Stage primaryStage;
 
+  /**
+   * Instantiates a new Synchronization window.
+   */
   public SynchronizationWindow() {
     primaryStage = new Stage();
     headerLabel = new Label("Synchronization");
     root = new GridPane();
   }
 
+  /**
+   * Show synchronization window.
+   */
   public void showSynchronizationWindow() {
     headerLabel.getStyleClass().add("cloudWindowHeaderLabel");
     BorderPane header = new BorderPane(headerLabel);
@@ -84,6 +93,9 @@ public class SynchronizationWindow {
     primaryStage.show();
   }
 
+  /**
+   * Close window.
+   */
   public void close() {
     primaryStage.close();
   }

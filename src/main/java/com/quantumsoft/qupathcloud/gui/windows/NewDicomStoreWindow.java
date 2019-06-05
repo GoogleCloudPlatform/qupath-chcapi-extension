@@ -31,6 +31,10 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+/**
+ * If you click the New DICOM Store button, new DICOM Store window will appear where you can create
+ * new DICOM Store.
+ */
 public class NewDicomStoreWindow {
 
   private static final double STAGE_WIDTH = 300;
@@ -47,10 +51,18 @@ public class NewDicomStoreWindow {
   private static final String PROMPT_TEXT = "Enter new Id";
   private Stage newDicomStoreStage;
 
+  /**
+   * Instantiates a new New dicom store window.
+   */
   NewDicomStoreWindow() {
     newDicomStoreStage = new Stage();
   }
 
+  /**
+   * Show window pane.
+   *
+   * @return the pane
+   */
   Pane showWindow() {
     JFXButton createButton = new JFXButton("CREATE");
     createButton.setId("createButton");
@@ -98,6 +110,11 @@ public class NewDicomStoreWindow {
     return vBox;
   }
 
+  /**
+   * Gets stage.
+   *
+   * @return the stage
+   */
   public Stage getStage() {
     return newDicomStoreStage;
   }

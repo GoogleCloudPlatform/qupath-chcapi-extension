@@ -22,10 +22,18 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+/**
+ * The type Load pyramid file callable.
+ */
 public class LoadPyramidFileCallable implements Callable<Pyramid> {
 
   private Path filePath;
 
+  /**
+   * Instantiates a new Load pyramid file callable.
+   *
+   * @param filePath the file path
+   */
   public LoadPyramidFileCallable(Path filePath) {
     this.filePath = filePath;
   }

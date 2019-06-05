@@ -41,6 +41,11 @@ import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+/**
+ * The type Conflicts window. This window contains conflict list of qpdata. When you click the
+ * synchronize button, this window will appear if we have different qpdata files locally and on the
+ * server.
+ */
 public class ConflictsWindow {
 
   private static final double STAGE_WIDTH = 920;
@@ -56,6 +61,11 @@ public class ConflictsWindow {
   private Stage primaryStage;
   private List<Conflict> conflicts;
 
+  /**
+   * Instantiates a new Conflicts window.
+   *
+   * @param conflicts the conflicts
+   */
   public ConflictsWindow(List<Conflict> conflicts) {
     primaryStage = new Stage();
     headerLabel = new Label("Conflict resolution");
@@ -63,6 +73,9 @@ public class ConflictsWindow {
     this.conflicts = conflicts;
   }
 
+  /**
+   * Show and wait conflicts window.
+   */
   public void showAndWaitConflictsWindow() {
     headerLabel.getStyleClass().add("cloudWindowHeaderLabel");
     BorderPane header = new BorderPane(headerLabel);
@@ -83,7 +96,7 @@ public class ConflictsWindow {
 
     ObservableList<Conflict> conflictsObservableList = FXCollections.observableArrayList(conflicts);
 
-    //table of conflicts
+    // table of conflicts
     TableView<Conflict> conflictsTable = new TableView<>(conflictsObservableList);
     conflictsTable.setId("conflictsTable");
     conflictsTable.setEditable(true);
@@ -123,7 +136,7 @@ public class ConflictsWindow {
       person.getResolutionProperty().setValue(Conflict.Resolution.valueOf(newValue));
     });
 
-    //bottom panel
+    // bottom panel
     JFXButton okButton = new JFXButton("OK");
     JFXButton cancelButton = new JFXButton("CANCEL");
     BorderPane bottomPanel = new BorderPane();
@@ -138,7 +151,7 @@ public class ConflictsWindow {
     });
     primaryStage.setOnCloseRequest(actionEvent -> setCancel());
 
-    //inner page
+    // inner page
     GridPane pageGrid = new GridPane();
     pageGrid.setPadding(new Insets(TOP_PADDING, RIGHT_PADDING, BOTTOM_PADDING, LEFT_PADDING));
 
@@ -174,6 +187,11 @@ public class ConflictsWindow {
     primaryStage.showAndWait();
   }
 
+  /**
+   * Gets result.
+   *
+   * @return the result
+   */
   public List<Conflict> getResult() {
     return conflicts;
   }

@@ -43,7 +43,13 @@ import qupath.lib.images.ImageData;
 import qupath.lib.objects.hierarchy.events.PathObjectHierarchyEvent;
 import qupath.lib.objects.hierarchy.events.PathObjectHierarchyListener;
 
+/**
+ * The repository is singleton which contains properties.
+ */
 public enum Repository {
+  /**
+   * Instance repository.
+   */
   INSTANCE;
 
   private final Logger LOGGER = LogManager.getLogger();
@@ -105,26 +111,56 @@ public enum Repository {
     });
   }
 
+  /**
+   * Gets dicom store property.
+   *
+   * @return the dicom store property
+   */
   public synchronized ObjectProperty<DicomStore> getDicomStoreProperty() {
     return dicomStore;
   }
 
+  /**
+   * Gets dicom store.
+   *
+   * @return the dicom store
+   */
   public synchronized DicomStore getDicomStore() {
     return dicomStore.get();
   }
 
+  /**
+   * Sets dicom store.
+   *
+   * @param value the value
+   */
   public synchronized void setDicomStore(DicomStore value) {
     dicomStore.set(value);
   }
 
+  /**
+   * Gets cloud dao.
+   *
+   * @return the cloud dao
+   */
   public CloudDao getCloudDao() {
     return cloudDao.get();
   }
 
+  /**
+   * Gets is logged in property.
+   *
+   * @return the is logged in property
+   */
   public BooleanProperty getIsLoggedInProperty() {
     return isLoggedInProperty;
   }
 
+  /**
+   * Invalidate credentials.
+   *
+   * @throws IOException the io exception
+   */
   public void invalidateCredentials() throws IOException {
     cloudDao.get().getoAuth20().invalidateCredentials();
   }
@@ -132,8 +168,16 @@ public enum Repository {
   // attempt to provide meaningfull modification date for qpdata.
   private class QuPathHierarchyListener implements PathObjectHierarchyListener {
 
+    /**
+     * The Image data.
+     */
     ImageData<BufferedImage> imageData;
 
+    /**
+     * Sets listened image data.
+     *
+     * @param imageData the image data
+     */
     public void setListenedImageData(ImageData<BufferedImage> imageData) {
       if (this.imageData != null) {
         this.imageData.getHierarchy().removePathObjectListener(this);

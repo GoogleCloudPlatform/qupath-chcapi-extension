@@ -28,6 +28,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 
+/**
+ * The top pane contains position labels and the search field.
+ */
 public class TopPanel {
 
   private static final double RIGHT_PADDING = 0;
@@ -43,6 +46,12 @@ public class TopPanel {
       + " 13.143l224.571 224.571-224.571 224.571q-5.714 5.714-5.714 13.143t5.714 13.143l28.571 28"
       + ".571q5.714 5.714 13.143 5.714t13.143-5.714l266.286-266.286q5.714-5.714 5.714-13.143z";
 
+  /**
+   * Gets beard crumbs and search grid.
+   *
+   * @param position the position
+   * @return the beard crumbs and search grid
+   */
   public GridPane getBeardCrumbsAndSearchGrid(Position position) {
 
     GridPane beardCrumbsAndSearchGridPanel = new GridPane();

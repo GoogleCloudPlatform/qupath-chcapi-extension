@@ -26,6 +26,9 @@ import qupath.lib.images.servers.ImageServerMetadata;
 import qupath.lib.images.servers.TileRequest;
 import qupath.lib.regions.RegionRequest;
 
+/**
+ * Stub image server which contains only displayed image name and path.
+ */
 public class StubImageServer implements ImageServer<BufferedImage> {
 
   private String displayedImageName;
@@ -36,6 +39,11 @@ public class StubImageServer implements ImageServer<BufferedImage> {
     return path;
   }
 
+  /**
+   * Sets path.
+   *
+   * @param path the path
+   */
   public void setPath(String path) {
     this.path = path;
   }
@@ -200,6 +208,11 @@ public class StubImageServer implements ImageServer<BufferedImage> {
     return displayedImageName;
   }
 
+  /**
+   * Sets displayed image name.
+   *
+   * @param displayedImageName the displayed image name
+   */
   public void setDisplayedImageName(String displayedImageName) {
     this.displayedImageName = displayedImageName;
   }

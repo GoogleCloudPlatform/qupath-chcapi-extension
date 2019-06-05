@@ -24,6 +24,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * The type Pyramid level.
+ */
 class PyramidLevel {
 
   private int width;
@@ -35,6 +38,12 @@ class PyramidLevel {
 
   private HashMap<Point, PyramidFrame> frameMap = new HashMap<>();
 
+  /**
+   * Instantiates a new Pyramid level.
+   *
+   * @param instance the instance
+   * @throws QuPathCloudException the qu path cloud exception
+   */
   PyramidLevel(Instance instance) throws QuPathCloudException {
     this.width = instance.getTotalPixelMatrixColumns().getValue1();
     this.height = instance.getTotalPixelMatrixRows().getValue1();
@@ -45,26 +54,59 @@ class PyramidLevel {
     addInstance(instance);
   }
 
+  /**
+   * Gets width.
+   *
+   * @return the width
+   */
   int getWidth() {
     return width;
   }
 
+  /**
+   * Gets height.
+   *
+   * @return the height
+   */
   int getHeight() {
     return height;
   }
 
+  /**
+   * Gets tile width.
+   *
+   * @return the tile width
+   */
   int getTileWidth() {
     return tileWidth;
   }
 
+  /**
+   * Gets tile height.
+   *
+   * @return the tile height
+   */
   int getTileHeight() {
     return tileHeight;
   }
 
+  /**
+   * Gets frame.
+   *
+   * @param tileX the tile x
+   * @param tileY the tile y
+   * @return the frame
+   */
   PyramidFrame getFrame(int tileX, int tileY) {
     return frameMap.get(new Point(tileX, tileY));
   }
 
+  /**
+   * Add instance.
+   *
+   * @param instance the instance
+   * @throws QuPathCloudException the qu path cloud exception
+   */
   void addInstance(Instance instance) throws QuPathCloudException {
     if (instance.getTotalPixelMatrixColumns().getValue1() != width ||
         instance.getTotalPixelMatrixRows().getValue1() != height ||

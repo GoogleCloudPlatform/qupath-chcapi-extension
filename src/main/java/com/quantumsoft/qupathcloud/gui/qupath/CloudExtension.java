@@ -25,10 +25,13 @@ import org.apache.logging.log4j.Logger;
 import qupath.lib.gui.QuPathGUI;
 import qupath.lib.gui.extensions.QuPathExtension;
 
+/**
+ * Cloud extension class to add this extension to QuPath. https://github.com/qupath/qupath/wiki/Creating-extensions
+ */
 public class CloudExtension implements QuPathExtension {
 
   private static final Logger LOGGER = LogManager.getLogger();
-  private static final String EXTENSION_NAME = "Cloud extension";
+  private static final String EXTENSION_NAME = "CHCAPI extension";
   private static final String EXTENSION_DESCRIPTION = "Adds integration with Google Cloud Healthcare API";
 
   public void installExtension(QuPathGUI qupath) {
