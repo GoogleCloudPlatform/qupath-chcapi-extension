@@ -61,7 +61,7 @@ public class DataToDcmConverter {
   }
 
   /**
-   * Convert qpdata to DICOM file.
+   * Converts qpdata to DICOM file.
    *
    * @return the to the converted qpdata file
    * @throws QuPathCloudException if IOException occurs

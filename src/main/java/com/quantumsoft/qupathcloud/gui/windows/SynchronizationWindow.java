@@ -54,7 +54,7 @@ public class SynchronizationWindow {
   }
 
   /**
-   * Show synchronization window.
+   * Shows synchronization window.
    */
   public void showSynchronizationWindow() {
     headerLabel.getStyleClass().add("cloudWindowHeaderLabel");

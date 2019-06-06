@@ -43,7 +43,7 @@ public class ErrorPage {
   private static final double GLYPH_SIZE = 140;
 
   /**
-   * Show error page grid pane.
+   * Shows error page grid pane.
    *
    * @param exception the exception
    * @return the grid pane

@@ -100,7 +100,7 @@ public class CloudWindow {
   }
 
   /**
-   * Show cloud window.
+   * Shows cloud window.
    */
   public void showCloudWindow() {
     headerLabel.getStyleClass().add("cloudWindowHeaderLabel");

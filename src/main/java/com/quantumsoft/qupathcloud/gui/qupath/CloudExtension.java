@@ -26,7 +26,8 @@ import qupath.lib.gui.QuPathGUI;
 import qupath.lib.gui.extensions.QuPathExtension;
 
 /**
- * Cloud extension class to add this extension to QuPath. https://github.com/qupath/qupath/wiki/Creating-extensions
+ * Cloud extension class to add this extension to QuPath.
+ * @see <a href="https://github.com/qupath/qupath/wiki/Creating-extensions">Creating QuPath extensions</a>
  */
 public class CloudExtension implements QuPathExtension {
 

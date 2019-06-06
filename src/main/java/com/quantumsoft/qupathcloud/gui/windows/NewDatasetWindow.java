@@ -67,7 +67,7 @@ public class NewDatasetWindow {
   }
 
   /**
-   * Show window pane.
+   * Shows window pane.
    *
    * @return the pane
    */

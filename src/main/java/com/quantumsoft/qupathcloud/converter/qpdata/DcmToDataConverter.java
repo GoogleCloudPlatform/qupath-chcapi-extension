@@ -43,7 +43,7 @@ public class DcmToDataConverter {
   }
 
   /**
-   * Convert DICOM to qpdata.
+   * Converts DICOM to qpdata.
    *
    * @throws QuPathCloudException if IOException occurs
    */

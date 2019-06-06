@@ -87,7 +87,7 @@ public class SynchronizationProjectWithDicomStore {
   /**
    * Instantiates a new Synchronization project with DICOM Store.
    *
-   * @param qupath the qupath
+   * @param qupath the QuPathGUI
    * @param dicomStore the chosen DICOM Store
    */
   public SynchronizationProjectWithDicomStore(QuPathGUI qupath, DicomStore dicomStore) {
@@ -103,7 +103,7 @@ public class SynchronizationProjectWithDicomStore {
   }
 
   /**
-   * Synchronization process.
+   * Synchronizes data with the server.
    */
   public void synchronization() {
     synchronizationWindow.showSynchronizationWindow();

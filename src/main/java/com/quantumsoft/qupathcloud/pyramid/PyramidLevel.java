@@ -42,7 +42,7 @@ class PyramidLevel {
    * Instantiates a new Pyramid level.
    *
    * @param instance first instance of level, subsequent instances must have matching parameters
-   * @throws QuPathCloudException the qupath cloud exception
+   * @throws QuPathCloudException if an error occurs
    */
   PyramidLevel(Instance instance) throws QuPathCloudException {
     this.width = instance.getTotalPixelMatrixColumns().getValue1();
@@ -102,10 +102,10 @@ class PyramidLevel {
   }
 
   /**
-   * Add instance.
+   * Adds instance.
    *
    * @param instance the instance
-   * @throws QuPathCloudException the qupath cloud exception
+   * @throws QuPathCloudException the QuPath cloud exception
    */
   void addInstance(Instance instance) throws QuPathCloudException {
     if (instance.getTotalPixelMatrixColumns().getValue1() != width ||

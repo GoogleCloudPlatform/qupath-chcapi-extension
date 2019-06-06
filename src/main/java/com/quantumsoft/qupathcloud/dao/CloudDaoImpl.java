@@ -99,7 +99,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
 /**
- * Implementation of Cloud dao.
+ * Implementation of Cloud dao for access to Healthcare API.
  */
 public class CloudDaoImpl extends CloudDao {
 

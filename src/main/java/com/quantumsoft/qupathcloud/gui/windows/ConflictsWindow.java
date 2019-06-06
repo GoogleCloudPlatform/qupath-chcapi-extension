@@ -74,7 +74,7 @@ public class ConflictsWindow {
   }
 
   /**
-   * Show and wait conflicts window.
+   * Shows and waits conflicts window.
    */
   public void showAndWaitConflictsWindow() {
     headerLabel.getStyleClass().add("cloudWindowHeaderLabel");

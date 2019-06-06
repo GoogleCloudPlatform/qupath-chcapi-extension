@@ -52,14 +52,14 @@ public class NewDicomStoreWindow {
   private Stage newDicomStoreStage;
 
   /**
-   * Instantiates a new New dicom store window.
+   * Instantiates a new New DICOM Store window.
    */
   NewDicomStoreWindow() {
     newDicomStoreStage = new Stage();
   }
 
   /**
-   * Show window pane.
+   * Shows window pane.
    *
    * @return the pane
    */

@@ -92,7 +92,7 @@ public class OAuth20 {
   }
 
   /**
-   * Invalidate credentials.
+   * Invalidates credentials.
    *
    * @throws IOException if IOException occurs
    */

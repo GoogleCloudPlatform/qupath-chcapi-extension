@@ -47,7 +47,7 @@ public class ImageToWsiDcmConverter {
   }
 
   /**
-   * Convert image to DICOM.
+   * Converts image to DICOM.
    *
    * @param imageName the image name
    * @throws QuPathCloudException if an error occurs

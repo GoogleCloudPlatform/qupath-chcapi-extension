@@ -128,7 +128,7 @@ public abstract class CloudDao {
   public abstract void createDataset(QueryBuilder queryBuilder) throws QuPathCloudException;
 
   /**
-   * Create DICOM Store.
+   * Creates DICOM Store.
    *
    * @param queryBuilder the query builder
    * @throws QuPathCloudException if an error occurs
@@ -136,7 +136,7 @@ public abstract class CloudDao {
   public abstract void createDicomStore(QueryBuilder queryBuilder) throws QuPathCloudException;
 
   /**
-   * Upload DICOM files to DICOM Store.
+   * Uploads DICOM files to DICOM Store.
    *
    * @param queryBuilder the query builder
    * @throws QuPathCloudException if an error occurs
@@ -144,7 +144,7 @@ public abstract class CloudDao {
   public abstract void uploadToDicomStore(QueryBuilder queryBuilder) throws QuPathCloudException;
 
   /**
-   * Download Instances list from DICOM Store.
+   * Downloads Instances list from DICOM Store.
    *
    * @param queryBuilder the query builder
    * @throws QuPathCloudException if an error occurs
@@ -152,7 +152,7 @@ public abstract class CloudDao {
   public abstract void downloadInstances(QueryBuilder queryBuilder) throws QuPathCloudException;
 
   /**
-   * Delete Instances list in DICOM Store.
+   * Deletes Instances list in DICOM Store.
    *
    * @param queryBuilder the query builder
    * @throws QuPathCloudException if an error occurs

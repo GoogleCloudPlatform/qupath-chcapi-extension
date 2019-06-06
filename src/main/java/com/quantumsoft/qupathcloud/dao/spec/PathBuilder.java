@@ -23,7 +23,7 @@ import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 public interface PathBuilder {
 
   /**
-   * Convert path to String.
+   * Converts path to String.
    *
    * @return the string
    * @throws QuPathCloudException the qu path cloud exception

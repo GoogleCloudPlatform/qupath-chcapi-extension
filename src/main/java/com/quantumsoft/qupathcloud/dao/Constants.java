@@ -15,17 +15,51 @@
 
 package com.quantumsoft.qupathcloud.dao;
 
+/**
+ * Constants for dao.
+ * @see <a href="https://cloud.google.com/healthcare/docs/">Cloud Healthcare API documentation</a>
+ */
 public class Constants {
 
+  /**
+   * The current stage of Healthcare API.
+   */
   public static final String STAGE = "/v1beta1";
+  /**
+   * The constant PROJECTS.
+   */
   public static final String PROJECTS = "/projects/";
+  /**
+   * The constant LOCATIONS.
+   */
   public static final String LOCATIONS = "/locations/";
+  /**
+   * The constant DATASETS.
+   */
   public static final String DATASETS = "/datasets/";
+  /**
+   * The constant DICOM_STORES.
+   */
   public static final String DICOM_STORES = "/dicomStores/";
+  /**
+   * The constant DICOM_WEB.
+   */
   public static final String DICOM_WEB = "/dicomWeb";
+  /**
+   * The constant STUDIES.
+   */
   public static final String STUDIES = "/studies/";
+  /**
+   * The constant SERIES.
+   */
   public static final String SERIES = "/series/";
+  /**
+   * The constant INSTANCES.
+   */
   public static final String INSTANCES = "/instances/";
+  /**
+   * The constant FRAMES.
+   */
   public static final String FRAMES = "/frames/";
 
   static final String SCHEME = "https";

@@ -51,7 +51,7 @@ public class MetadataConfiguration {
   }
 
   /**
-   * Save the current image metadata file.
+   * Saves the current image metadata file.
    *
    * @param series the series
    * @param instancesInSeries the instances in series
@@ -73,7 +73,7 @@ public class MetadataConfiguration {
   }
 
   /**
-   * Read the current image metadata file.
+   * Reads the current image metadata file.
    *
    * @param metadataFile the metadata file
    * @return list of instances of the current image
@@ -89,7 +89,7 @@ public class MetadataConfiguration {
   }
 
   /**
-   * Save the project metadata file which contains information about all images in the project.
+   * Saves the project metadata file which contains information about all images in the project.
    *
    * @param seriesListInProject the series list in project
    * @throws QuPathCloudException if IOException occurs
@@ -105,7 +105,7 @@ public class MetadataConfiguration {
   }
 
   /**
-   * Read the project metadata file.
+   * Reads the project metadata file.
    *
    * @return the list
    * @throws QuPathCloudException if IOException occurs

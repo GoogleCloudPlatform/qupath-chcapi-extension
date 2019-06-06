@@ -27,7 +27,7 @@ import org.dcm4che3.util.UIDUtils;
 public class Dicomizer {
 
   /**
-   * Run Dicomizer.
+   * Runs Dicomizer.
    *
    * @param options the options
    * @throws IOException if IOException occurs
@@ -73,7 +73,7 @@ public class Dicomizer {
     private int compressionQuality = 80;
 
     /**
-     * Input path options.
+     * Sets input path options.
      *
      * @param value the input path
      * @return the options
@@ -84,7 +84,7 @@ public class Dicomizer {
     }
 
     /**
-     * Threads options.
+     * Sets threads options.
      *
      * @param count the count of threads
      * @return the options
@@ -95,7 +95,7 @@ public class Dicomizer {
     }
 
     /**
-     * Generate pyramid with n levels, default 0 means 'use as is'
+     * Generates a pyramid with n levels, default 0 means 'use as is'
      *
      * @param levels the levels of pyramid
      * @return the options
@@ -106,7 +106,7 @@ public class Dicomizer {
     }
 
     /**
-     * Width of the tiles in the target image
+     * Sets width of the tiles in the target image
      *
      * @param width the tile width
      * @return the options
@@ -117,7 +117,7 @@ public class Dicomizer {
     }
 
     /**
-     * Height of the tiles in the target image
+     * Sets height of the tiles in the target image
      *
      * @param height the tile height
      * @return the options
@@ -128,7 +128,7 @@ public class Dicomizer {
     }
 
     /**
-     * Compression of the target image
+     * Sets compression value of the target image
      *
      * @param value the compression value
      * @return the options
@@ -139,7 +139,7 @@ public class Dicomizer {
     }
 
     /**
-     * Quality of the target image (0..100)
+     * Sets quality of the target image (0..100)
      *
      * @param value the compression quality value
      * @return the options
@@ -150,7 +150,7 @@ public class Dicomizer {
     }
 
     /**
-     * Output folder options.
+     * Sets output folder options.
      *
      * @param path the output folder path
      * @return the options
@@ -161,7 +161,7 @@ public class Dicomizer {
     }
 
     /**
-     * Image name is set as SeriesDescription tag
+     * Sets image name is set as SeriesDescription tag
      *
      * @param name the image name
      * @return the options
@@ -254,7 +254,7 @@ public class Dicomizer {
     }
 
     /**
-     * Get downsamples double [ ].
+     * Gets downsamples double [ ].
      *
      * @return the double [ ]
      */
@@ -290,7 +290,7 @@ public class Dicomizer {
       }
 
       /**
-       * Gets value.
+       * Gets compression value.
        *
        * @return the compression value
        */
