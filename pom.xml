@@ -8,7 +8,7 @@
   </properties>
 
   <groupId>com.quantumsoft</groupId>
-  <artifactId>qupath-cloud</artifactId>
+  <artifactId>qupath-chcapi-extension</artifactId>
   <version>1.1</version>
 
   <repositories>
