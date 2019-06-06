@@ -34,17 +34,17 @@ public class Dicomizer {
    */
   public static void run(Options options) throws IOException {
     int exitCode = Wsi2dcmLibrary.INSTANCE.wsi2dcm(
-        StandardCharsets.UTF_8.encode(options.getInputPath()),
-        StandardCharsets.UTF_8.encode(options.getOutputFolder()),
+        StandardCharsets.UTF_8.encode(options.getInputPath() + "\0"),
+        StandardCharsets.UTF_8.encode(options.getOutputFolder() + "\0"),
         new NativeLong(options.getTileWidth()),
         new NativeLong(options.getTileHeight()),
-        StandardCharsets.UTF_8.encode(options.getCompression().getValue()),
+        StandardCharsets.UTF_8.encode(options.getCompression().getValue() + "\0"),
         options.getCompressionQuality(),
         0,
         -1,
-        StandardCharsets.UTF_8.encode(options.getImageName()),
-        StandardCharsets.UTF_8.encode(UIDUtils.createUID()),
-        StandardCharsets.UTF_8.encode(UIDUtils.createUID()),
+        StandardCharsets.UTF_8.encode(options.getImageName() + "\0"),
+        StandardCharsets.UTF_8.encode(UIDUtils.createUID() + "\0"),
+        StandardCharsets.UTF_8.encode(UIDUtils.createUID() + "\0"),
         options.getPyramidLevels(),
         DoubleBuffer.wrap(options.getDownsamples()),
         (byte) 1,
