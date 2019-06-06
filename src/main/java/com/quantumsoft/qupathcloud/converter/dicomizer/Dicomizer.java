@@ -26,31 +26,38 @@ import org.dcm4che3.util.UIDUtils;
  */
 public class Dicomizer {
 
+  private static final String NULL_CHAR = "\0";
+  private static final int START_LEVEL = 0;
+  private static final int STOP_LEVEL = -1;
+  private static final int BATCH_LIMIT = 500;
+  private static final byte TILED = 1;
+  private static final byte DEBUG = 0;
+
   /**
-   * Runs Dicomizer.
+   * Runs Dicomizer with options.
    *
    * @param options the options
    * @throws IOException if IOException occurs
    */
   public static void run(Options options) throws IOException {
     int exitCode = Wsi2dcmLibrary.INSTANCE.wsi2dcm(
-        StandardCharsets.UTF_8.encode(options.getInputPath() + "\0"),
-        StandardCharsets.UTF_8.encode(options.getOutputFolder() + "\0"),
+        StandardCharsets.UTF_8.encode(options.getInputPath() + NULL_CHAR),
+        StandardCharsets.UTF_8.encode(options.getOutputFolder() + NULL_CHAR),
         new NativeLong(options.getTileWidth()),
         new NativeLong(options.getTileHeight()),
-        StandardCharsets.UTF_8.encode(options.getCompression().getValue() + "\0"),
+        StandardCharsets.UTF_8.encode(options.getCompression().getValue() + NULL_CHAR),
         options.getCompressionQuality(),
-        0,
-        -1,
-        StandardCharsets.UTF_8.encode(options.getImageName() + "\0"),
-        StandardCharsets.UTF_8.encode(UIDUtils.createUID() + "\0"),
-        StandardCharsets.UTF_8.encode(UIDUtils.createUID() + "\0"),
+        START_LEVEL,
+        STOP_LEVEL,
+        StandardCharsets.UTF_8.encode(options.getImageName() + NULL_CHAR),
+        StandardCharsets.UTF_8.encode(UIDUtils.createUID() + NULL_CHAR),
+        StandardCharsets.UTF_8.encode(UIDUtils.createUID() + NULL_CHAR),
         options.getPyramidLevels(),
         DoubleBuffer.wrap(options.getDownsamples()),
-        (byte) 1,
-        500,
+        TILED,
+        BATCH_LIMIT,
         options.getThreadCount(),
-        (byte) 0);
+        DEBUG);
     if (exitCode != 0) {
       throw new IOException("Dicomizer error, exit code: " + exitCode);
     }
