@@ -61,12 +61,12 @@ steps:
 
 ## Compilation:
 Perform the following steps for compiling extension and packaging to qupath-chcapi-extension.jar:
-1) **git clone https://github.com/qupath/qupath.git** in terminal in your local folder (for 
+1) **git clone https://github.com/qupath/qupath.git** in the terminal in your local folder (for 
 adding dependencies from QuPath).
 2) Add **apply plugin: 'maven'** string in build.gradle(Build all projects - all projects point) in 
 qupath folder.
-3) **./gradlew install** in qupath folder in terminal.
-4) **mvn package** in qupath-chcapi-extension folder in terminal (for packaging to jar).  
+3) **./gradlew install** in qupath folder in the terminal.
+4) **mvn package** in qupath-chcapi-extension folder in the terminal (for packaging to jar).  
 
 Resulting **qupath-chcapi-extension-1.1.jar** will be put into **qupath-chcapi-extension/target** 
 folder.
