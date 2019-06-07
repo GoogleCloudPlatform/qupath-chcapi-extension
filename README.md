@@ -68,7 +68,8 @@ qupath folder.
 3) **./gradlew install** in qupath folder in terminal.
 4) **mvn package** in qupath-chcapi-extension folder in terminal (for packaging to jar).  
 
-There is **qupath-chcapi-extension-1.1.jar** in **qupath-chcapi-extension/target** folder.
+Resulting **qupath-chcapi-extension-1.1.jar** will be put into **qupath-chcapi-extension/target** 
+folder.
 
 ## License:
 This extension is licensed under GPL v3. Full license text is available in LICENSE.
