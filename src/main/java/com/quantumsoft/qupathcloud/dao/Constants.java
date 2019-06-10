@@ -15,41 +15,85 @@
 
 package com.quantumsoft.qupathcloud.dao;
 
+/**
+ * Constants for dao.
+ * @see <a href="https://cloud.google.com/healthcare/docs/">Cloud Healthcare API documentation</a>
+ */
 public class Constants {
-    public static final String SCHEME = "https";
-    public static final String CLOUD_RESOURCE_MANAGER_HOST = "cloudresourcemanager.googleapis.com";
-    public static final String PATH_TO_PROJECTS = "/v1/projects/";
-    public static final String HEALTHCARE_HOST = "healthcare.googleapis.com";
-    public static final String STAGE = "/v1beta1";
-    public static final String PROJECTS = "/projects/";
-    public static final String LOCATIONS = "/locations/";
-    public static final String DATASETS = "/datasets/";
-    public static final String DICOM_STORES = "/dicomStores/";
-    public static final String DICOM_WEB = "/dicomWeb";
-    public static final String STUDIES = "/studies/";
-    public static final String SERIES = "/series/";
-    public static final String INSTANCES = "/instances/";
-    public static final String FRAMES = "/frames/";
 
-    public static final String PARAM_PAGE_TOKEN = "pageToken";
-    public static final String PARAM_DICOM_STORE_ID = "dicomStoreId";
-    public static final String PARAM_DATASET_ID = "datasetId";
-    public static final String PARAM_INCLUDE_FIELD = "includefield";
-    public static final String VALUE_PARAM_STUDY_INSTANCE_UID = "0020000D";
-    public static final String VALUE_PARAM_SERIES_INSTANCE_UID = "0020000E";
-    public static final String VALUE_PARAM_TOTAL_PIXEL_MATRIX_COLUMNS = "00480006";
-    public static final String VALUE_PARAM_TOTAL_PIXEL_MATRIX_ROWS = "00480007";
-    public static final String VALUE_PARAM_PER_FRAME_FUNCTIONAL_GROUP_SEQUENCE = "52009230";
-    public static final String VALUE_PARAM_IMAGE_COMMENTS = "00204000";
-    public static final String VALUE_PARAM_MODALITY = "00080060";
-    public static final String VALUE_PARAM_INSTANCE_CREATION_DATE = "00080012";
-    public static final String VALUE_PARAM_INSTANCE_CREATION_TIME = "00080013";
-    public static final String VALUE_PARAM_TIMEZONE_OFFSET_FROM_UTC = "00080201";
-    public static final String VALUE_PARAM_SOP_AUTHORIZATHION_COMMENT = "01000424";
-    public static final String VALUE_PARAM_DIMENSION_ORGANIZATION_TYPE= "00209311";
-    public static final String VALUE_PARAM_CONCATENATION_UID = "00209161";
-    public static final String VALUE_PARAM_CONCATENATION_FRAME_OFFSET_NUMBER = "00209228";
-    public static final String VALUE_PARAM_NUMBER_OF_FRAMES = "00209228";
+  /**
+   * The current stage of Healthcare API.
+   */
+  public static final String STAGE = "/v1beta1";
+  /**
+   * The constant PROJECTS.
+   */
+  public static final String PROJECTS = "/projects/";
+  /**
+   * The constant LOCATIONS.
+   */
+  public static final String LOCATIONS = "/locations/";
+  /**
+   * The constant DATASETS.
+   */
+  public static final String DATASETS = "/datasets/";
+  /**
+   * The constant DICOM_STORES.
+   */
+  public static final String DICOM_STORES = "/dicomStores/";
+  /**
+   * The constant DICOM_WEB.
+   */
+  public static final String DICOM_WEB = "/dicomWeb";
+  /**
+   * The constant STUDIES.
+   */
+  public static final String STUDIES = "/studies/";
+  /**
+   * The constant SERIES.
+   */
+  public static final String SERIES = "/series/";
+  /**
+   * The constant INSTANCES.
+   */
+  public static final String INSTANCES = "/instances/";
+  /**
+   * The constant FRAMES.
+   */
+  public static final String FRAMES = "/frames/";
 
-    public static final String BEARER = "Bearer ";
+  static final String SCHEME = "https";
+  static final String CLOUD_RESOURCE_MANAGER_HOST = "cloudresourcemanager.googleapis.com";
+  static final String PATH_TO_PROJECTS = "/v1/projects/";
+  static final String HEALTHCARE_HOST = "healthcare.googleapis.com";
+
+  static final String PARAM_PAGE_TOKEN = "pageToken";
+  static final String PARAM_DICOM_STORE_ID = "dicomStoreId";
+  static final String PARAM_DATASET_ID = "datasetId";
+  static final String PARAM_INCLUDE_FIELD = "includefield";
+  static final String VALUE_PARAM_STUDY_INSTANCE_UID = "0020000D";
+  static final String VALUE_PARAM_SERIES_INSTANCE_UID = "0020000E";
+  static final String VALUE_PARAM_TOTAL_PIXEL_MATRIX_COLUMNS = "00480006";
+  static final String VALUE_PARAM_TOTAL_PIXEL_MATRIX_ROWS = "00480007";
+  static final String VALUE_PARAM_PER_FRAME_FUNCTIONAL_GROUP_SEQUENCE = "52009230";
+  static final String VALUE_PARAM_IMAGE_COMMENTS = "00204000";
+  static final String VALUE_PARAM_MODALITY = "00080060";
+  static final String VALUE_PARAM_INSTANCE_CREATION_DATE = "00080012";
+  static final String VALUE_PARAM_INSTANCE_CREATION_TIME = "00080013";
+  static final String VALUE_PARAM_TIMEZONE_OFFSET_FROM_UTC = "00080201";
+  static final String VALUE_PARAM_SOP_AUTHORIZATHION_COMMENT = "01000424";
+  static final String VALUE_PARAM_DIMENSION_ORGANIZATION_TYPE = "00209311";
+  static final String VALUE_PARAM_CONCATENATION_UID = "00209161";
+  static final String VALUE_PARAM_CONCATENATION_FRAME_OFFSET_NUMBER = "00209228";
+  static final String VALUE_PARAM_NUMBER_OF_FRAMES = "00209228";
+
+  static final String BEARER = "Bearer ";
+  static final String APPLICATION_JSON_CHARSET_UTF8 = "application/json; charset=utf-8";
+  static final String MULTIPART_RELATED_TYPE_APPLICATION_DICOM_TRANSFER_SYNTAX =
+      "multipart/related; type=application/dicom; transfer-syntax=*";
+  static final String APPLICATION_DICOM_JSON_CHARSET_UTF8 = "application/dicom+json; charset=utf-8";
+  static final String MULTIPART_RELATED_TYPE_APPLICATION_DICOM_BOUNDARY =
+      "multipart/related; type=application/dicom; boundary=";
+  static final String MULTIPART_RELATED_TYPE_IMAGE_JPEG_TRANSFER_SYNTAX =
+      "multipart/related; type=image/jpeg; transfer-syntax=1.2.840.10008.1.2.4.50";
 }

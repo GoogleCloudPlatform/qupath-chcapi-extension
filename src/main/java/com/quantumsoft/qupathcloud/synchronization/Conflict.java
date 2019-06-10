@@ -16,59 +16,118 @@
 package com.quantumsoft.qupathcloud.synchronization;
 
 import com.quantumsoft.qupathcloud.entities.instance.Instance;
+import java.awt.image.BufferedImage;
+import java.util.Date;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.util.Pair;
+import qupath.lib.projects.ProjectImageEntry;
 
-import java.io.File;
-import java.util.Date;
-
+/**
+ * The type Conflict for qpdata files.
+ */
 public class Conflict {
 
-    public enum Resolution {
-        Local,
-        Remote,
-        Cancel
-    }
+  /**
+   * The enum Resolution.
+   */
+  public enum Resolution {
+    /**
+     * Local resolution.
+     */
+    Local,
+    /**
+     * Remote resolution.
+     */
+    Remote,
+    /**
+     * Cancel resolution.
+     */
+    Cancel
+  }
 
-    private final String imageName;
-    private final Pair<File, Date> local;
-    private final Pair<Instance, Date> remote;
-    private final ObjectProperty<Resolution> resolution;
+  private final String imageName;
+  private final Pair<ProjectImageEntry<BufferedImage>, Date> local;
+  private final Pair<Instance, Date> remote;
+  private final ObjectProperty<Resolution> resolution;
 
-    public Conflict(String imageName, Pair<File, Date> local, Pair<Instance, Date> remote, Resolution resolution) {
-        this.imageName = imageName;
-        this.local = local;
-        this.remote = remote;
-        this.resolution = new SimpleObjectProperty<>();
-        this.resolution.set(resolution);
-    }
+  /**
+   * Instantiates a new Conflict.
+   *
+   * @param imageName the image name
+   * @param local the local
+   * @param remote the remote
+   * @param resolution the resolution
+   */
+  public Conflict(String imageName, Pair<ProjectImageEntry<BufferedImage>, Date> local,
+      Pair<Instance, Date> remote, Resolution resolution) {
+    this.imageName = imageName;
+    this.local = local;
+    this.remote = remote;
+    this.resolution = new SimpleObjectProperty<>();
+    this.resolution.set(resolution);
+  }
 
-    public Pair<File, Date> getLocal() {
-        return local;
-    }
+  /**
+   * Gets local.
+   *
+   * @return the local
+   */
+  public Pair<ProjectImageEntry<BufferedImage>, Date> getLocal() {
+    return local;
+  }
 
-    public Pair<Instance, Date> getRemote() {
-        return remote;
-    }
+  /**
+   * Gets remote.
+   *
+   * @return the remote
+   */
+  public Pair<Instance, Date> getRemote() {
+    return remote;
+  }
 
-    public ObjectProperty<Resolution> getResolutionProperty() {
-        return resolution;
-    }
+  /**
+   * Gets resolution property.
+   *
+   * @return the resolution property
+   */
+  public ObjectProperty<Resolution> getResolutionProperty() {
+    return resolution;
+  }
 
-    public Resolution getResolution() {
-        return resolution.getValue();
-    }
+  /**
+   * Gets resolution.
+   *
+   * @return the resolution
+   */
+  public Resolution getResolution() {
+    return resolution.getValue();
+  }
 
-    public Date getLocalDate() {
-        return local.getValue();
-    }
+  /**
+   * Gets local date.
+   *
+   * @return the local date
+   */
+  public Date getLocalDate() {
+    return local.getValue();
+  }
 
-    public Date getRemoteDate() {
-        return remote.getValue();
-    }
+  /**
+   * Gets remote date.
+   *
+   * @return the remote date
+   */
+  public Date getRemoteDate() {
+    return remote.getValue();
+  }
 
-    public String getImageName() {
-        return imageName;
-    }
+  /**
+   * Gets image name.
+   *
+   * @return the image name
+   */
+  public String getImageName() {
+    return imageName;
+  }
 }

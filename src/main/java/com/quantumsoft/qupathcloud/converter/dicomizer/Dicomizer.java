@@ -16,175 +16,294 @@
 package com.quantumsoft.qupathcloud.converter.dicomizer;
 
 import com.sun.jna.NativeLong;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.dcm4che3.util.UIDUtils;
-
 import java.io.IOException;
 import java.nio.DoubleBuffer;
 import java.nio.charset.StandardCharsets;
+import org.dcm4che3.util.UIDUtils;
 
+/**
+ * Wrapper for the wsi2dcm library.
+ */
 public class Dicomizer {
-    private static final Logger LOGGER = LogManager.getLogger();
 
-    public static void run(Options options) throws IOException {
-        int exitCode = Wsi2dcmLibrary.INSTANCE.wsi2dcm(
-                StandardCharsets.UTF_8.encode(options.getInputPath()),
-                StandardCharsets.UTF_8.encode(options.getOutputFolder()),
-                new NativeLong(options.getTileWidth()),
-                new NativeLong(options.getTileHeight()),
-                StandardCharsets.UTF_8.encode(options.getCompression().getValue()),
-                options.getCompressionQuality(),
-                0,
-                -1,
-                StandardCharsets.UTF_8.encode(options.getImageName()),
-                StandardCharsets.UTF_8.encode(UIDUtils.createUID()),
-                StandardCharsets.UTF_8.encode(UIDUtils.createUID()),
-                options.getPyramidLevels(),
-                DoubleBuffer.wrap(options.getDownsamples()),
-                (byte)1,
-                500,
-                options.getThreadCount(),
-                (byte)0);
-        if (exitCode != 0) {
-            throw new IOException("Dicomizer error, exit code: " + exitCode);
-        }
+  private static final String NULL_CHAR = "\0";
+  private static final int START_LEVEL = 0;
+  private static final int STOP_LEVEL = -1;
+  private static final int BATCH_LIMIT = 500;
+  private static final byte TILED = 1;
+  private static final byte DEBUG = 0;
+
+  /**
+   * Runs Dicomizer with options.
+   *
+   * @param options the options
+   * @throws IOException if IOException occurs
+   */
+  public static void run(Options options) throws IOException {
+    int exitCode = Wsi2dcmLibrary.INSTANCE.wsi2dcm(
+        StandardCharsets.UTF_8.encode(options.getInputPath() + NULL_CHAR),
+        StandardCharsets.UTF_8.encode(options.getOutputFolder() + NULL_CHAR),
+        new NativeLong(options.getTileWidth()),
+        new NativeLong(options.getTileHeight()),
+        StandardCharsets.UTF_8.encode(options.getCompression().getValue() + NULL_CHAR),
+        options.getCompressionQuality(),
+        START_LEVEL,
+        STOP_LEVEL,
+        StandardCharsets.UTF_8.encode(options.getImageName() + NULL_CHAR),
+        StandardCharsets.UTF_8.encode(UIDUtils.createUID() + NULL_CHAR),
+        StandardCharsets.UTF_8.encode(UIDUtils.createUID() + NULL_CHAR),
+        options.getPyramidLevels(),
+        DoubleBuffer.wrap(options.getDownsamples()),
+        TILED,
+        BATCH_LIMIT,
+        options.getThreadCount(),
+        DEBUG);
+    if (exitCode != 0) {
+      throw new IOException("Dicomizer error, exit code: " + exitCode);
+    }
+  }
+
+  /**
+   * Dicomizer options.
+   */
+  public static class Options {
+
+    private String inputPath;
+    private String outputFolder;
+    private String imageName;
+
+    private Integer threadCount = -1; // all available
+    private Integer pyramidLevels = 0; // use as is
+    private Integer tileWidth = 500;
+    private Integer tileHeight = 500;
+    private Compression compression = Compression.JPEG;
+    private int compressionQuality = 80;
+
+    /**
+     * Sets input path options.
+     *
+     * @param value the input path
+     * @return the options
+     */
+    public Options inputPath(String value) {
+      inputPath = value;
+      return this;
     }
 
-    public static class Options {
-        private String inputPath;
-        private String outputFolder;
-        private String imageName;
-
-        private Integer threadCount = -1; // all available
-        private Integer pyramidLevels = 0; // use as is
-        private Integer tileWidth = 500;
-        private Integer tileHeight = 500;
-        private Compression compression = Compression.JPEG;
-        private int compressionQuality = 80;
-
-        public Options inputPath(String value) {
-            inputPath = value;
-            return this;
-        }
-
-        public Options threads(int count) {
-            threadCount = count;
-            return this;
-        }
-
-        /**
-         * Generate pyramid with n levels, default 0 means 'use as is'
-         */
-        public Options generatePyramid(int levels) {
-            pyramidLevels = levels;
-            return this;
-        }
-
-        /**
-         * Width of the tiles in the target image
-         */
-        public Options tileWidth(int width) {
-            tileWidth = width;
-            return this;
-        }
-
-        /**
-         * Height of the tiles in the target image
-         */
-        public Options tileHeight(int height) {
-            tileHeight = height;
-            return this;
-        }
-
-        /**
-         * Compression of the target image
-         */
-        public Options compression(Compression value) {
-            compression = value;
-            return this;
-        }
-
-        /**
-         * Quality of the target image (0..100)
-         */
-        public Options compressionQuality(int value) {
-            compressionQuality = value;
-            return this;
-        }
-
-        public Options outputFolder(String path) {
-            outputFolder = path;
-            return this;
-        }
-
-        /**
-         * Image name is set as SeriesDescription tag
-         */
-        public Options imageName(String name) {
-            imageName = name;
-            return this;
-
-        }
-
-        public String getInputPath() {
-            return inputPath;
-        }
-
-        public Integer getThreadCount() {
-            return threadCount;
-        }
-
-        public Integer getPyramidLevels() {
-            return pyramidLevels;
-        }
-
-        public Integer getTileWidth() {
-            return tileWidth;
-        }
-
-        public Integer getTileHeight() {
-            return tileHeight;
-        }
-
-        public Compression getCompression() {
-            return compression;
-        }
-
-        public String getOutputFolder() {
-            return outputFolder;
-        }
-
-        public int getCompressionQuality() {
-            return compressionQuality;
-        }
-
-        public String getImageName() {
-            return imageName;
-        }
-
-        public double[] getDownsamples() {
-            double[] result = new double[pyramidLevels];
-            for (int i = 0; i < pyramidLevels; i++) {
-                result[i] = Math.pow(2, i);
-            }
-            return result;
-        }
-
-        public enum Compression {
-            NONE("raw"),
-            JPEG("jpeg"),
-            JPEG2000("jpeg2000");
-
-            private String value;
-
-            Compression(String value) {
-                this.value = value;
-            }
-
-            public String getValue() {
-                return value;
-            }
-        }
+    /**
+     * Sets threads options.
+     *
+     * @param count the count of threads
+     * @return the options
+     */
+    public Options threads(int count) {
+      threadCount = count;
+      return this;
     }
+
+    /**
+     * Generates a pyramid with n levels, default 0 means 'use as is'
+     *
+     * @param levels the levels of pyramid
+     * @return the options
+     */
+    public Options generatePyramid(int levels) {
+      pyramidLevels = levels;
+      return this;
+    }
+
+    /**
+     * Sets width of the tiles in the target image
+     *
+     * @param width the tile width
+     * @return the options
+     */
+    public Options tileWidth(int width) {
+      tileWidth = width;
+      return this;
+    }
+
+    /**
+     * Sets height of the tiles in the target image
+     *
+     * @param height the tile height
+     * @return the options
+     */
+    public Options tileHeight(int height) {
+      tileHeight = height;
+      return this;
+    }
+
+    /**
+     * Sets compression value of the target image
+     *
+     * @param value the compression value
+     * @return the options
+     */
+    public Options compression(Compression value) {
+      compression = value;
+      return this;
+    }
+
+    /**
+     * Sets quality of the target image (0..100)
+     *
+     * @param value the compression quality value
+     * @return the options
+     */
+    public Options compressionQuality(int value) {
+      compressionQuality = value;
+      return this;
+    }
+
+    /**
+     * Sets output folder options.
+     *
+     * @param path the output folder path
+     * @return the options
+     */
+    public Options outputFolder(String path) {
+      outputFolder = path;
+      return this;
+    }
+
+    /**
+     * Sets image name is set as SeriesDescription tag
+     *
+     * @param name the image name
+     * @return the options
+     */
+    public Options imageName(String name) {
+      imageName = name;
+      return this;
+
+    }
+
+    /**
+     * Gets input path.
+     *
+     * @return the input path
+     */
+    public String getInputPath() {
+      return inputPath;
+    }
+
+    /**
+     * Gets thread count.
+     *
+     * @return the thread count
+     */
+    public Integer getThreadCount() {
+      return threadCount;
+    }
+
+    /**
+     * Gets pyramid levels.
+     *
+     * @return the pyramid levels
+     */
+    public Integer getPyramidLevels() {
+      return pyramidLevels;
+    }
+
+    /**
+     * Gets tile width.
+     *
+     * @return the tile width
+     */
+    public Integer getTileWidth() {
+      return tileWidth;
+    }
+
+    /**
+     * Gets tile height.
+     *
+     * @return the tile height
+     */
+    public Integer getTileHeight() {
+      return tileHeight;
+    }
+
+    /**
+     * Gets compression.
+     *
+     * @return the compression
+     */
+    public Compression getCompression() {
+      return compression;
+    }
+
+    /**
+     * Gets output folder.
+     *
+     * @return the output folder
+     */
+    public String getOutputFolder() {
+      return outputFolder;
+    }
+
+    /**
+     * Gets compression quality.
+     *
+     * @return the compression quality
+     */
+    public int getCompressionQuality() {
+      return compressionQuality;
+    }
+
+    /**
+     * Gets image name.
+     *
+     * @return the image name
+     */
+    public String getImageName() {
+      return imageName;
+    }
+
+    /**
+     * Gets downsamples double [ ].
+     *
+     * @return the double [ ]
+     */
+    public double[] getDownsamples() {
+      double[] result = new double[pyramidLevels];
+      for (int i = 0; i < pyramidLevels; i++) {
+        result[i] = Math.pow(2, i);
+      }
+      return result;
+    }
+
+    /**
+     * The enum Compression.
+     */
+    public enum Compression {
+      /**
+       * None compression.
+       */
+      NONE("raw"),
+      /**
+       * Jpeg compression.
+       */
+      JPEG("jpeg"),
+      /**
+       * Jpeg 2000 compression.
+       */
+      JPEG2000("jpeg2000");
+
+      private String value;
+
+      Compression(String value) {
+        this.value = value;
+      }
+
+      /**
+       * Gets compression value.
+       *
+       * @return the compression value
+       */
+      public String getValue() {
+        return value;
+      }
+    }
+  }
 }

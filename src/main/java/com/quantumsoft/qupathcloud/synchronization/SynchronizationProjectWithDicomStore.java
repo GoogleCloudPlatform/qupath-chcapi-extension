@@ -15,22 +15,45 @@
 
 package com.quantumsoft.qupathcloud.synchronization;
 
+import static com.quantumsoft.qupathcloud.configuration.MetadataConfiguration.METADATA_FILE_EXTENSION;
+
 import com.quantumsoft.qupathcloud.configuration.MetadataConfiguration;
 import com.quantumsoft.qupathcloud.converter.ImageDataUtilities;
 import com.quantumsoft.qupathcloud.converter.dicomizer.ImageToWsiDcmConverter;
 import com.quantumsoft.qupathcloud.converter.qpdata.DataToDcmConverter;
 import com.quantumsoft.qupathcloud.converter.qpdata.DcmToDataConverter;
-import com.quantumsoft.qupathcloud.dao.CloudDAO;
+import com.quantumsoft.qupathcloud.dao.CloudDao;
 import com.quantumsoft.qupathcloud.dao.DAOHelper;
 import com.quantumsoft.qupathcloud.dao.spec.QueryBuilder;
 import com.quantumsoft.qupathcloud.entities.DicomStore;
 import com.quantumsoft.qupathcloud.entities.Series;
 import com.quantumsoft.qupathcloud.entities.instance.Instance;
-import com.quantumsoft.qupathcloud.entities.metadata.ImageMetadataIndex;
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 import com.quantumsoft.qupathcloud.gui.windows.ConflictsWindow;
 import com.quantumsoft.qupathcloud.gui.windows.SynchronizationWindow;
+import com.quantumsoft.qupathcloud.imageserver.StubImageServer;
 import com.quantumsoft.qupathcloud.repository.Repository;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.util.Pair;
 import org.apache.commons.io.FileUtils;
@@ -39,381 +62,428 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import qupath.lib.gui.QuPathGUI;
 import qupath.lib.gui.helpers.DisplayHelpers;
+import qupath.lib.images.ImageData;
 import qupath.lib.projects.Project;
-import qupath.lib.projects.ProjectIO;
 import qupath.lib.projects.ProjectImageEntry;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.stream.Collectors;
-
-import static com.quantumsoft.qupathcloud.configuration.MetadataConfiguration.METADATA_FILE_EXTENSION;
-
+/**
+ * Sync a project with chosen DICOM Store.
+ */
 public class SynchronizationProjectWithDicomStore {
-    private static final String METADATA_FOLDER = "metadata";
-    private static final String TEMPORARY_FOLDER = "temp";
-    private static final Logger LOGGER = LogManager.getLogger();
-    private CloudDAO cloudDAO;
-    private String projectId;
-    private String locationId;
-    private String datasetId;
-    private String dicomStoreId;
-    private QuPathGUI qupath;
-    private SynchronizationWindow synchronizationWindow;
-    private Project<BufferedImage> project;
-    private File projectDirectory;
 
-    public SynchronizationProjectWithDicomStore(QuPathGUI qupath, DicomStore dicomStore) {
-        this.qupath = qupath;
-        cloudDAO = Repository.INSTANCE.getCloudDao();
-        projectId = dicomStore.getProjectId();
-        locationId = dicomStore.getLocationId();
-        datasetId = dicomStore.getDatasetId();
-        dicomStoreId = dicomStore.getDicomStoreId();
-        synchronizationWindow = new SynchronizationWindow();
-        project = qupath.getProject();
-        projectDirectory = qupath.getCurrentProjectDirectory();
-    }
+  private static final Path METADATA_FOLDER = Paths.get("metadata");
+  private static final Path QU_PATH_DATA_FILE = Paths.get("data.qpdata");
+  private static final Logger LOGGER = LogManager.getLogger();
+  private CloudDao cloudDao;
+  private String projectId;
+  private String locationId;
+  private String datasetId;
+  private String dicomStoreId;
+  private QuPathGUI qupath;
+  private SynchronizationWindow synchronizationWindow;
+  private Project<BufferedImage> project;
+  private Path projectDirectory;
 
-    public void synchronization() {
-        synchronizationWindow.showSynchronizationWindow();
-        Runnable loader = () -> {
-            try {
-                synchronizeImages();
-                synchronizeMetadata();
-                synchronizeQpdata();
-                ProjectIO.writeProject(project);
-            } catch (QuPathCloudException e) {
-                LOGGER.error("Synchronization error: ", e);
-                DisplayHelpers.showErrorMessage("Synchronization error!", e);
-            }
+  /**
+   * Instantiates a new Synchronization project with DICOM Store.
+   *
+   * @param qupath the QuPathGUI
+   * @param dicomStore the chosen DICOM Store
+   */
+  public SynchronizationProjectWithDicomStore(QuPathGUI qupath, DicomStore dicomStore) {
+    this.qupath = qupath;
+    cloudDao = Repository.INSTANCE.getCloudDao();
+    projectId = dicomStore.getProjectId();
+    locationId = dicomStore.getLocationId();
+    datasetId = dicomStore.getDatasetId();
+    dicomStoreId = dicomStore.getDicomStoreId();
+    synchronizationWindow = new SynchronizationWindow();
+    project = qupath.getProject();
+    projectDirectory = project.getPath().getParent();
+  }
 
-            Platform.runLater(() -> {
-                qupath.refreshProject();
-                synchronizationWindow.close();
-            });
-        };
-        Thread loadThread = new Thread(loader);
-        loadThread.start();
-    }
+  /**
+   * Synchronizes data with the server.
+   */
+  public void synchronization() {
+    synchronizationWindow.showSynchronizationWindow();
+    Runnable loader = () -> {
+      try {
+        synchronizeImages();
+        synchronizeMetadata();
+        synchronizeQpdata();
+        project.syncChanges();
+      } catch (QuPathCloudException | IOException e) {
+        LOGGER.error("Synchronization error: ", e);
+        DisplayHelpers.showErrorMessage("Synchronization error!", e);
+      } finally {
+        Platform.runLater(() -> {
+          qupath.refreshProject();
+          synchronizationWindow.close();
+        });
+      }
+    };
+    Thread loadThread = new Thread(loader);
+    loadThread.start();
+  }
 
-    private void synchronizeImages() throws QuPathCloudException {
-        File temporaryDirectory = new File(projectDirectory, TEMPORARY_FOLDER);
-        if (!temporaryDirectory.exists()) {
-            checkedMkDir(temporaryDirectory);
-        }
-        List<ProjectImageEntry<BufferedImage>> imageList = project.getImageList();
+  private void synchronizeImages() throws QuPathCloudException {
+    List<ProjectImageEntry<BufferedImage>> imageList = project.getImageList();
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
+    List<Future<Void>> futureList = new ArrayList<>();
+    QueryBuilder queryBuilder = QueryBuilder.forProject(projectId)
+        .setLocationId(locationId)
+        .setDatasetId(datasetId)
+        .setDicomStoreId(dicomStoreId);
+    List<Series> remoteSeriesList = cloudDao.getSeriesList(queryBuilder);
+    List<Series> remoteImageSeriesList = DAOHelper.getImageSeriesList(remoteSeriesList);
 
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        List<Future<Void>> futureList = new ArrayList<>();
-        QueryBuilder queryBuilder = QueryBuilder.forProject(projectId)
-                .setLocationId(locationId)
-                .setDatasetId(datasetId)
-                .setDicomStoreId(dicomStoreId);
-        List<Series> series = cloudDAO.getSeriesList(queryBuilder);
-        List<Series> remoteSeriesList = DAOHelper.getImagesSeriesList(series);
-        for (int i = 0; i < imageList.size(); i++) {
-            ProjectImageEntry<BufferedImage> entry = imageList.get(i);
-            String pathToImage = entry.getServerPath();
-            String extension = FilenameUtils.getExtension(pathToImage);
-            String localFileName = FilenameUtils.getBaseName(pathToImage);
+    List<Path> tempDirectories = new ArrayList<>();
+    for (ProjectImageEntry<BufferedImage> currentEntry : imageList) {
+      String serverPath = currentEntry.getServerPath();
+      String imageExtension = FilenameUtils.getExtension(serverPath);
+      String imageName = FilenameUtils.getBaseName(serverPath);
 
-            if (!extension.equals(METADATA_FILE_EXTENSION)) {
-                File localFolder = new File(temporaryDirectory, String.valueOf(i));
-                checkedMkDir(localFolder);
-                File localImageFile = new File(pathToImage);
-                String checkedFileName = checkFileName(remoteSeriesList, localFileName);
-
-                ImageToWsiDcmConverter converter = new ImageToWsiDcmConverter(localImageFile, localFolder);
-                converter.convertImageToWsiDcm(checkedFileName);
-
-                File[] dicomizedFiles = localFolder.listFiles((dir, fname) -> fname.contains(".dcm"));
-                if (dicomizedFiles == null || dicomizedFiles.length == 0) {
-                    String errorParameter = MessageFormat.format("Dicomization failed for: {0}", pathToImage);
-                    throw new QuPathCloudException(errorParameter);
-                }
-                queryBuilder.setFiles(Arrays.asList(dicomizedFiles));
-                Callable<Void> callable = () -> {
-                    cloudDAO.uploadToDicomStore(queryBuilder);
-                    return null;
-                };
-                Future<Void> future = executorService.submit(callable);
-                futureList.add(future);
-
-                project.removeImage(entry);
-            }
-        }
-        for (Future<Void> future : futureList) {
-            try {
-                future.get();
-            } catch (InterruptedException | ExecutionException e) {
-                throw new QuPathCloudException(e);
-            }
-        }
-        executorService.shutdown();
-
+      if (!imageExtension.equals(METADATA_FILE_EXTENSION)) {
+        URI uri;
         try {
-            FileUtils.cleanDirectory(temporaryDirectory);
+          uri = new URI(serverPath);
+        } catch (URISyntaxException e) {
+          throw new QuPathCloudException(e);
+        }
+
+        Path tempDirectory = createTempDirectory("QuPath-");
+        tempDirectory.toFile().deleteOnExit();
+        tempDirectories.add(tempDirectory);
+
+        Path pathToImage = Paths.get(uri);
+        ImageToWsiDcmConverter converter = new ImageToWsiDcmConverter(pathToImage, tempDirectory);
+        String checkedFileName = checkFileName(remoteImageSeriesList, imageName);
+        converter.convertImageToWsiDcm(checkedFileName);
+
+        List<Path> dicomizedFiles;
+        try {
+          dicomizedFiles = Files.list(tempDirectory).collect(Collectors.toList());
         } catch (IOException e) {
-            throw new QuPathCloudException(e);
+          throw new QuPathCloudException(e);
         }
+        if (dicomizedFiles.size() == 0) {
+          String errorParam = MessageFormat.format("Dicomization failed for: {0}", serverPath);
+          throw new QuPathCloudException(errorParam);
+        }
+        queryBuilder.setPaths(dicomizedFiles);
+        Callable<Void> callable = () -> {
+          cloudDao.uploadToDicomStore(queryBuilder);
+          return null;
+        };
+        Future<Void> future = executorService.submit(callable);
+        futureList.add(future);
+
+        project.removeImage(currentEntry);
+      }
+    }
+    for (Future<Void> future : futureList) {
+      try {
+        future.get();
+      } catch (InterruptedException | ExecutionException e) {
+        throw new QuPathCloudException(e);
+      }
+    }
+    executorService.shutdown();
+
+    for (Path tempDirectory : tempDirectories) {
+      deleteDirectory(tempDirectory);
+    }
+  }
+
+  private void synchronizeMetadata() throws QuPathCloudException {
+    Path metadataDirectory = projectDirectory.resolve(METADATA_FOLDER);
+    MetadataConfiguration metadataConfiguration = new MetadataConfiguration(metadataDirectory);
+
+    QueryBuilder queryBuilder = QueryBuilder.forProject(projectId)
+        .setLocationId(locationId)
+        .setDatasetId(datasetId)
+        .setDicomStoreId(dicomStoreId);
+    List<Series> remoteSeriesList = cloudDao.getSeriesList(queryBuilder);
+    List<Series> remoteImageSeriesList = DAOHelper.getImageSeriesList(remoteSeriesList);
+
+    List<Series> seriesListInProject;
+    if (Files.notExists(metadataDirectory)) {
+      try {
+        Files.createDirectory(metadataDirectory);
+      } catch (IOException e) {
+        throw new QuPathCloudException(e);
+      }
+      seriesListInProject = new ArrayList<>();
+      seriesProcess(remoteImageSeriesList, metadataConfiguration, seriesListInProject);
+    } else {
+      seriesListInProject = metadataConfiguration.readProjectMetadataFile();
+      List<Series> localImageSeriesList = new ArrayList<>();
+      for (Series series : seriesListInProject) {
+        if (remoteImageSeriesList.contains(series)) {
+          localImageSeriesList.add(series);
+        }
+      }
+      List<Series> seriesListForDownloading = new ArrayList<>(remoteImageSeriesList);
+      seriesListForDownloading.removeAll(localImageSeriesList);
+      if (seriesListForDownloading.size() != 0) {
+        seriesProcess(seriesListForDownloading, metadataConfiguration, seriesListInProject);
+      }
+    }
+  }
+
+  private void seriesProcess(List<Series> remoteImageSeriesList,
+      MetadataConfiguration metadataConfiguration,
+      List<Series> seriesListInProject) throws QuPathCloudException {
+    for (Series series : remoteImageSeriesList) {
+      String studyId = series.getStudyInstanceUID().getValue1();
+      String seriesId = series.getSeriesInstanceUID().getValue1();
+      String imageName = series.getSeriesDescription().getValue1();
+      QueryBuilder queryBuilder = QueryBuilder.forProject(projectId)
+          .setLocationId(locationId)
+          .setDatasetId(datasetId)
+          .setDicomStoreId(dicomStoreId)
+          .setStudyId(studyId)
+          .setSeriesId(seriesId);
+      List<Instance> instances = cloudDao.getInstancesList(queryBuilder);
+      Path metadataImageFile = metadataConfiguration.saveMetadataFile(series, instances);
+      String serverPath = metadataImageFile.toString();
+
+      StubImageServer stubImageServer = new StubImageServer();
+      stubImageServer.setDisplayedImageName(imageName);
+      stubImageServer.setPath(serverPath);
+
+      project.addImage(stubImageServer);
+
+      seriesListInProject.add(series);
+    }
+    metadataConfiguration.saveProjectMetadataFile(seriesListInProject);
+  }
+
+  private void synchronizeQpdata() throws QuPathCloudException {
+    List<Pair<ProjectImageEntry<BufferedImage>, Date>> localInfosToUpload = collectLocalDataFileInfos();
+    List<Pair<Instance, Date>> remoteInfosToDownload = collectRemoteInstanceInfos();
+
+    List<Instance> remoteInstancesToDelete = new ArrayList<>();
+    List<Conflict> conflicts = new ArrayList<>();
+
+    Iterator<Pair<ProjectImageEntry<BufferedImage>, Date>> localIter = localInfosToUpload
+        .iterator();
+    Pair<ProjectImageEntry<BufferedImage>, Date> localInfo;
+    while (localIter.hasNext()) {
+      localInfo = localIter.next();
+      String localName = localInfo.getKey().getImageName();
+      Pair<Instance, Date> remoteInfo;
+      Iterator<Pair<Instance, Date>> remoteIter = remoteInfosToDownload.iterator();
+      while (remoteIter.hasNext()) {
+        remoteInfo = remoteIter.next();
+        if (localName.equals(remoteInfo.getKey().getSopAuthorizationComment().getValue1())) {
+          Date localDate = localInfo.getValue();
+          Date remoteDate = remoteInfo.getValue();
+          int comparisonResult = localDate.compareTo(remoteDate);
+          Conflict.Resolution resolution;
+          if (comparisonResult > 0) {
+            resolution = Conflict.Resolution.Local;
+          } else if (comparisonResult == 0) {
+            remoteIter.remove();
+            localIter.remove();
+            break;
+          } else {
+            resolution = Conflict.Resolution.Remote;
+          }
+          Conflict conflict = new Conflict(localName, localInfo, remoteInfo, resolution);
+          conflicts.add(conflict);
+        }
+      }
     }
 
-    private void synchronizeMetadata() throws QuPathCloudException {
-        File metadataDirectory = new File(projectDirectory, METADATA_FOLDER);
-        QueryBuilder queryBuilder = QueryBuilder.forProject(projectId)
-                .setLocationId(locationId)
-                .setDatasetId(datasetId)
-                .setDicomStoreId(dicomStoreId);
-        List<Series> series = cloudDAO.getSeriesList(queryBuilder);
-        List<Series> remoteSeriesList = DAOHelper.getImagesSeriesList(series);
+    if (conflicts.size() > 0) {
+      Callable<List<Conflict>> task = () -> {
+        ConflictsWindow conflictsWindow = new ConflictsWindow(conflicts);
+        conflictsWindow.showAndWaitConflictsWindow();
+        return conflictsWindow.getResult();
+      };
+      FutureTask<List<Conflict>> conflictsQuery = new FutureTask<>(task);
+      Platform.runLater(conflictsQuery);
 
-        MetadataConfiguration metadataConfiguration = new MetadataConfiguration(metadataDirectory);
-        List<ImageMetadataIndex> imageMetadataIndexList;
-        if (!metadataDirectory.exists()) {
-            checkedMkDir(metadataDirectory);
-            imageMetadataIndexList = new ArrayList<>();
-            seriesProcess(remoteSeriesList, metadataConfiguration, imageMetadataIndexList);
-        } else if (metadataDirectory.listFiles() != null) {
-            imageMetadataIndexList = metadataConfiguration.readProjectMetadataIndexFile();
-            List<Series> localSeriesList = new ArrayList<>();
-            for (ImageMetadataIndex imageMetadataIndex : imageMetadataIndexList) {
-                Series localSeries = imageMetadataIndex.getSeries();
-                if (remoteSeriesList.contains(localSeries)) {
-                    localSeriesList.add(localSeries);
-                }
-            }
-            List<Series> seriesListForDownloading = new ArrayList<>(remoteSeriesList);
-            seriesListForDownloading.removeAll(localSeriesList);
-            if (seriesListForDownloading.size() != 0) {
-                seriesProcess(seriesListForDownloading, metadataConfiguration, imageMetadataIndexList);
-            }
+      try {
+        List<Conflict> resolvedConflicts = conflictsQuery.get();
+
+        for (Conflict conflict : resolvedConflicts) {
+          if (conflict.getResolution() == Conflict.Resolution.Cancel) {
+            remoteInfosToDownload.remove(conflict.getRemote());
+            localInfosToUpload.remove(conflict.getLocal());
+          } else if (conflict.getResolution() == Conflict.Resolution.Local) {
+            remoteInstancesToDelete.add(conflict.getRemote().getKey());
+            remoteInfosToDownload.remove(conflict.getRemote());
+          } else if (conflict.getResolution() == Conflict.Resolution.Remote) {
+            localInfosToUpload.remove(conflict.getLocal());
+          }
         }
+      } catch (InterruptedException | ExecutionException e) {
+        throw new QuPathCloudException(e);
+      }
     }
 
-    private void seriesProcess(List<Series> seriesList, MetadataConfiguration metadataConfiguration, List<ImageMetadataIndex> imageMetadataIndexList) throws QuPathCloudException {
-        for (Series series : seriesList) {
-            String studyId = series.getStudyInstanceUID().getValue1();
-            String seriesId = series.getSeriesInstanceUID().getValue1();
-            String imageComments = series.getSeriesDescription().getValue1();
-            QueryBuilder queryBuilder = QueryBuilder.forProject(projectId)
-                    .setLocationId(locationId)
-                    .setDatasetId(datasetId)
-                    .setDicomStoreId(dicomStoreId)
-                    .setStudyId(studyId)
-                    .setSeriesId(seriesId);
-            List<Instance> instances = cloudDAO.getInstancesList(queryBuilder);
-            File metadataFile = metadataConfiguration.saveMetadataFile(series, instances);
-            String absolutePathToMetadataFile = metadataFile.getAbsolutePath();
-            ProjectImageEntry<BufferedImage> newImageEntry = new ProjectImageEntry<>(project, absolutePathToMetadataFile, imageComments, null);
-            project.addImage(newImageEntry);
-            ImageMetadataIndex imageMetadataIndex = new ImageMetadataIndex();
-            imageMetadataIndex.setSeries(series);
-            imageMetadataIndexList.add(imageMetadataIndex);
-        }
-        metadataConfiguration.saveProjectMetadataIndexFile(imageMetadataIndexList);
+    QueryBuilder baseQuery = QueryBuilder.forProject(projectId)
+        .setLocationId(locationId)
+        .setDatasetId(datasetId)
+        .setDicomStoreId(dicomStoreId);
+
+    if (localInfosToUpload.size() > 0) {
+      processUploads(localInfosToUpload, baseQuery);
     }
 
-    private void synchronizeQpdata() throws QuPathCloudException {
-        List<Pair<File, Date>> localInfosToUpload = collectLocalDataFileInfos();
-        List<Pair<Instance, Date>> remoteInfosToDownload = collectRemoteInstanceInfos();
-
-        List<Instance> remoteInstancesToDelete = new ArrayList<>();
-        List<Conflict> conflicts = new ArrayList<>();
-
-        Iterator<Pair<File, Date>> localIter = localInfosToUpload.iterator();
-        Pair<File, Date> localInfo;
-        while (localIter.hasNext()) {
-            localInfo = localIter.next();
-            String localName = FilenameUtils.getBaseName(localInfo.getKey().getPath());
-            Pair<Instance, Date> remoteInfo;
-            Iterator<Pair<Instance, Date>> remoteIter = remoteInfosToDownload.iterator();
-            while (remoteIter.hasNext()) {
-                remoteInfo = remoteIter.next();
-                if (localName.equals(remoteInfo.getKey().getSopAuthorizationComment().getValue1())) {
-                    int comparisonResult = localInfo.getValue().compareTo(remoteInfo.getValue());
-                    Conflict.Resolution resolution;
-                    if (comparisonResult > 0) {
-                        resolution = Conflict.Resolution.Local;
-                    } else if (comparisonResult == 0) {
-                        remoteIter.remove();
-                        localIter.remove();
-                        break;
-                    } else {
-                        resolution = Conflict.Resolution.Remote;
-                    }
-                    Conflict conflict = new Conflict(localName, localInfo, remoteInfo, resolution);
-                    conflicts.add(conflict);
-                }
-            }
-        }
-
-        if (conflicts.size() > 0) {
-            Callable<List<Conflict>> task = () -> {
-                ConflictsWindow conflictsWindow = new ConflictsWindow(conflicts);
-                conflictsWindow.showAndWaitConflictsWindow();
-                return conflictsWindow.getResult();
-            };
-            FutureTask<List<Conflict>> conflictsQuery = new FutureTask<>(task);
-            Platform.runLater(conflictsQuery);
-
-            try {
-                List<Conflict> resolvedConflicts = conflictsQuery.get();
-
-                for (Conflict conflict : resolvedConflicts) {
-                    if (conflict.getResolution() == Conflict.Resolution.Cancel) {
-                        remoteInfosToDownload.remove(conflict.getRemote());
-                        localInfosToUpload.remove(conflict.getLocal());
-                    } else if (conflict.getResolution() == Conflict.Resolution.Local) {
-                        remoteInstancesToDelete.add(conflict.getRemote().getKey());
-                        remoteInfosToDownload.remove(conflict.getRemote());
-                    } else if (conflict.getResolution() == Conflict.Resolution.Remote) {
-                        localInfosToUpload.remove(conflict.getLocal());
-                    }
-                }
-            } catch (InterruptedException | ExecutionException e) {
-                throw new QuPathCloudException(e);
-            }
-        }
-
-        QueryBuilder baseQuery = QueryBuilder.forProject(projectId)
-                .setLocationId(locationId)
-                .setDatasetId(datasetId)
-                .setDicomStoreId(dicomStoreId);
-
-        processUploads(localInfosToUpload, baseQuery);
-
-        processDownloads(remoteInfosToDownload, baseQuery);
-
-        QueryBuilder query = new QueryBuilder(baseQuery).setInstances(remoteInstancesToDelete);
-        cloudDAO.deleteInstances(query);
+    if (remoteInfosToDownload.size() > 0) {
+      processDownloads(remoteInfosToDownload, baseQuery);
     }
 
-    private List<Pair<File, Date>> collectLocalDataFileInfos() {
-        File projectDataDirectory = qupath.getProjectDataDirectory(true);
+    QueryBuilder query = new QueryBuilder(baseQuery).setInstances(remoteInstancesToDelete);
+    cloudDao.deleteInstances(query);
+  }
 
-        File[] dataFiles = projectDataDirectory.listFiles();
-        List<Pair<File, Date>> localDataFileInfos = new ArrayList<>();
-        if (dataFiles != null) {
-            for (File dataFile : dataFiles) {
-                Pair<File, Date> fileInfo = new Pair<>(dataFile, ImageDataUtilities.getModificationDate(dataFile));
-                localDataFileInfos.add(fileInfo);
-            }
-        }
-        return localDataFileInfos;
+  private List<Pair<ProjectImageEntry<BufferedImage>, Date>> collectLocalDataFileInfos()
+      throws QuPathCloudException {
+    List<ProjectImageEntry<BufferedImage>> imageList = qupath.getProject().getImageList();
+    List<Pair<ProjectImageEntry<BufferedImage>, Date>> localDataFileInfos = new ArrayList<>();
+    for (ProjectImageEntry<BufferedImage> currentEntry : imageList) {
+      Path pathToCurrentEntry = currentEntry.getEntryPath();
+      Path pathToCurrentQpdataFile = pathToCurrentEntry.resolve(QU_PATH_DATA_FILE);
+      if (Files.exists(pathToCurrentQpdataFile)) {
+        Date modificationDate = ImageDataUtilities.getModificationDate(pathToCurrentQpdataFile);
+        Pair<ProjectImageEntry<BufferedImage>, Date> fileInfo =
+            new Pair<>(currentEntry, modificationDate);
+        localDataFileInfos.add(fileInfo);
+      }
+    }
+    return localDataFileInfos;
+  }
+
+  private List<Pair<Instance, Date>> collectRemoteInstanceInfos() throws QuPathCloudException {
+    List<Pair<Instance, Date>> remoteInstanceInfos = new ArrayList<>();
+    QueryBuilder queryBuilder = QueryBuilder.forProject(projectId)
+        .setLocationId(locationId)
+        .setDatasetId(datasetId)
+        .setDicomStoreId(dicomStoreId);
+    List<Instance> instances = cloudDao.getInstancesList(queryBuilder);
+    List<Instance> remoteInstances = DAOHelper.getQpdataInstanceListInDicomStore(instances);
+    for (Instance instance : remoteInstances) {
+      Pair<Instance, Date> instanceInfo = new Pair<>(instance, instance.getCreationDate());
+      remoteInstanceInfos.add(instanceInfo);
+    }
+    return remoteInstanceInfos;
+  }
+
+  private void processUploads(List<Pair<ProjectImageEntry<BufferedImage>, Date>> localDataFileInfos,
+      QueryBuilder baseQuery)
+      throws QuPathCloudException {
+    Path directoryToUpload = createTempDirectory("qpDataDcmUpload-");
+
+    List<Path> dataFilesForUpload = new ArrayList<>();
+    for (Pair<ProjectImageEntry<BufferedImage>, Date> fileInfo : localDataFileInfos) {
+      Path pathToCurrentEntry = fileInfo.getKey().getEntryPath();
+      Path pathToCurrentQpdataFile = pathToCurrentEntry.resolve(QU_PATH_DATA_FILE);
+      Date modificationDate = fileInfo.getValue();
+      String imageName = fileInfo.getKey().getImageName();
+      DataToDcmConverter dataToDcmConverter = new DataToDcmConverter(pathToCurrentQpdataFile,
+          directoryToUpload, modificationDate, imageName);
+      Path convertedFile = dataToDcmConverter.convertQuPathDataToDcm();
+      dataFilesForUpload.add(convertedFile);
     }
 
-    private List<Pair<Instance, Date>> collectRemoteInstanceInfos() throws QuPathCloudException {
-        List<Pair<Instance, Date>> remoteInstanceInfos = new ArrayList<>();
-        QueryBuilder queryBuilder = QueryBuilder.forProject(projectId)
-                .setLocationId(locationId)
-                .setDatasetId(datasetId)
-                .setDicomStoreId(dicomStoreId);
-        List<Instance> instances = cloudDAO.getInstancesList(queryBuilder);
-        List<Instance> remoteInstances = DAOHelper.getQpdataInstancesListInDicomStore(instances);
-        for (Instance instance : remoteInstances) {
-            Pair<Instance, Date> instanceInfo = new Pair<>(instance, instance.getCreationDate());
-            remoteInstanceInfos.add(instanceInfo);
+    QueryBuilder query = new QueryBuilder(baseQuery).setPaths(dataFilesForUpload);
+    cloudDao.uploadToDicomStore(query);
+
+    deleteDirectory(directoryToUpload);
+  }
+
+  private void processDownloads(List<Pair<Instance, Date>> remoteInstanceInfos,
+      QueryBuilder baseQuery) throws QuPathCloudException {
+
+    List<ProjectImageEntry<BufferedImage>> imageList = qupath.getProject().getImageList();
+    Map<String, Path> imageDirectories = new HashMap<>();
+    for (ProjectImageEntry<BufferedImage> currentEntry : imageList) {
+      Path pathToCurrentEntry = currentEntry.getEntryPath();
+      String imageName = currentEntry.getImageName();
+
+      if (Files.notExists(pathToCurrentEntry)) {
+        String serverPath = currentEntry.getServerPath();
+        StubImageServer stubImageServer = new StubImageServer();
+        stubImageServer.setDisplayedImageName(imageName);
+        stubImageServer.setPath(serverPath);
+
+        ImageData<BufferedImage> imageData = qupath.createNewImageData(stubImageServer);
+        ProjectImageEntry<BufferedImage> entry = project.getImageEntry(serverPath);
+        try {
+          entry.saveImageData(imageData);
+        } catch (IOException e) {
+          throw new QuPathCloudException(e);
         }
-        return remoteInstanceInfos;
+      }
+
+      imageDirectories.put(imageName, pathToCurrentEntry);
     }
 
-    private void processUploads(List<Pair<File, Date>> localDataFileInfos, QueryBuilder baseQuery) throws QuPathCloudException {
-        File uploadDirectory = prepareTempDirectory("qpDataDcmUpload");
+    Path directoryToDownload = createTempDirectory("qpDataDcmDownload-");
 
-        List<File> dataFilesForUpload = new ArrayList<>();
-        List<File> tempFiles = new ArrayList<>();
-        for (Pair<File, Date> fileInfo : localDataFileInfos) {
-            DataToDcmConverter dataToDcmConverter = new DataToDcmConverter(fileInfo.getKey(), uploadDirectory, fileInfo.getValue());
-            File convertedFile = dataToDcmConverter.convertQuPathDataToDcm();
-            dataFilesForUpload.add(convertedFile);
-            tempFiles.add(convertedFile);
-        }
+    List<Instance> remoteQpdataInstances = remoteInstanceInfos.stream().map(Pair::getKey)
+        .collect(Collectors.toList());
+    QueryBuilder query = new QueryBuilder(baseQuery)
+        .setDirectory(directoryToDownload)
+        .setInstances(remoteQpdataInstances);
+    cloudDao.downloadInstances(query);
 
-        QueryBuilder query = new QueryBuilder(baseQuery).setFiles(dataFilesForUpload);
-        cloudDAO.uploadToDicomStore(query);
-
-        deleteLocalFiles(tempFiles);
+    for (Instance instance : remoteQpdataInstances) {
+      String sopInstanceUID = instance.getSopInstanceUID().getValue1();
+      Path downloadedQpdataInstance = directoryToDownload.resolve(sopInstanceUID + ".dcm");
+      String imageName = instance.getSopAuthorizationComment().getValue1();
+      Path imageDirectory = imageDirectories.get(imageName);
+      Path qpdataFile = imageDirectory.resolve(QU_PATH_DATA_FILE);
+      DcmToDataConverter dcmToDataConverter =
+          new DcmToDataConverter(downloadedQpdataInstance, qpdataFile);
+      dcmToDataConverter.convertDcmToQuPathData();
     }
 
-    private void processDownloads(List<Pair<Instance, Date>> remoteInstanceInfos, QueryBuilder baseQuery) throws QuPathCloudException {
-        File projectDataDirectory = qupath.getProjectDataDirectory(true);
-        File downloadDirectory = prepareTempDirectory("qpDataDcmDownload");
+    deleteDirectory(directoryToDownload);
+  }
 
-        List<Instance> remoteInstancesToDownload = remoteInstanceInfos.stream().map(Pair::getKey).collect(Collectors.toList());
-        QueryBuilder query = new QueryBuilder(baseQuery)
-                .setDirectory(downloadDirectory)
-                .setInstances(remoteInstancesToDownload);
-        cloudDAO.downloadDicomStore(query);
-
-        File[] dcmDataFiles = downloadDirectory.listFiles();
-        List<File> tempFiles = new ArrayList<>();
-        if (dcmDataFiles != null && dcmDataFiles.length > 0) {
-            for (File dcmDataFile : dcmDataFiles) {
-                DcmToDataConverter dcmToDataConverter = new DcmToDataConverter(dcmDataFile, projectDataDirectory);
-                dcmToDataConverter.convertDcmToQuPathData();
-            }
-            tempFiles.addAll(Arrays.asList(dcmDataFiles));
-        }
-
-        deleteLocalFiles(tempFiles);
+  private Path createTempDirectory(String prefix) throws QuPathCloudException {
+    try {
+      return Files.createTempDirectory(prefix);
+    } catch (IOException e) {
+      throw new QuPathCloudException(e);
     }
+  }
 
-    private void deleteLocalFiles(List<File> files) {
-        for (File localFile : files) {
-            if (!localFile.delete()) {
-                LOGGER.warn("Failed to delete temp file: " + localFile);
-            }
-        }
+  private void deleteDirectory(Path path) throws QuPathCloudException {
+    try {
+      FileUtils.deleteDirectory(path.toFile());
+    } catch (IOException e) {
+      throw new QuPathCloudException(e);
     }
+  }
 
-    private File prepareTempDirectory(String name) throws QuPathCloudException {
-        File tempDirectory = new File(projectDirectory, name);
-        if (!tempDirectory.exists()) {
-            checkedMkDir(tempDirectory);
-        }
-        File[] dcmDataFiles = tempDirectory.listFiles();
-        if (dcmDataFiles != null && dcmDataFiles.length > 0) {
-            try {
-                FileUtils.cleanDirectory(tempDirectory);
-            } catch (IOException e) {
-                throw new QuPathCloudException(e);
-            }
-        }
-        return tempDirectory;
+  private String checkFileName(List<Series> remoteSeriesList, String localFileName) {
+    List<String> remoteFileNames = new ArrayList<>();
+    for (Series series : remoteSeriesList) {
+      String remoteFileName = series.getSeriesDescription().getValue1();
+      remoteFileNames.add(remoteFileName);
     }
-
-    private String checkFileName(List<Series> remoteSeriesList, String localFileName) {
-        List<String> remoteFileNames = new ArrayList<>();
-        for (Series series : remoteSeriesList) {
-            String remoteFileName = series.getSeriesDescription().getValue1();
-            remoteFileNames.add(remoteFileName);
+    int fileNumber = 0;
+    if (remoteFileNames.contains(localFileName)) {
+      for (int i = 1; i < remoteFileNames.size(); i++) {
+        String iteration = localFileName + "_" + i;
+        if (remoteFileNames.contains(iteration)) {
+          fileNumber = i;
         }
-        int fileNumber = 0;
-        if (remoteFileNames.contains(localFileName)) {
-            for (int i = 1; i < remoteFileNames.size(); i++) {
-                String iteration = localFileName + "_" + i;
-                if (remoteFileNames.contains(iteration)) {
-                    fileNumber = i;
-                }
-            }
-            if (fileNumber == 0) {
-                return localFileName + "_1";
-            } else {
-                fileNumber++;
-                return localFileName + "_" + fileNumber;
-            }
-        }
-        return localFileName;
+      }
+      if (fileNumber == 0) {
+        return localFileName + "_1";
+      } else {
+        fileNumber++;
+        return localFileName + "_" + fileNumber;
+      }
     }
-
-    private void checkedMkDir(File directory) throws QuPathCloudException {
-        if (!directory.exists() && !directory.mkdir()) {
-            throw new QuPathCloudException("Failed to create directory: " + directory);
-        }
-    }
+    return localFileName;
+  }
 }
