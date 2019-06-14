@@ -1,0 +1,26 @@
+steps:
+- name: 'gcr.io/cloud-builders/git'
+  args:
+  - 'clone'
+  - 'https://github.com/qupath/qupath.git'
+  - 'qupath'
+- name: 'gcr.io/cloud-builders/git'
+  args:
+  - 'checkout'
+  - 'tags/v0.1.2'
+  dir: 'qupath'
+- name: 'maven:3.6.1-amazoncorretto-8'
+  volumes:
+  - name: 'vol1'
+    path: '/root/.m2'
+  args:
+  - 'mvn'
+  - 'install'
+  dir: 'qupath'
+- name: 'maven:3.6.1-amazoncorretto-8'
+  volumes:
+  - name: 'vol1'
+    path: '/root/.m2'
+  args:
+  - 'mvn'
+  - 'install'
