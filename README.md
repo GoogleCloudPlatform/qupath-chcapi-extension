@@ -1,18 +1,22 @@
 # QuPath Cloud Healthcare API Extension
+
 The **QuPath Cloud Healthcare API** provides viewing whole-slide images online without 
 full downloading and synchronize annotations with the help of 
 [Google Cloud Healthcare API](https://cloud.google.com/healthcare/).
 
 ## Installation:
+
 1) Download the latest JAR from the releases tab.
 2) Run **QuPath** application and drop the JAR on it's window or just put to /extensions in QuPath 
 data folder.
 >If you haven't installed QuPath v0.2.0-m2, install QuPath from 
 >[here](https://github.com/qupath/qupath/releases/tag/v0.2.0-m2).  
 >For new version recommended using another /extension folder to avoid conflict with the previous 
->extension version.
+>extension version. Also, you can delete the previous extension version, if you don't want to use 
+>another /extension folder.
 
 ## Setting up project to use DICOM cloud:
+
 To upload to the cloud it is necessary to dicomize your whole-slide images using embedded wsi2dcm 
 dicomizer in qupath-chcapi-extension or using 
 [OrthancWSIDicomizer](https://www.orthanc-server.com/browse.php?path=/whole-slide-imaging) 
@@ -43,6 +47,7 @@ on computer.
 [here](https://openslide.org/).
 
 ## Synchronization annotations:
+
 1) Add/Edit image annotations in existing project.
 2) Save changed annotations via **File**->**Save**.
 3) Click **Synchronize** button (annotations will be uploaded in chosen DICOM Store).
@@ -53,6 +58,7 @@ modified timestamp).
 6) (Re)open annotated image - need to reload ImageData containing annotations.
 
 ## Note:
+
 QuPath uses embedded Java and may cause some errors. If you get any errors with it, follow these 
 steps:
 1) Download and install Java SE Development Kit 11.
@@ -60,16 +66,22 @@ steps:
 3) Launch QuPath with following parameters `java -Djava.library.path=. -jar qupath-0.2.0-m2.jar`
 
 ## Compilation:
+
 Perform the following steps for compiling extension and packaging to qupath-chcapi-extension.jar:
 1) **git clone https://github.com/qupath/qupath.git** in the terminal in your local folder (for 
 adding dependencies from QuPath).
-2) Add **apply plugin: 'maven'** string in build.gradle(Build all projects - all projects point) in 
+2) **git checkout v0.2.0-m2** to switch to QuPath v0.2.0-m2.
+3) Add **apply plugin: 'maven'** string in build.gradle(Build all projects - all projects point) in 
 qupath folder.
-3) **./gradlew install** in qupath folder in the terminal.
-4) **mvn package** in qupath-chcapi-extension folder in the terminal (for packaging to jar).  
+4) **./gradlew install** in qupath folder in the terminal.
+5) Copy **openslide** folder to **.m/repository/org/** from **qupath/maven/repo/org/** folder. It's 
+necessary to copy openslide dependencies to the local maven repository.
+6) **git clone https://github.com/GoogleCloudPlatform/qupath-chcapi-extension.git**
+7) **mvn package** in qupath-chcapi-extension folder in the terminal (for packaging to jar).  
 
-Resulting **qupath-chcapi-extension-1.1.jar** will be put into **qupath-chcapi-extension/target** 
+Resulting **qupath-chcapi-extension-2.0.jar** will be put into **qupath-chcapi-extension/target** 
 folder.
 
 ## License:
+
 This extension is licensed under GPL v3. Full license text is available in LICENSE.
