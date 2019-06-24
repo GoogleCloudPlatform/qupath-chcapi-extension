@@ -15,10 +15,9 @@
 
 package com.quantumsoft.qupathcloud.dao;
 
-import static com.quantumsoft.qupathcloud.dao.CloudDaoImpl.cutHeadersAndBoundary;
 import static com.quantumsoft.qupathcloud.dao.Constants.APPLICATION_DICOM_JSON_CHARSET_UTF8;
+import static com.quantumsoft.qupathcloud.dao.Constants.APPLICATION_DICOM_TRANSFER_SYNTAX;
 import static com.quantumsoft.qupathcloud.dao.Constants.BEARER;
-import static com.quantumsoft.qupathcloud.dao.Constants.MULTIPART_RELATED_TYPE_APPLICATION_DICOM_TRANSFER_SYNTAX;
 import static com.quantumsoft.qupathcloud.exception.Errors.FAILED_HTTP;
 import static org.apache.http.HttpHeaders.ACCEPT;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
@@ -72,7 +71,7 @@ public class DownloadDicomCallable implements Callable<Void> {
     try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
       URI uri = uriBuilder.build();
       HttpGet request = new HttpGet(uri);
-      request.addHeader(ACCEPT, MULTIPART_RELATED_TYPE_APPLICATION_DICOM_TRANSFER_SYNTAX);
+      request.addHeader(ACCEPT, APPLICATION_DICOM_TRANSFER_SYNTAX);
       request.addHeader(CONTENT_TYPE, APPLICATION_DICOM_JSON_CHARSET_UTF8);
       Credential credential = oAuth20.getCredential();
       request.addHeader(AUTHORIZATION, BEARER + credential.getAccessToken());
@@ -86,8 +85,7 @@ public class DownloadDicomCallable implements Callable<Void> {
         HttpEntity entity = response.getEntity();
 
         try (InputStream inputStream = entity.getContent()) {
-          InputStream inputStream1 = cutHeadersAndBoundary(inputStream);
-          Files.copy(inputStream1, outputFile);
+          Files.copy(inputStream, outputFile);
         }
       }
     }

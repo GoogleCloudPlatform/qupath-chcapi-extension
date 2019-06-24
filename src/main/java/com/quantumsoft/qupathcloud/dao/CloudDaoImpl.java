@@ -44,7 +44,6 @@ import static com.quantumsoft.qupathcloud.dao.Constants.VALUE_PARAM_TIMEZONE_OFF
 import static com.quantumsoft.qupathcloud.dao.Constants.VALUE_PARAM_TOTAL_PIXEL_MATRIX_COLUMNS;
 import static com.quantumsoft.qupathcloud.dao.Constants.VALUE_PARAM_TOTAL_PIXEL_MATRIX_ROWS;
 import static com.quantumsoft.qupathcloud.exception.Errors.FAILED_HTTP;
-import static org.apache.commons.io.IOUtils.toByteArray;
 import static org.apache.http.HttpHeaders.ACCEPT;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;
@@ -76,14 +75,12 @@ import com.quantumsoft.qupathcloud.entities.instance.Instance;
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 import com.quantumsoft.qupathcloud.oauth20.OAuth20;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -107,7 +104,6 @@ public class CloudDaoImpl extends CloudDao {
   private static final int THREADS_COUNT = 4;
   private static final int R = 0x0d; // "\r"
   private static final int N = 0x0a; // "\n"
-  private static final int H = 0x2d; // "-"
 
   /**
    * Instantiates a new Cloud dao.
@@ -284,8 +280,7 @@ public class CloudDaoImpl extends CloudDao {
   }
 
   @Override
-  public void downloadInstances(QueryBuilder queryBuilder)
-      throws QuPathCloudException {
+  public void downloadInstances(QueryBuilder queryBuilder) throws QuPathCloudException {
     StudiesPathBuilder studiesPathBuilder = new StudiesPathBuilder(queryBuilder);
     ExecutorService executorService = Executors.newFixedThreadPool(THREADS_COUNT);
     List<Future<Void>> list = new ArrayList<>();
@@ -451,36 +446,6 @@ public class CloudDaoImpl extends CloudDao {
       }
     }
     return inputStream;
-  }
-
-  /**
-   * This method cuts the top headers and the top boundary with the bottom boundary. The minus of
-   * this method is a delay of ~ 0.2 - 0.5 seconds during cuts.
-   *
-   * @param inputStream without cuts body.
-   * @return cut inputStream.
-   * @throws IOException when toByteArray method throws an exception.
-   */
-  static InputStream cutHeadersAndBoundary(InputStream inputStream) throws IOException {
-    byte[] body = toByteArray(inputStream);
-    int bodyLength = body.length;
-    int startImageBody = 0;
-    for (int i = 0; i < bodyLength - 1; i++) {
-      if (body[i] == R && body[i + 1] == N && body[i + 2] == R && body[i + 3] == N) {
-        startImageBody = i + 4; //inclusive
-        break;
-      }
-    }
-    int endImageBody = 0;
-    for (int i = bodyLength - 1; i > 0; i--) {
-      if (body[i] == H && body[i - 1] == H && body[i - 2] == N && body[i - 3] == R) {
-        endImageBody = i - 3; //not inclusive
-        break;
-      }
-    }
-    int imageBodyLength = bodyLength - (bodyLength - endImageBody);
-    byte[] imageBody = Arrays.copyOfRange(body, startImageBody, imageBodyLength);
-    return new ByteArrayInputStream(imageBody);
   }
 
   private void checkStatusCode(CloseableHttpResponse response) throws QuPathCloudException {

@@ -89,8 +89,7 @@ public class Constants {
 
   static final String BEARER = "Bearer ";
   static final String APPLICATION_JSON_CHARSET_UTF8 = "application/json; charset=utf-8";
-  static final String MULTIPART_RELATED_TYPE_APPLICATION_DICOM_TRANSFER_SYNTAX =
-      "multipart/related; type=application/dicom; transfer-syntax=*";
+  static final String APPLICATION_DICOM_TRANSFER_SYNTAX = "application/dicom; transfer-syntax=*";
   static final String APPLICATION_DICOM_JSON_CHARSET_UTF8 = "application/dicom+json; charset=utf-8";
   static final String MULTIPART_RELATED_TYPE_APPLICATION_DICOM_BOUNDARY =
       "multipart/related; type=application/dicom; boundary=";
