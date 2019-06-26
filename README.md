@@ -1,50 +1,52 @@
 # QuPath Cloud Healthcare API Extension
 
 The **QuPath Cloud Healthcare API** provides viewing whole-slide images online without 
-full downloading and synchronize annotations with the help of 
+full downloading and [synchronize annotations](#synchronization-annotations) with the help of 
 [Google Cloud Healthcare API](https://cloud.google.com/healthcare/).
 
 ## Installation:
 
-1) Download the latest JAR from the releases tab.
-2) Run **QuPath** application and drop the JAR on it's window or just put to /extensions in QuPath 
-data folder.
->If you haven't installed QuPath v0.2.0-m2, install QuPath from 
->[here](https://github.com/qupath/qupath/releases/tag/v0.2.0-m2).  
->For new version recommended using another /extension folder to avoid conflict with the previous 
->extension version. Also, you can delete the previous extension version, if you don't want to use 
->another /extension folder.
+1) Install QuPath v0.2.0-m2 from [here](https://github.com/qupath/qupath/releases/tag/v0.2.0-m2).
+2) Download the latest JAR from the releases tab.
+3) When you install QuPath, folder for extensions is set */home/user/QuPath/extensions* by default 
+(in Linux). You can put the JAR in this folder or just drag-and-drop it in the QuPath window.
+> For new version recommended using another QuPath user directory to avoid conflict with the 
+> previous extension version. You can set another user directory. Press edit -> preferences and 
+> set another user directory in QuPath. Also, you can delete the previous extension version, if 
+> you don't want to use another QuPath user directory.
 
 ## Setting up project to use DICOM cloud:
 
-To upload to the cloud it is necessary to dicomize your whole-slide images using embedded wsi2dcm 
-dicomizer in qupath-chcapi-extension or using 
-[OrthancWSIDicomizer](https://www.orthanc-server.com/browse.php?path=/whole-slide-imaging) 
-and upload it with the help of [cURL](https://curl.haxx.se/)  or 
-[dcm4che stowrs](https://sourceforge.net/projects/dcm4che/).
-
 1) Create empty project in QuPath.
-2) Click **Cloud** button on the button bar. Login with OAuth in your default browser with your 
-account which have access permission (1 time).
-3) Select Project and click **NEXT** button in extension window.
-4) Create Dataset. Click **New Dataset** button, input Dataset name, choose near Location and after 
-that click **NEXT** button. Also, you can choose existing Dataset.
-5) Create DICOM Store. Click **New DICOM Store** button, input DICOM Store name. After that click 
-**OK** button.
+2) Click the **Cloud** button on the button bar. Login with OAuth in your default browser with your 
+account which has access permission to Cloud Healthcare API (1 time).
+3) Select the desired Project and click the **NEXT** button in extension window.
+4) Select an existing Dataset or create a new one. Steps to create a new Dataset:
+   1) Click the **New Dataset** button.
+   2) Input the Dataset name.
+   3) Choose the desired Location in which you want the Dataset stored.
+   4) Click the **CREATE** button.
+   5) Click the **NEXT** button.
+5) Select an existing DICOM Store which contains whole slide images or create a new one. Steps to 
+create a new DICOM Store:
+   1) Click the **New DICOM Store** button.
+   2) Input the DICOM Store name.
+   3) Click the **CREATE** button.
+   4) Click the **OK** button.
 6) Upload dicomized images into created DICOM Store and Dataset in chosen Location:
-   1) If you want to use the embedded wsi2dcm dicomizer in the qupath-chcapi-extension, just add 
-   images to the project. When you click **Synchronize** button images will be dicomized and 
+   1) If you want to use the embedded wsi-to-dicom-converter in the qupath-chcapi-extension, just 
+   add images to the project. When you click **Synchronize** button images will be dicomized and 
    uploaded.
-   2) Alternatively you can use [OrthancWSIDicomizer](http://book.orthanc-server.com/plugins/wsi.html). 
+   2) Alternatively you can use 
+   [OrthancWSIDicomizer](https://www.orthanc-server.com/browse.php?path=/whole-slide-imaging). 
    Once source images have been dicomized, you can upload them via 
-   [curl](https://cloud.google.com/healthcare/docs/how-tos/dicom-import-export) or 
-   [dcm4che stowrs tool](https://github.com/dcm4che/dcm4che/tree/master/dcm4che-tool/dcm4che-tool-stowrs).
+   [gcloud](https://cloud.google.com/healthcare/docs/how-tos/dicom-import-export).
 7) Click **Synchronize** button on the button bar in QuPath to synchronize DICOM Store with your 
 project.
->Extension saved in your chosen dicom store for existing project and saved your access permission 
-on computer.   
->Supported formats for qupath-chcapi-extension and pathology test data you can see 
-[here](https://openslide.org/).
+> Extension saved in your chosen dicom store for existing project and saved your access permission 
+> on computer.   
+> Supported formats for qupath-chcapi-extension and pathology test data you can see 
+> [here](https://openslide.org/).
 
 ## Synchronization annotations:
 
