@@ -23,7 +23,7 @@ import com.quantumsoft.qupathcloud.converter.dicomizer.ImageToWsiDcmConverter;
 import com.quantumsoft.qupathcloud.converter.qpdata.DataToDcmConverter;
 import com.quantumsoft.qupathcloud.converter.qpdata.DcmToDataConverter;
 import com.quantumsoft.qupathcloud.dao.CloudDao;
-import com.quantumsoft.qupathcloud.dao.DAOHelper;
+import com.quantumsoft.qupathcloud.dao.DaoHelper;
 import com.quantumsoft.qupathcloud.dao.spec.QueryBuilder;
 import com.quantumsoft.qupathcloud.entities.DicomStore;
 import com.quantumsoft.qupathcloud.entities.Series;
@@ -136,7 +136,7 @@ public class SynchronizationProjectWithDicomStore {
         .setDatasetId(datasetId)
         .setDicomStoreId(dicomStoreId);
     List<Series> remoteSeriesList = cloudDao.getSeriesList(queryBuilder);
-    List<Series> remoteImageSeriesList = DAOHelper.getImageSeriesList(remoteSeriesList);
+    List<Series> remoteImageSeriesList = DaoHelper.getImageSeriesList(remoteSeriesList);
 
     List<Path> tempDirectories = new ArrayList<>();
     for (ProjectImageEntry<BufferedImage> currentEntry : imageList) {
@@ -205,7 +205,7 @@ public class SynchronizationProjectWithDicomStore {
         .setDatasetId(datasetId)
         .setDicomStoreId(dicomStoreId);
     List<Series> remoteSeriesList = cloudDao.getSeriesList(queryBuilder);
-    List<Series> remoteImageSeriesList = DAOHelper.getImageSeriesList(remoteSeriesList);
+    List<Series> remoteImageSeriesList = DaoHelper.getImageSeriesList(remoteSeriesList);
 
     List<Series> seriesListInProject;
     if (Files.notExists(metadataDirectory)) {
@@ -366,7 +366,7 @@ public class SynchronizationProjectWithDicomStore {
         .setDatasetId(datasetId)
         .setDicomStoreId(dicomStoreId);
     List<Instance> instances = cloudDao.getInstancesList(queryBuilder);
-    List<Instance> remoteInstances = DAOHelper.getQpdataInstanceListInDicomStore(instances);
+    List<Instance> remoteInstances = DaoHelper.getQpdataInstanceListInDicomStore(instances);
     for (Instance instance : remoteInstances) {
       Pair<Instance, Date> instanceInfo = new Pair<>(instance, instance.getCreationDate());
       remoteInstanceInfos.add(instanceInfo);

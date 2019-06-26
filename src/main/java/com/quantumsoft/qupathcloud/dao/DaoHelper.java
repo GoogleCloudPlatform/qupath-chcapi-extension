@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * Dao helper for filtering qpdata and images in lists.
  */
-public class DAOHelper {
+public class DaoHelper {
 
   /**
    * Gets image Series list.
@@ -51,6 +51,6 @@ public class DAOHelper {
         .collect(Collectors.toList());
   }
 
-  private DAOHelper() {
+  private DaoHelper() {
   }
 }
