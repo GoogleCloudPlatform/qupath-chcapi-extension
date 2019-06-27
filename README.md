@@ -10,8 +10,8 @@ full downloading and [synchronize annotations](#synchronization-annotations) wit
 2) Download the latest JAR from the releases tab.
 3) When you install QuPath, folder for extensions is set */home/user/QuPath/extensions* by default 
 (in Linux). You can put the JAR in this folder or just drag-and-drop it in the QuPath window.
-> For new version recommended using another QuPath user directory to avoid conflict with the 
-> previous extension version. You can set another user directory. Press edit -> preferences and 
+> For new version another QuPath user directory is recommended to avoid conflict with the previous 
+> extension version. You can set another user directory. Press edit -> preferences and 
 > set another user directory in QuPath. Also, you can delete the previous extension version, if 
 > you don't want to use another QuPath user directory.
 
@@ -24,7 +24,7 @@ account which has access permission to Cloud Healthcare API (1 time).
 4) Select an existing Dataset or create a new one. Steps to create a new Dataset:
    1) Click the **New Dataset** button.
    2) Input the Dataset name.
-   3) Choose the desired Location in which you want the Dataset stored.
+   3) Choose the desired Location in where you want the Dataset stored.
    4) Click the **CREATE** button.
    5) Click the **NEXT** button.
 5) Select an existing DICOM Store which contains whole slide images or create a new one. Steps to 
@@ -54,7 +54,7 @@ project.
 2) Save changed annotations via **File**->**Save**.
 3) Click **Synchronize** button (annotations will be uploaded in chosen DICOM Store).
 4) If DICOM Store contains dicomized annotations that are locally absent they will be downloaded.
-5) If DICOM Store contains different versions of annotations for same images, user will be 
+5) If DICOM Store contains different versions of annotations for the same images, user will be 
 presented window with conflict list and asked to resolve them (with defaults set based on last 
 modified timestamp).
 6) (Re)open annotated image - need to reload ImageData containing annotations.
