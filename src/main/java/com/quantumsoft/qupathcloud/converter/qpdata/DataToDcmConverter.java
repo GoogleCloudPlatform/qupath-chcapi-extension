@@ -33,7 +33,8 @@ import org.dcm4che3.util.StreamUtils;
 import org.dcm4che3.util.UIDUtils;
 
 /**
- * Qpdata to DICOM converter.
+ * Qpdata to DICOM converter. This class contains a method for converting Qpdata files
+ * (which contains user-generated annotations for images) to dcm files.
  */
 public class DataToDcmConverter {
 

@@ -24,7 +24,8 @@ import org.dcm4che3.data.Fragments;
 import org.dcm4che3.io.DicomInputStream;
 
 /**
- * DICOM to qpdata converter.
+ * DICOM to qpdata converter. This class contains a method for converting dcm files with Qpdata
+ * data (which contains user-generated annotations for images) inside, to Qpdata files.
  */
 public class DcmToDataConverter {
 

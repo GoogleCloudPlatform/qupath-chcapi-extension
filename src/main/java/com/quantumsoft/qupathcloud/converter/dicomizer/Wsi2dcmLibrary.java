@@ -22,7 +22,8 @@ import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 
 /**
- * The interface wsi2dcm library.
+ * The interface wsi2dcm library. This interface is a wrapper for native library for generation
+ * dcm files from whole-slide images.
  */
 public interface Wsi2dcmLibrary extends Library {
 
@@ -30,6 +31,8 @@ public interface Wsi2dcmLibrary extends Library {
   Wsi2dcmLibrary INSTANCE = Native.load(Wsi2dcmLibrary.JNA_LIBRARY_NAME, Wsi2dcmLibrary.class);
 
   /**
+   * Converts whole-slide images to dcm files.
+   *
    * @param inputFile the input file
    * @param outputFileMask the output file mask
    * @param frameSizeX the frame size x

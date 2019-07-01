@@ -23,7 +23,7 @@ import org.apache.logging.log4j.Logger;
 import org.openslide.OpenSlide;
 
 /**
- * Converter for dicomization whole-slide images.
+ * Converter for dicomization of whole-slide images.
  */
 public class ImageToWsiDcmConverter {
 

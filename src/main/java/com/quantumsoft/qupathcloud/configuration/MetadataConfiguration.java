@@ -107,7 +107,7 @@ public class MetadataConfiguration {
   /**
    * Reads the project metadata file.
    *
-   * @return the list
+   * @return the list of series containing information about images
    * @throws QuPathCloudException if IOException occurs
    */
   public List<Series> readProjectMetadataFile() throws QuPathCloudException {
