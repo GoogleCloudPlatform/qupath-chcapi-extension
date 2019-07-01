@@ -8,43 +8,42 @@ full downloading and [synchronize annotations](#synchronization-annotations) wit
 
 1) Install QuPath v0.2.0-m2 from [here](https://github.com/qupath/qupath/releases/tag/v0.2.0-m2).
 2) Download the latest JAR from the releases tab.
-3) When you install QuPath, folder for extensions is set */home/user/QuPath/extensions* by default 
-(in Linux). You can put the JAR in this folder or just drag-and-drop it in the QuPath window.
-> For new version another QuPath user directory is recommended to avoid conflict with the previous 
-> extension version. You can set another user directory. Press edit -> preferences and 
-> set another user directory in QuPath. Also, you can delete the previous extension version, if 
-> you don't want to use another QuPath user directory.
+3) When you install QuPath, folder for extensions is set to */home/user/QuPath/extensions* by 
+default (in Linux). You can put the JAR in this folder or just drag-and-drop it in the QuPath 
+window.
+> If you already have QuPath and want to install the new version a new QuPath user directory is 
+> recommended. You can set another user directory by going to Edit -> Preferences -> Set another 
+> user directory in QuPath. Also, you can delete the previous extension version, if you don't want 
+> to use another QuPath user directory.
 
 ## Setting up project to use DICOM cloud:
 
 1) Create empty project in QuPath.
-2) Click the **Cloud** button on the button bar. Login with OAuth in your default browser with your 
+2) Click **Cloud** on the button bar. Login with OAuth in your default browser with your 
 account which has access permission to Cloud Healthcare API (1 time).
-3) Select the desired Project and click the **NEXT** button in extension window.
+3) Select the desired Project and click **NEXT** in extension window.
 4) Select an existing Dataset or create a new one. Steps to create a new Dataset:
-   1) Click the **New Dataset** button.
+   1) Click **New Dataset**.
    2) Input the Dataset name.
-   3) Choose the desired Location in where you want the Dataset stored.
-   4) Click the **CREATE** button.
-   5) Click the **NEXT** button.
+   3) Select the location where the Dataset should be stored.
+   4) Click **CREATE**.
+   5) Click **NEXT**.
 5) Select an existing DICOM Store which contains whole slide images or create a new one. Steps to 
 create a new DICOM Store:
-   1) Click the **New DICOM Store** button.
+   1) Click **New DICOM Store**.
    2) Input the DICOM Store name.
-   3) Click the **CREATE** button.
-   4) Click the **OK** button.
+   3) Click **CREATE**.
+   4) Click **OK**.
 6) Upload dicomized images into created DICOM Store and Dataset in chosen Location:
    1) If you want to use the embedded wsi-to-dicom-converter in the qupath-chcapi-extension, just 
-   add images to the project. When you click **Synchronize** button images will be dicomized and 
-   uploaded.
+   add images to the project. When you click **Synchronize** images will be dicomized and uploaded.
    2) Alternatively you can use 
    [OrthancWSIDicomizer](https://www.orthanc-server.com/browse.php?path=/whole-slide-imaging). 
    Once source images have been dicomized, you can upload them via 
    [gcloud](https://cloud.google.com/healthcare/docs/how-tos/dicom-import-export).
-7) Click **Synchronize** button on the button bar in QuPath to synchronize DICOM Store with your 
-project.
+7) Click **Synchronize** on the button bar in QuPath to synchronize DICOM Store with your project.
 > Extension saved in your chosen dicom store for existing project and saved your access permission 
-> on computer.   
+> on the computer.   
 > Supported formats for qupath-chcapi-extension and pathology test data you can see 
 > [here](https://openslide.org/).
 
@@ -52,7 +51,7 @@ project.
 
 1) Add/Edit image annotations in existing project.
 2) Save changed annotations via **File**->**Save**.
-3) Click **Synchronize** button (annotations will be uploaded in chosen DICOM Store).
+3) Click **Synchronize** (annotations will be uploaded in chosen DICOM Store).
 4) If DICOM Store contains dicomized annotations that are locally absent they will be downloaded.
 5) If DICOM Store contains different versions of annotations for the same images, user will be 
 presented window with conflict list and asked to resolve them (with defaults set based on last 
