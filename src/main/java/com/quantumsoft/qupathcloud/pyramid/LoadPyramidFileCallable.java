@@ -23,7 +23,8 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
- * The type Load pyramid file callable.
+ * LoadPyramidFileCallable for loading a pyramid that contains information about tiles of
+ * whole-slide images from metadata files.
  */
 public class LoadPyramidFileCallable implements Callable<Pyramid> {
 

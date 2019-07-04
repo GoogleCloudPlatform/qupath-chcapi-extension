@@ -44,7 +44,8 @@ import qupath.lib.objects.hierarchy.events.PathObjectHierarchyEvent;
 import qupath.lib.objects.hierarchy.events.PathObjectHierarchyListener;
 
 /**
- * The repository is singleton which contains properties.
+ * The repository is a singleton that contains the chosen DICOM Store for the current QuPath
+ * project, the instance of CloudDao and isLoggedInProperty.
  */
 public enum Repository {
   /**
@@ -165,7 +166,7 @@ public enum Repository {
     cloudDao.get().getoAuth20().invalidateCredentials();
   }
 
-  // attempt to provide meaningfull modification date for qpdata.
+  // attempt to provide meaningfull modification date for Qpdata.
   private class QuPathHierarchyListener implements PathObjectHierarchyListener {
 
     /**

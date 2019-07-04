@@ -21,7 +21,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 /**
- * Query builder.
+ * Query builder for creating a query for Healthcare API.
  */
 public class QueryBuilder {
 

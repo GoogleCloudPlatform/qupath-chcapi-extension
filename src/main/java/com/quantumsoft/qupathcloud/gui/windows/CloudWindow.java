@@ -63,7 +63,9 @@ import org.apache.logging.log4j.Logger;
 import qupath.lib.gui.QuPathGUI;
 
 /**
- * Cloud window to choose DICOM Store for a project.
+ * In cloud window you can authorize, select Healthcare project, select-create a Dataset,
+ * select-create a DICOM Store, and save the selected DICOM Store for the current QuPath project
+ * at the end.
  */
 public class CloudWindow {
 
@@ -161,7 +163,7 @@ public class CloudWindow {
         QueryBuilder queryBuilder = QueryBuilder.forProject(projectId)
             .setLocationId(locationId)
             .setDatasetId(datasetId);
-        List<DicomStore> dicomStores = cloudDao.getDicomStoresList(queryBuilder);
+        List<DicomStore> dicomStores = cloudDao.getDicomStores(queryBuilder);
         currentTable = new DicomStoresTable().getDicomstoresTable(dicomStores);
         currentTable.getSelectionModel().select(dicomStore);
 
@@ -179,7 +181,7 @@ public class CloudWindow {
     headerLabel.setText("Authorization");
     Runnable loader1 = () -> {
       try {
-        List<Project> projects = cloudDao.getProjectsList();
+        List<Project> projects = cloudDao.getProjects();
         if (projects.isEmpty()) {
           throw new QuPathCloudException("Empty list of projects!");
         }
@@ -227,9 +229,9 @@ public class CloudWindow {
       Runnable loader = () -> {
         try {
           QueryBuilder queryBuilder = QueryBuilder.forProject(projectId);
-          List<Location> locations = cloudDao.getLocationsList(queryBuilder);
+          List<Location> locations = cloudDao.getLocations(queryBuilder);
           queryBuilder.setLocations(locations);
-          List<Dataset> datasets = cloudDao.getDatasetsListInAllLocations(queryBuilder);
+          List<Dataset> datasets = cloudDao.getDatasetsInAllLocations(queryBuilder);
           currentTable = new DatasetsTable().getDatasetsTable(datasets);
 
           Platform.runLater(() -> showDatasetsPage(locations));
@@ -268,7 +270,7 @@ public class CloudWindow {
 
       Runnable loader = () -> {
         try {
-          List<Project> projects = cloudDao.getProjectsList();
+          List<Project> projects = cloudDao.getProjects();
 
           Platform.runLater(() -> {
             currentTable = new ProjectsTable().getProjectsTable(projects);
@@ -303,7 +305,7 @@ public class CloudWindow {
           QueryBuilder queryBuilder = QueryBuilder.forProject(projectId)
               .setLocationId(locationId)
               .setDatasetId(datasetId);
-          List<DicomStore> dicomStores = cloudDao.getDicomStoresList(queryBuilder);
+          List<DicomStore> dicomStores = cloudDao.getDicomStores(queryBuilder);
           currentTable = new DicomStoresTable().getDicomstoresTable(dicomStores);
 
           Platform.runLater(this::showDicomStoresPage);
@@ -332,9 +334,9 @@ public class CloudWindow {
         try {
           String projectId = choseDataset.getProjectId();
           QueryBuilder queryBuilder = QueryBuilder.forProject(projectId);
-          List<Location> locations = cloudDao.getLocationsList(queryBuilder);
+          List<Location> locations = cloudDao.getLocations(queryBuilder);
           queryBuilder.setLocations(locations);
-          List<Dataset> datasets = cloudDao.getDatasetsListInAllLocations(queryBuilder);
+          List<Dataset> datasets = cloudDao.getDatasetsInAllLocations(queryBuilder);
           currentTable = new DatasetsTable().getDatasetsTable(datasets);
 
           Platform.runLater(() -> showDatasetsPage(locations));
@@ -393,7 +395,7 @@ public class CloudWindow {
                 .setDatasetId(datasetId)
                 .setDicomStoreId(newDicomStoreId);
             cloudDao.createDicomStore(queryBuilder);
-            List<DicomStore> dicomStores = cloudDao.getDicomStoresList(queryBuilder);
+            List<DicomStore> dicomStores = cloudDao.getDicomStores(queryBuilder);
             currentTable = new DicomStoresTable().getDicomstoresTable(dicomStores);
 
             Platform.runLater(() -> {
@@ -442,7 +444,7 @@ public class CloudWindow {
                 .setDatasetId(newDatasetId)
                 .setLocations(locations);
             cloudDao.createDataset(queryBuilder);
-            List<Dataset> datasets = cloudDao.getDatasetsListInAllLocations(queryBuilder);
+            List<Dataset> datasets = cloudDao.getDatasetsInAllLocations(queryBuilder);
             currentTable = new DatasetsTable().getDatasetsTable(datasets);
 
             Platform.runLater(() -> {

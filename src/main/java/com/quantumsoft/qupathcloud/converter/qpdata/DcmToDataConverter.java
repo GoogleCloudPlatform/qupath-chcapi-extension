@@ -24,8 +24,8 @@ import org.dcm4che3.data.Fragments;
 import org.dcm4che3.io.DicomInputStream;
 
 /**
- * DICOM to qpdata converter. This class contains a method for converting dcm files with Qpdata
- * data (which contains user-generated annotations for images) inside, to Qpdata files.
+ * DcmToDataConverter converts DICOM files with Qpdata data (which contains user-generated
+ * annotations for images), to Qpdata files.
  */
 public class DcmToDataConverter {
 
@@ -33,7 +33,7 @@ public class DcmToDataConverter {
   private final Path outputFile;
 
   /**
-   * Instantiates a new DICOM to qpdata converter.
+   * Instantiates a new DICOM to Qpdata converter.
    *
    * @param inputFile the input file
    * @param outputFile the output file
@@ -44,7 +44,7 @@ public class DcmToDataConverter {
   }
 
   /**
-   * Converts DICOM to qpdata.
+   * Converts DICOM to Qpdata.
    *
    * @throws QuPathCloudException if IOException occurs
    */

@@ -33,8 +33,8 @@ import org.dcm4che3.util.StreamUtils;
 import org.dcm4che3.util.UIDUtils;
 
 /**
- * Qpdata to DICOM converter. This class contains a method for converting Qpdata files
- * (which contains user-generated annotations for images) to dcm files.
+ * DataToDcmConverter converts Qpdata files (which contains user-generated annotations for images)
+ * to dcm files.
  */
 public class DataToDcmConverter {
 
@@ -46,9 +46,9 @@ public class DataToDcmConverter {
   private String imageName;
 
   /**
-   * Instantiates a new qpdata to DICOM converter.
+   * Instantiates a new Qpdata to DICOM converter.
    *
-   * @param inputFile the input qpdata file
+   * @param inputFile the input Qpdata file
    * @param outputDirectory the output directory
    * @param modificationDate the modification date
    * @param imageName the image name
@@ -62,9 +62,9 @@ public class DataToDcmConverter {
   }
 
   /**
-   * Converts qpdata to DICOM file.
+   * Converts Qpdata to DICOM file.
    *
-   * @return the to the converted qpdata file
+   * @return the converted Qpdata file
    * @throws QuPathCloudException if IOException occurs
    */
   public Path convertQuPathDataToDcm() throws QuPathCloudException {

@@ -30,7 +30,7 @@ import qupath.lib.images.servers.ImageServer;
 import qupath.lib.images.servers.ImageServerBuilder;
 
 /**
- * The type Cloud image server builder.
+ * Cloud image server builder for creating CloudImageServer.
  */
 public class CloudImageServerBuilder implements ImageServerBuilder<BufferedImage> {
 

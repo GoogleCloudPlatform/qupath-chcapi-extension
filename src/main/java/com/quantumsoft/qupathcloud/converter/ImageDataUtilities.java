@@ -33,7 +33,7 @@ public class ImageDataUtilities {
   public static final String LAST_CHANGE = "lastChange";
 
   /**
-   * Gets modification date of qpdata.
+   * Gets modification date of Qpdata.
    *
    * @param path the path
    * @return the modification date

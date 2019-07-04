@@ -43,7 +43,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * OAuth20 class for access to the Google Cloud Healthcare API.
+ * OAuth20 class for access to the Google Cloud Healthcare API using OAuth 2.0 protocol.
  */
 public class OAuth20 {
 

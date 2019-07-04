@@ -67,7 +67,7 @@ import qupath.lib.projects.Project;
 import qupath.lib.projects.ProjectImageEntry;
 
 /**
- * Sync a project with chosen DICOM Store.
+ * Sync a local current project with chosen DICOM Store.
  */
 public class SynchronizationProjectWithDicomStore {
 
@@ -103,7 +103,7 @@ public class SynchronizationProjectWithDicomStore {
   }
 
   /**
-   * Synchronizes data with the server.
+   * Synchronizes local data with the server.
    */
   public void synchronization() {
     synchronizationWindow.showSynchronizationWindow();
@@ -135,8 +135,8 @@ public class SynchronizationProjectWithDicomStore {
         .setLocationId(locationId)
         .setDatasetId(datasetId)
         .setDicomStoreId(dicomStoreId);
-    List<Series> remoteSeriesList = cloudDao.getSeriesList(queryBuilder);
-    List<Series> remoteImageSeriesList = DaoHelper.getImageSeriesList(remoteSeriesList);
+    List<Series> remoteSeriesList = cloudDao.getSeries(queryBuilder);
+    List<Series> remoteImageSeriesList = DaoHelper.getImageSeries(remoteSeriesList);
 
     List<Path> tempDirectories = new ArrayList<>();
     for (ProjectImageEntry<BufferedImage> currentEntry : imageList) {
@@ -204,8 +204,8 @@ public class SynchronizationProjectWithDicomStore {
         .setLocationId(locationId)
         .setDatasetId(datasetId)
         .setDicomStoreId(dicomStoreId);
-    List<Series> remoteSeriesList = cloudDao.getSeriesList(queryBuilder);
-    List<Series> remoteImageSeriesList = DaoHelper.getImageSeriesList(remoteSeriesList);
+    List<Series> remoteSeriesList = cloudDao.getSeries(queryBuilder);
+    List<Series> remoteImageSeriesList = DaoHelper.getImageSeries(remoteSeriesList);
 
     List<Series> seriesListInProject;
     if (Files.notExists(metadataDirectory)) {
@@ -245,7 +245,7 @@ public class SynchronizationProjectWithDicomStore {
           .setDicomStoreId(dicomStoreId)
           .setStudyId(studyId)
           .setSeriesId(seriesId);
-      List<Instance> instances = cloudDao.getInstancesList(queryBuilder);
+      List<Instance> instances = cloudDao.getInstances(queryBuilder);
       Path metadataImageFile = metadataConfiguration.saveMetadataFile(series, instances);
       String serverPath = metadataImageFile.toString();
 
@@ -365,8 +365,8 @@ public class SynchronizationProjectWithDicomStore {
         .setLocationId(locationId)
         .setDatasetId(datasetId)
         .setDicomStoreId(dicomStoreId);
-    List<Instance> instances = cloudDao.getInstancesList(queryBuilder);
-    List<Instance> remoteInstances = DaoHelper.getQpdataInstanceListInDicomStore(instances);
+    List<Instance> instances = cloudDao.getInstances(queryBuilder);
+    List<Instance> remoteInstances = DaoHelper.getQpdataInstancesInDicomStore(instances);
     for (Instance instance : remoteInstances) {
       Pair<Instance, Date> instanceInfo = new Pair<>(instance, instance.getCreationDate());
       remoteInstanceInfos.add(instanceInfo);

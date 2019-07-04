@@ -28,7 +28,7 @@ account which has access permission to Cloud Healthcare API (1 time).
    3) Select the location where the Dataset should be stored.
    4) Click **CREATE**.
    5) Click **NEXT**.
-5) Select an existing DICOM Store which contains whole slide images or create a new one. Steps to 
+5) Select an existing DICOM Store which contains whole-slide images or create a new one. Steps to 
 create a new DICOM Store:
    1) Click **New DICOM Store**.
    2) Input the DICOM Store name.

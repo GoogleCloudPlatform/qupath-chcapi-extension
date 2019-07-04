@@ -50,7 +50,7 @@ public abstract class CloudDao {
    * @return the list of Projects
    * @throws QuPathCloudException if an error occurs
    */
-  public abstract List<Project> getProjectsList() throws QuPathCloudException;
+  public abstract List<Project> getProjects() throws QuPathCloudException;
 
   /**
    * Gets Locations list.
@@ -59,7 +59,7 @@ public abstract class CloudDao {
    * @return the list of Locations
    * @throws QuPathCloudException if an error occurs
    */
-  public abstract List<Location> getLocationsList(QueryBuilder queryBuilder)
+  public abstract List<Location> getLocations(QueryBuilder queryBuilder)
       throws QuPathCloudException;
 
   /**
@@ -69,7 +69,7 @@ public abstract class CloudDao {
    * @return the list of Datasets in all locations
    * @throws QuPathCloudException if an error occurs
    */
-  public abstract List<Dataset> getDatasetsListInAllLocations(QueryBuilder queryBuilder)
+  public abstract List<Dataset> getDatasetsInAllLocations(QueryBuilder queryBuilder)
       throws QuPathCloudException;
 
   /**
@@ -79,7 +79,7 @@ public abstract class CloudDao {
    * @return the list of DICOM Stores
    * @throws QuPathCloudException if an error occurs
    */
-  public abstract List<DicomStore> getDicomStoresList(QueryBuilder queryBuilder)
+  public abstract List<DicomStore> getDicomStores(QueryBuilder queryBuilder)
       throws QuPathCloudException;
 
   /**
@@ -89,7 +89,7 @@ public abstract class CloudDao {
    * @return the list of Studies
    * @throws QuPathCloudException if an error occurs
    */
-  public abstract List<Study> getStudiesList(QueryBuilder queryBuilder) throws QuPathCloudException;
+  public abstract List<Study> getStudies(QueryBuilder queryBuilder) throws QuPathCloudException;
 
   /**
    * Gets Series list.
@@ -98,7 +98,7 @@ public abstract class CloudDao {
    * @return the list of Series
    * @throws QuPathCloudException if an error occurs
    */
-  public abstract List<Series> getSeriesList(QueryBuilder queryBuilder) throws QuPathCloudException;
+  public abstract List<Series> getSeries(QueryBuilder queryBuilder) throws QuPathCloudException;
 
   /**
    * Gets Instances list.
@@ -107,7 +107,7 @@ public abstract class CloudDao {
    * @return the list of Instances
    * @throws QuPathCloudException if an error occurs
    */
-  public abstract List<Instance> getInstancesList(QueryBuilder queryBuilder)
+  public abstract List<Instance> getInstances(QueryBuilder queryBuilder)
       throws QuPathCloudException;
 
   /**
@@ -120,7 +120,7 @@ public abstract class CloudDao {
   public abstract BufferedImage getFrame(QueryBuilder queryBuilder) throws QuPathCloudException;
 
   /**
-   * Create Dataset.
+   * Creates Dataset.
    *
    * @param queryBuilder the query builder
    * @throws QuPathCloudException if an error occurs

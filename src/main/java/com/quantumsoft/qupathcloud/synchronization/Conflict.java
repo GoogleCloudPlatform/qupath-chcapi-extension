@@ -24,25 +24,15 @@ import javafx.util.Pair;
 import qupath.lib.projects.ProjectImageEntry;
 
 /**
- * The type Conflict for qpdata files.
+ * Conflict for local and remote Qpdata files. If DICOM Store contains different versions of
+ * annotations for the same images, user will be presented window with conflict list and asked
+ * to resolve them (with defaults set based on last modified timestamp).
  */
 public class Conflict {
 
-  /**
-   * The enum Resolution.
-   */
   public enum Resolution {
-    /**
-     * Local resolution.
-     */
     Local,
-    /**
-     * Remote resolution.
-     */
     Remote,
-    /**
-     * Cancel resolution.
-     */
     Cancel
   }
 

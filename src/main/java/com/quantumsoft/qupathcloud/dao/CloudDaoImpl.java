@@ -115,7 +115,7 @@ public class CloudDaoImpl extends CloudDao {
   }
 
   @Override
-  public List<Project> getProjectsList() throws QuPathCloudException {
+  public List<Project> getProjects() throws QuPathCloudException {
     URIBuilder uriBuilder = new URIBuilder()
         .setScheme(SCHEME)
         .setHost(CLOUD_RESOURCE_MANAGER_HOST)
@@ -134,7 +134,7 @@ public class CloudDaoImpl extends CloudDao {
   }
 
   @Override
-  public List<Location> getLocationsList(QueryBuilder queryBuilder) throws QuPathCloudException {
+  public List<Location> getLocations(QueryBuilder queryBuilder) throws QuPathCloudException {
     LocationsPathBuilder locationsPathBuilder = new LocationsPathBuilder(queryBuilder);
     URIBuilder uriBuilder = new URIBuilder()
         .setScheme(SCHEME)
@@ -144,7 +144,7 @@ public class CloudDaoImpl extends CloudDao {
   }
 
   @Override
-  public List<Dataset> getDatasetsListInAllLocations(QueryBuilder queryBuilder)
+  public List<Dataset> getDatasetsInAllLocations(QueryBuilder queryBuilder)
       throws QuPathCloudException {
     List<Dataset> datasetList = new ArrayList<>();
     for (Location location : queryBuilder.getLocations()) {
@@ -156,7 +156,7 @@ public class CloudDaoImpl extends CloudDao {
   }
 
   @Override
-  public List<DicomStore> getDicomStoresList(QueryBuilder queryBuilder)
+  public List<DicomStore> getDicomStores(QueryBuilder queryBuilder)
       throws QuPathCloudException {
     DicomStoresPathBuilder dicomStoresPathBuilder = new DicomStoresPathBuilder(queryBuilder);
     URIBuilder uriBuilder = new URIBuilder()
@@ -178,7 +178,7 @@ public class CloudDaoImpl extends CloudDao {
   }
 
   @Override
-  public List<Study> getStudiesList(QueryBuilder queryBuilder) throws QuPathCloudException {
+  public List<Study> getStudies(QueryBuilder queryBuilder) throws QuPathCloudException {
     StudiesPathBuilder studiesPathBuilder = new StudiesPathBuilder(queryBuilder);
     URIBuilder uriBuilder = new URIBuilder()
         .setScheme(SCHEME)
@@ -188,7 +188,7 @@ public class CloudDaoImpl extends CloudDao {
   }
 
   @Override
-  public List<Series> getSeriesList(QueryBuilder queryBuilder) throws QuPathCloudException {
+  public List<Series> getSeries(QueryBuilder queryBuilder) throws QuPathCloudException {
     SeriesPathBuilder seriesPathBuilder = new SeriesPathBuilder(queryBuilder);
     URIBuilder uriBuilder = new URIBuilder()
         .setScheme(SCHEME)
@@ -199,7 +199,7 @@ public class CloudDaoImpl extends CloudDao {
   }
 
   @Override
-  public List<Instance> getInstancesList(QueryBuilder queryBuilder) throws QuPathCloudException {
+  public List<Instance> getInstances(QueryBuilder queryBuilder) throws QuPathCloudException {
     InstancesPathBuilder instancesPathBuilder = new InstancesPathBuilder(queryBuilder);
     URIBuilder uriBuilder = new URIBuilder()
         .setScheme(SCHEME)
