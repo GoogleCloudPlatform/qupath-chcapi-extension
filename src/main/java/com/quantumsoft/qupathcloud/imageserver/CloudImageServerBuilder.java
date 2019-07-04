@@ -15,46 +15,57 @@
 
 package com.quantumsoft.qupathcloud.imageserver;
 
-import com.quantumsoft.qupathcloud.dao.CloudDAO;
+import static com.quantumsoft.qupathcloud.configuration.MetadataConfiguration.METADATA_FILE_EXTENSION;
+
+import com.quantumsoft.qupathcloud.dao.CloudDao;
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 import com.quantumsoft.qupathcloud.repository.Repository;
+import java.awt.image.BufferedImage;
+import java.net.URI;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.apache.commons.io.FilenameUtils;
 import qupath.lib.images.servers.FileFormatInfo;
 import qupath.lib.images.servers.ImageServer;
 import qupath.lib.images.servers.ImageServerBuilder;
 
-import java.awt.image.BufferedImage;
-
-import static com.quantumsoft.qupathcloud.configuration.MetadataConfiguration.METADATA_FILE_EXTENSION;
-
+/**
+ * Cloud image server builder for creating CloudImageServer.
+ */
 public class CloudImageServerBuilder implements ImageServerBuilder<BufferedImage> {
-    private CloudDAO cloudDAO;
 
-    public CloudImageServerBuilder(){
-        cloudDAO = Repository.INSTANCE.getCloudDao();
-    }
+  private final CloudDao cloudDao;
 
-    @Override
-    public float supportLevel(String path, FileFormatInfo.ImageCheckType info, Class<?> cls) {
-        String extension = FilenameUtils.getExtension(path);
-        if(extension.equals(METADATA_FILE_EXTENSION))
-            return 10;
-        else
-            return 0;
-    }
+  /**
+   * Instantiates a new Cloud image server builder.
+   */
+  public CloudImageServerBuilder() {
+    cloudDao = Repository.INSTANCE.getCloudDao();
+  }
 
-    @Override
-    public ImageServer<BufferedImage> buildServer(String path) throws QuPathCloudException {
-        return new CloudImageServer(path, cloudDAO, Repository.INSTANCE.getDicomStore());
+  @Override
+  public float supportLevel(URI uri, FileFormatInfo.ImageCheckType info, Class<?> cls) {
+    Path filePath = Paths.get(uri);
+    String extension = FilenameUtils.getExtension(filePath.toString());
+    if (extension.equals(METADATA_FILE_EXTENSION)) {
+      return 10;
+    } else {
+      return 0;
     }
+  }
 
-    @Override
-    public String getName() {
-        return "CloudImageServer Builder";
-    }
+  @Override
+  public ImageServer<BufferedImage> buildServer(URI uri) throws QuPathCloudException {
+    return new CloudImageServer(uri, cloudDao, Repository.INSTANCE.getDicomStore());
+  }
 
-    @Override
-    public String getDescription() {
-        return "Pyramid image with tiles obtained via google healthcare api";
-    }
+  @Override
+  public String getName() {
+    return "CloudImageServer Builder";
+  }
+
+  @Override
+  public String getDescription() {
+    return "Pyramid image with tiles obtained via google healthcare api";
+  }
 }

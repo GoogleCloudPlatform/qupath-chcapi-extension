@@ -18,24 +18,31 @@ package com.quantumsoft.qupathcloud.pyramid;
 import com.quantumsoft.qupathcloud.configuration.MetadataConfiguration;
 import com.quantumsoft.qupathcloud.entities.instance.Instance;
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
-
-import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+/**
+ * LoadPyramidFileCallable for loading a pyramid that contains information about tiles of
+ * whole-slide images from metadata files.
+ */
 public class LoadPyramidFileCallable implements Callable<Pyramid> {
-    private String filePath;
 
-    public LoadPyramidFileCallable(String filePath) {
-        this.filePath = filePath;
-    }
+  private Path filePath;
 
-    @Override
-    public Pyramid call() throws QuPathCloudException {
-        File metaFile = new File(filePath);
-        File metaDirectory = new File(metaFile.getParent());
-        MetadataConfiguration metaConf = new MetadataConfiguration(metaDirectory);
-        List<Instance> instanceList = metaConf.readMetadataFile(metaFile);
-        return new Pyramid(instanceList);
-    }
+  /**
+   * Instantiates a new Load pyramid file callable.
+   *
+   * @param filePath the file path
+   */
+  public LoadPyramidFileCallable(Path filePath) {
+    this.filePath = filePath;
+  }
+
+  @Override
+  public Pyramid call() throws QuPathCloudException {
+    MetadataConfiguration metaConf = new MetadataConfiguration(filePath.getParent());
+    List<Instance> instanceList = metaConf.readMetadataFile(filePath);
+    return new Pyramid(instanceList);
+  }
 }

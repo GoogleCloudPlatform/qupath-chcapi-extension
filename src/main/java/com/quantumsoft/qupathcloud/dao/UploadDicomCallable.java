@@ -15,10 +15,22 @@
 
 package com.quantumsoft.qupathcloud.dao;
 
+import static com.quantumsoft.qupathcloud.dao.Constants.BEARER;
+import static com.quantumsoft.qupathcloud.dao.Constants.MULTIPART_RELATED_TYPE_APPLICATION_DICOM_BOUNDARY;
+import static com.quantumsoft.qupathcloud.exception.Errors.FAILED_HTTP;
+import static org.apache.http.HttpHeaders.AUTHORIZATION;
+import static org.apache.http.entity.mime.MIME.CONTENT_TYPE;
+
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.http.HttpStatusCodes;
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 import com.quantumsoft.qupathcloud.oauth20.OAuth20;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.util.UUID;
+import java.util.concurrent.Callable;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -30,68 +42,57 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Random;
-import java.util.concurrent.Callable;
-
-import static com.quantumsoft.qupathcloud.dao.Constants.BEARER;
-import static com.quantumsoft.qupathcloud.exception.Errors.FAILED_HTTP;
-import static org.apache.http.HttpHeaders.AUTHORIZATION;
-import static org.apache.http.HttpHeaders.CONTENT_TYPE;
-
+/**
+ * Upload DICOM file to chosen DICOM Store.
+ */
 public class UploadDicomCallable implements Callable<Void> {
-    private static final Logger LOGGER = LogManager.getLogger();
-    private static final char[] MULTIPART_CHARS = "-_1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
-    private OAuth20 oAuth20;
-    private File inputFile;
-    private URIBuilder uriBuilder;
 
-    UploadDicomCallable(OAuth20 oAuth20, File inputFile, URIBuilder uriBuilder) {
-        this.oAuth20 = oAuth20;
-        this.inputFile = inputFile;
-        this.uriBuilder = uriBuilder;
-    }
+  private static final Logger LOGGER = LogManager.getLogger();
+  private OAuth20 oAuth20;
+  private Path inputFile;
+  private URIBuilder uriBuilder;
 
-    @Override
-    public Void call() throws IOException, QuPathCloudException, URISyntaxException {
-        try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
-            URI uri = uriBuilder.build();
-            HttpPost request = new HttpPost(uri);
+  /**
+   * Instantiates a new Upload dicom callable.
+   *
+   * @param oAuth20 the oAuth20
+   * @param inputFile the input file
+   * @param uriBuilder the uri builder
+   */
+  UploadDicomCallable(OAuth20 oAuth20, Path inputFile, URIBuilder uriBuilder) {
+    this.oAuth20 = oAuth20;
+    this.inputFile = inputFile;
+    this.uriBuilder = uriBuilder;
+  }
 
-            ContentType contentType = ContentType.create("application/dicom");
-            String boundary = generateBoundary();
+  @Override
+  public Void call() throws IOException, QuPathCloudException, URISyntaxException {
+    try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
+      URI uri = uriBuilder.build();
+      HttpPost request = new HttpPost(uri);
 
-            HttpEntity httpEntity = MultipartEntityBuilder
-                    .create()
-                    .setBoundary(boundary)
-                    .addBinaryBody("DICOMFile", inputFile, contentType, inputFile.getName())
-                    .build();
-            request.setEntity(httpEntity);
+      ContentType contentType = ContentType.create("application/dicom");
+      String boundary = UUID.randomUUID().toString();
 
-            request.addHeader(CONTENT_TYPE, "multipart/related; type=application/dicom; boundary=" + boundary);
-            Credential credential = oAuth20.getCredential();
-            request.addHeader(AUTHORIZATION, BEARER + credential.getAccessToken());
-            LOGGER.debug("Start uploading DICOM file");
-            try (CloseableHttpResponse response = httpclient.execute(request)) {
-                int statusCode = response.getStatusLine().getStatusCode();
-                if (statusCode != HttpStatusCodes.STATUS_CODE_OK){
-                    throw new QuPathCloudException(FAILED_HTTP + statusCode);
-                }
-            }
+      HttpEntity httpEntity = MultipartEntityBuilder
+          .create()
+          .setBoundary(boundary)
+          .addBinaryBody("DICOMFile", inputFile.toFile(), contentType,
+              inputFile.getFileName().toString())
+          .build();
+      request.setEntity(httpEntity);
+
+      request.addHeader(CONTENT_TYPE, MULTIPART_RELATED_TYPE_APPLICATION_DICOM_BOUNDARY + boundary);
+      Credential credential = oAuth20.getCredential();
+      request.addHeader(AUTHORIZATION, BEARER + credential.getAccessToken());
+      LOGGER.debug("Start uploading DICOM file");
+      try (CloseableHttpResponse response = httpclient.execute(request)) {
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (statusCode != HttpStatusCodes.STATUS_CODE_OK) {
+          throw new QuPathCloudException(FAILED_HTTP + statusCode);
         }
-        return null;
+      }
     }
-
-    private String generateBoundary() {
-        StringBuilder buffer = new StringBuilder();
-        Random rand = new Random();
-        int count = rand.nextInt(11) + 30;
-        for(int i = 0; i < count; ++i) {
-            buffer.append(MULTIPART_CHARS[rand.nextInt(MULTIPART_CHARS.length)]);
-        }
-        return buffer.toString();
-    }
+    return null;
+  }
 }

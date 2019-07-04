@@ -15,13 +15,20 @@
 
 package com.quantumsoft.qupathcloud.repository;
 
+import static com.quantumsoft.qupathcloud.converter.ImageDataUtilities.LAST_CHANGE;
+
 import com.quantumsoft.qupathcloud.configuration.DicomStoreConfiguration;
-import com.quantumsoft.qupathcloud.dao.CloudDAO;
-import com.quantumsoft.qupathcloud.dao.CloudDAOImpl;
+import com.quantumsoft.qupathcloud.dao.CloudDao;
+import com.quantumsoft.qupathcloud.dao.CloudDaoImpl;
 import com.quantumsoft.qupathcloud.entities.DicomStore;
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 import com.quantumsoft.qupathcloud.oauth20.OAuth20;
 import com.quantumsoft.qupathcloud.synchronization.SynchronizationProjectWithDicomStore;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Date;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -31,119 +38,165 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import qupath.lib.gui.QuPathGUI;
 import qupath.lib.gui.helpers.DisplayHelpers;
+import qupath.lib.gui.prefs.PathPrefs;
 import qupath.lib.images.ImageData;
 import qupath.lib.objects.hierarchy.events.PathObjectHierarchyEvent;
 import qupath.lib.objects.hierarchy.events.PathObjectHierarchyListener;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.Date;
-
-import static com.quantumsoft.qupathcloud.converter.ImageDataUtilities.LAST_CHANGE;
-
+/**
+ * The repository is a singleton that contains the chosen DICOM Store for the current QuPath
+ * project, the instance of CloudDao and isLoggedInProperty.
+ */
 public enum Repository {
-    INSTANCE;
+  /**
+   * Instance repository.
+   */
+  INSTANCE;
 
-    private final Logger LOGGER = LogManager.getLogger();
-    private final ObjectProperty<DicomStore> dicomStore;
-    private final ObjectProperty<CloudDAO> cloudDao;
-    private final BooleanProperty isLoggedInProperty = new SimpleBooleanProperty();
+  private final Logger LOGGER = LogManager.getLogger();
+  private final ObjectProperty<DicomStore> dicomStore;
+  private final ObjectProperty<CloudDao> cloudDao;
+  private final BooleanProperty isLoggedInProperty = new SimpleBooleanProperty();
 
-    private final QuPathHierarchyListener hierarchyListener;
+  private final QuPathHierarchyListener hierarchyListener;
 
-    Repository() {
-        isLoggedInProperty.set(true);
-        QuPathGUI qupath = QuPathGUI.getInstance();
-        dicomStore = new SimpleObjectProperty<>();
-        dicomStore.addListener((observableValue, oldStore, newStore) -> {
-            if(newStore == null){
-                return;
-            }
+  Repository() {
+    isLoggedInProperty.set(true);
+    QuPathGUI qupath = QuPathGUI.getInstance();
+    dicomStore = new SimpleObjectProperty<>();
+    dicomStore.addListener((observableValue, oldStore, newStore) -> {
+      if (newStore == null) {
+        return;
+      }
 
-            Platform.runLater(()->{
-                SynchronizationProjectWithDicomStore sync = new SynchronizationProjectWithDicomStore(qupath, newStore);
-                sync.synchronization();
-            });
-        });
-        qupath.projectProperty().addListener((observable, oldProject, newProject) -> {
-            if (newProject == null) {
-                setDicomStore(null);
-                return;
-            }
+      Platform.runLater(() -> {
+        SynchronizationProjectWithDicomStore sync = new SynchronizationProjectWithDicomStore(qupath,
+            newStore);
+        sync.synchronization();
+      });
+    });
+    qupath.projectProperty().addListener((observable, oldProject, newProject) -> {
+      if (newProject == null) {
+        setDicomStore(null);
+        return;
+      }
 
-            if (oldProject != null && newProject.getFile() == oldProject.getFile()) {
-                return;
-            }
+      if (oldProject != null && newProject.getPath() == oldProject.getPath()) {
+        return;
+      }
 
-            Runnable loader = () -> {
-                DicomStoreConfiguration dicomStoreConfiguration = new DicomStoreConfiguration(newProject.getBaseDirectory());
-                try {
-                    DicomStore projectDicomStore = dicomStoreConfiguration.readConfiguration();
-                    setDicomStore(projectDicomStore);
-                } catch (QuPathCloudException e) {
-                    LOGGER.error("Repository error!", e);
-                    DisplayHelpers.showErrorMessage("Repository error!", e);
-                }
-            };
-            new Thread(loader).start();
-        });
-
-        cloudDao = new SimpleObjectProperty<>();
-        cloudDao.set(new CloudDAOImpl(new OAuth20()));
-
-        hierarchyListener = new QuPathHierarchyListener();
-        qupath.addImageDataChangeListener((source, imageDataOld, imageDataNew) -> {
-            LOGGER.trace("ImageData change old: " + imageDataOld + ", new:" + imageDataNew);
-            hierarchyListener.setListenedImageData(imageDataNew);
-        });
-    }
-
-    public synchronized ObjectProperty<DicomStore> getDicomStoreProperty() {
-        return dicomStore;
-    }
-
-    public synchronized DicomStore getDicomStore() {
-        return dicomStore.get();
-    }
-
-    public synchronized void setDicomStore(DicomStore value) {
-        dicomStore.set(value);
-    }
-
-    public CloudDAO getCloudDao() {
-        return cloudDao.get();
-    }
-
-    public BooleanProperty getIsLoggedInProperty() {
-        return isLoggedInProperty;
-    }
-
-    public void invalidateCredentials() throws IOException {
-        cloudDao.get().getoAuth20().invalidateCredentials();
-    }
-
-    // attempt to provide meaningfull modification date for qpdata.
-    private class QuPathHierarchyListener implements PathObjectHierarchyListener {
-        ImageData<BufferedImage> imageData;
-
-        public void setListenedImageData(ImageData<BufferedImage> imageData) {
-            if (this.imageData != null) {
-                this.imageData.getHierarchy().removePathObjectListener(this);
-            }
-            if (imageData != null) {
-                this.imageData = imageData;
-                this.imageData.getHierarchy().addPathObjectListener(this);
-            }
+      Runnable loader = () -> {
+        Path projectDirectory = newProject.getPath().getParent();
+        DicomStoreConfiguration dicomStoreConfiguration = new DicomStoreConfiguration(
+            projectDirectory);
+        try {
+          DicomStore projectDicomStore = dicomStoreConfiguration.readConfiguration();
+          setDicomStore(projectDicomStore);
+        } catch (QuPathCloudException e) {
+          LOGGER.error("Repository error!", e);
+          DisplayHelpers.showErrorMessage("Repository error!", e);
         }
+      };
+      new Thread(loader).start();
+    });
 
-        @Override
-        public void hierarchyChanged(PathObjectHierarchyEvent event) {
-            LOGGER.trace("PathObjectHierarchyEvent event: " + event);
-            // crutch attempt to filter out initial imageData loading
-            if (!event.getSource().equals(event.getHierarchy().getRootObject())) {
-                imageData.setProperty(LAST_CHANGE, new Date());
-                LOGGER.trace("imageData lastChange date updated");
-            }
-        }
+    cloudDao = new SimpleObjectProperty<>();
+    Path baseQupathDirectory = Paths.get(PathPrefs.getUserPath());
+    OAuth20 oAuth20 = new OAuth20(baseQupathDirectory);
+    cloudDao.set(new CloudDaoImpl(oAuth20));
+
+    hierarchyListener = new QuPathHierarchyListener();
+    qupath.addImageDataChangeListener((source, imageDataOld, imageDataNew) -> {
+      LOGGER.trace("ImageData change old: " + imageDataOld + ", new:" + imageDataNew);
+      hierarchyListener.setListenedImageData(imageDataNew);
+    });
+  }
+
+  /**
+   * Gets dicom store property.
+   *
+   * @return the dicom store property
+   */
+  public synchronized ObjectProperty<DicomStore> getDicomStoreProperty() {
+    return dicomStore;
+  }
+
+  /**
+   * Gets dicom store.
+   *
+   * @return the dicom store
+   */
+  public synchronized DicomStore getDicomStore() {
+    return dicomStore.get();
+  }
+
+  /**
+   * Sets dicom store.
+   *
+   * @param value the value
+   */
+  public synchronized void setDicomStore(DicomStore value) {
+    dicomStore.set(value);
+  }
+
+  /**
+   * Gets cloud dao.
+   *
+   * @return the cloud dao
+   */
+  public CloudDao getCloudDao() {
+    return cloudDao.get();
+  }
+
+  /**
+   * Gets is logged in property.
+   *
+   * @return the is logged in property
+   */
+  public BooleanProperty getIsLoggedInProperty() {
+    return isLoggedInProperty;
+  }
+
+  /**
+   * Invalidate credentials.
+   *
+   * @throws IOException the io exception
+   */
+  public void invalidateCredentials() throws IOException {
+    cloudDao.get().getoAuth20().invalidateCredentials();
+  }
+
+  // attempt to provide meaningfull modification date for Qpdata.
+  private class QuPathHierarchyListener implements PathObjectHierarchyListener {
+
+    /**
+     * The Image data.
+     */
+    ImageData<BufferedImage> imageData;
+
+    /**
+     * Sets listened image data.
+     *
+     * @param imageData the image data
+     */
+    public void setListenedImageData(ImageData<BufferedImage> imageData) {
+      if (this.imageData != null) {
+        this.imageData.getHierarchy().removePathObjectListener(this);
+      }
+      if (imageData != null) {
+        this.imageData = imageData;
+        this.imageData.getHierarchy().addPathObjectListener(this);
+      }
     }
+
+    @Override
+    public void hierarchyChanged(PathObjectHierarchyEvent event) {
+      LOGGER.trace("PathObjectHierarchyEvent event: " + event);
+      // crutch attempt to filter out initial imageData loading
+      if (!event.getSource().equals(event.getHierarchy().getRootObject())) {
+        imageData.setProperty(LAST_CHANGE, new Date());
+        LOGGER.trace("imageData lastChange date updated");
+      }
+    }
+  }
 }

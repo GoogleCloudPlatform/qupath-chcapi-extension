@@ -15,230 +15,40 @@
 
 package com.quantumsoft.qupathcloud.converter;
 
-import qupath.lib.images.ImageData;
-import qupath.lib.images.PathImage;
-import qupath.lib.images.servers.ImageServer;
-import qupath.lib.images.servers.ImageServerMetadata;
-import qupath.lib.io.PathIO;
-import qupath.lib.regions.RegionRequest;
-
+import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
+import com.quantumsoft.qupathcloud.imageserver.StubImageServer;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import qupath.lib.images.ImageData;
+import qupath.lib.images.servers.ImageServer;
+import qupath.lib.io.PathIO;
 
+/**
+ * Image data utilities.
+ */
 public class ImageDataUtilities {
-    public static final String LAST_CHANGE = "lastChange";
 
-    // TODO this exploits bug in PathIO to avoid creating ImageServer with non-local filepath (which "naturally" happens when loading image for viewing normally)
-    public static Date getModificationDate(File file){
-        ImageServer<BufferedImage> imageServer = new FakeImageServer();
-        ImageData<BufferedImage> imageData = new ImageData<>(imageServer);
-        PathIO.readImageData(file, imageData, imageServer, BufferedImage.class);
-        Date savedDate = (Date) imageData.getProperties().get(LAST_CHANGE);
-        return savedDate != null ? savedDate : new Date(0);
+  public static final String LAST_CHANGE = "lastChange";
+
+  /**
+   * Gets modification date of Qpdata.
+   *
+   * @param path the path
+   * @return the modification date
+   * @throws QuPathCloudException if IOException occurs
+   */
+// TODO this exploits bug in PathIO to avoid creating ImageServer with non-local filepath (which "naturally" happens when loading image for viewing normally)
+  public static Date getModificationDate(Path path) throws QuPathCloudException {
+    ImageServer<BufferedImage> imageServer = new StubImageServer();
+    ImageData<BufferedImage> imageData = new ImageData<>(imageServer);
+    try {
+      PathIO.readImageData(path.toFile(), imageData, imageServer, BufferedImage.class);
+    } catch (IOException e) {
+      throw new QuPathCloudException("Read image data error!");
     }
-
-    public static class FakeImageServer implements ImageServer<BufferedImage> {
-        @Override
-        public String getPath() {
-            return null;
-        }
-
-        @Override
-        public String getShortServerName() {
-            return null;
-        }
-
-        @Override
-        public double[] getPreferredDownsamples() {
-            return new double[0];
-        }
-
-        @Override
-        public double getPreferredDownsampleFactor(double requestedDownsample) {
-            return 0;
-        }
-
-        @Override
-        public int getPreferredTileWidth() {
-            return 0;
-        }
-
-        @Override
-        public int getPreferredTileHeight() {
-            return 0;
-        }
-
-        @Override
-        public double getMagnification() {
-            return 0;
-        }
-
-        @Override
-        public int getWidth() {
-            return 0;
-        }
-
-        @Override
-        public int getHeight() {
-            return 0;
-        }
-
-        @Override
-        public int nChannels() {
-            return 0;
-        }
-
-        @Override
-        public boolean isRGB() {
-            return false;
-        }
-
-        @Override
-        public int nZSlices() {
-            return 0;
-        }
-
-        @Override
-        public int nTimepoints() {
-            return 0;
-        }
-
-        @Override
-        public double getTimePoint(int ind) {
-            return 0;
-        }
-
-        @Override
-        public TimeUnit getTimeUnit() {
-            return null;
-        }
-
-        @Override
-        public double getZSpacingMicrons() {
-            return 0;
-        }
-
-        @Override
-        public double getPixelWidthMicrons() {
-            return 0;
-        }
-
-        @Override
-        public double getPixelHeightMicrons() {
-            return 0;
-        }
-
-        @Override
-        public double getAveragedPixelSizeMicrons() {
-            return 0;
-        }
-
-        @Override
-        public boolean hasPixelSizeMicrons() {
-            return false;
-        }
-
-        @Override
-        public BufferedImage getBufferedThumbnail(int maxWidth, int maxHeight, int zPosition) {
-            return null;
-        }
-
-        @Override
-        public PathImage<BufferedImage> readRegion(RegionRequest request) {
-            return null;
-        }
-
-        @Override
-        public BufferedImage readBufferedImage(RegionRequest request) {
-            return null;
-        }
-
-        @Override
-        public void close() {
-
-        }
-
-        @Override
-        public String getServerType() {
-            return null;
-        }
-
-        @Override
-        public List<String> getSubImageList() {
-            return null;
-        }
-
-        @Override
-        public String getSubImagePath(String imageName) {
-            return null;
-        }
-
-        @Override
-        public List<String> getAssociatedImageList() {
-            return null;
-        }
-
-        @Override
-        public BufferedImage getAssociatedImage(String name) {
-            return null;
-        }
-
-        @Override
-        public String getDisplayedImageName() {
-            return null;
-        }
-
-        @Override
-        public boolean containsSubImages() {
-            return false;
-        }
-
-        @Override
-        public boolean usesBaseServer(ImageServer<?> server) {
-            return false;
-        }
-
-        @Override
-        public File getFile() {
-            return null;
-        }
-
-        @Override
-        public boolean isEmptyRegion(RegionRequest request) {
-            return false;
-        }
-
-        @Override
-        public int getBitsPerPixel() {
-            return 0;
-        }
-
-        @Override
-        public Integer getDefaultChannelColor(int channel) {
-            return null;
-        }
-
-        @Override
-        public ImageServerMetadata getMetadata() {
-            return null;
-        }
-
-        @Override
-        public void setMetadata(ImageServerMetadata metadata) {
-
-        }
-
-        @Override
-        public ImageServerMetadata getOriginalMetadata() {
-            return null;
-        }
-
-        @Override
-        public boolean usesOriginalMetadata() {
-            return false;
-        }
-    }
+    Date savedDate = (Date) imageData.getProperties().get(LAST_CHANGE);
+    return savedDate != null ? savedDate : new Date(0);
+  }
 }

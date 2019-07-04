@@ -16,37 +16,48 @@
 package com.quantumsoft.qupathcloud.converter.qpdata;
 
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
-import org.dcm4che3.data.Attributes;
-import org.dcm4che3.data.Fragments;
-import org.dcm4che3.data.Tag;
-import org.dcm4che3.io.DicomInputStream;
-
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import org.dcm4che3.data.Attributes;
+import org.dcm4che3.data.Fragments;
+import org.dcm4che3.io.DicomInputStream;
 
+/**
+ * DcmToDataConverter converts DICOM files with Qpdata data (which contains user-generated
+ * annotations for images), to Qpdata files.
+ */
 public class DcmToDataConverter {
-    private File inputFile;
-    private File outputDirectory;
 
-    public DcmToDataConverter(File inputFile, File outputDirectory) {
-        this.inputFile = inputFile;
-        this.outputDirectory = outputDirectory;
-    }
+  private final Path inputFile;
+  private final Path outputFile;
 
-    public File convertDcmToQuPathData() throws QuPathCloudException {
-        try (DicomInputStream dis = new DicomInputStream(inputFile)) {
-            Attributes attrs = dis.readDataset(-1, -1);
-            byte[] qpdataBytes = (byte[]) ((Fragments) attrs.getValue(DataToDcmConverter.QPDATA_TAG)).get(0);
-            String qpdataName = attrs.getString(Tag.SOPAuthorizationComment);
-            File outputFile = new File(outputDirectory, qpdataName + ".qpdata");
-            try (FileOutputStream fos = new FileOutputStream(outputFile, false)) {
-                fos.write(qpdataBytes, 0, qpdataBytes.length);
-                fos.close();
-                return outputFile;
-            }
-        } catch (IOException e) {
-            throw new QuPathCloudException(e);
-        }
+  /**
+   * Instantiates a new DICOM to Qpdata converter.
+   *
+   * @param inputFile the input file
+   * @param outputFile the output file
+   */
+  public DcmToDataConverter(Path inputFile, Path outputFile) {
+    this.inputFile = inputFile;
+    this.outputFile = outputFile;
+  }
+
+  /**
+   * Converts DICOM to Qpdata.
+   *
+   * @throws QuPathCloudException if IOException occurs
+   */
+  public void convertDcmToQuPathData() throws QuPathCloudException {
+    try (DicomInputStream dis = new DicomInputStream(inputFile.toFile())) {
+      Attributes attrs = dis.readDataset(-1, -1);
+      byte[] qpdataBytes = (byte[]) ((Fragments) attrs.getValue(DataToDcmConverter.QPDATA_TAG))
+          .get(0);
+      try (FileOutputStream fos = new FileOutputStream(outputFile.toFile(), false)) {
+        fos.write(qpdataBytes, 0, qpdataBytes.length);
+      }
+    } catch (IOException e) {
+      throw new QuPathCloudException(e);
     }
+  }
 }
