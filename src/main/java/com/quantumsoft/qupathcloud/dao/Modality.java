@@ -19,46 +19,60 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Utility class for mapping Modality Description to Modality Value.
+ */
 public enum Modality {
-    COMPUTED_RADIOGRAPHY("CR"),
-    COMPUTED_TOMOGRAPHY("CT"),
-    DIGITAL_RADIOGRAPHY("DX"),
-    GENERAL_MICROSCOPY("GM"),
-    INTRA_ORAL_RADIOGRAPHY("IO"),
-    INTRAVASCULAR_OPTICAL_COHERENCE_TOMOGRAPHY("IVOCT"),
-    MAMMOGRAPHY("MG"),
-    MAGNETIC_RESONANCE("MR"),
-    NUCLEAR_MEDECINE("NM"),
-    OPTICAL_COHERENCE_TOMOGRAPHY("OCT"),
-    OPHTHALMIC_PHOTOGRAPHY("OP"),
-    OPHTHALMIC_TOMOGRAPHY("OPT"),
-    POSITRON_EMISSION_TOMOGRAPHY("PT"),
-    PANORAMIC_X_RAY("PX"),
-    RADIO_FLUOROSCOPY("RF"),
-    RADIOGRAPHIC_IMAGING("RG"),
-    SLIDE_MICROSCOPY("SM"),
-    THERMOGRAPHY("TG"),
-    X_RAY_ANGIOGRAPHY("XA"),
-    EXTERNAL_CAMERA_PHOTOGRAPHY("XC"),
-    QU_PATH_DATA("QPDATA"); // Modality for QuPath annotation
+  COMPUTED_RADIOGRAPHY("CR"),
+  COMPUTED_TOMOGRAPHY("CT"),
+  DIGITAL_RADIOGRAPHY("DX"),
+  GENERAL_MICROSCOPY("GM"),
+  INTRA_ORAL_RADIOGRAPHY("IO"),
+  INTRAVASCULAR_OPTICAL_COHERENCE_TOMOGRAPHY("IVOCT"),
+  MAMMOGRAPHY("MG"),
+  MAGNETIC_RESONANCE("MR"),
+  NUCLEAR_MEDECINE("NM"),
+  OPTICAL_COHERENCE_TOMOGRAPHY("OCT"),
+  OPHTHALMIC_PHOTOGRAPHY("OP"),
+  OPHTHALMIC_TOMOGRAPHY("OPT"),
+  POSITRON_EMISSION_TOMOGRAPHY("PT"),
+  PANORAMIC_X_RAY("PX"),
+  RADIO_FLUOROSCOPY("RF"),
+  RADIOGRAPHIC_IMAGING("RG"),
+  SLIDE_MICROSCOPY("SM"),
+  THERMOGRAPHY("TG"),
+  X_RAY_ANGIOGRAPHY("XA"),
+  EXTERNAL_CAMERA_PHOTOGRAPHY("XC"),
+  QU_PATH_DATA("QPDATA"); // Modality for QuPath annotation
 
-    private String modalityValue;
-    private static final List<String> VALUES = new ArrayList<>();
+  private String modalityValue;
+  private static final List<String> VALUES = new ArrayList<>();
 
-    static {
-        for(Modality modality : Modality.values())
-            VALUES.add(modality.modalityValue);
+  static {
+    for (Modality modality : Modality.values()) {
+      VALUES.add(modality.modalityValue);
     }
+  }
 
-    Modality(String modalityValue){
-        this.modalityValue = modalityValue;
-    }
+  Modality(String modalityValue) {
+    this.modalityValue = modalityValue;
+  }
 
-    public static List<String> getValues(){
-        return Collections.unmodifiableList(VALUES);
-    }
+  /**
+   * Returns all Modality Values.
+   *
+   * @return the values
+   */
+  public static List<String> getValues() {
+    return Collections.unmodifiableList(VALUES);
+  }
 
-    public String getValue(){
-        return modalityValue;
-    }
+  /**
+   * Returns the Modality Value of the Modality Description.
+   *
+   * @return the value
+   */
+  public String getValue() {
+    return modalityValue;
+  }
 }

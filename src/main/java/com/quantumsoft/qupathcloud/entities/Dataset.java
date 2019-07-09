@@ -18,62 +18,110 @@ package com.quantumsoft.qupathcloud.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Objects;
 
+/**
+ * The Dataset class contains name and the specified timeZone.
+ *
+ * @see <a href="https://cloud.google.com/healthcare/docs/concepts/projects-datasets-data-stores">Dataset</a>
+ */
 public class Dataset {
-    private String name;
-    private String timeZone;
 
-    @JsonIgnore
-    public String getProjectId(){
-        String arr[] = name.split("/");
-        return arr[arr.length - 5];
-    }
+  private String name;
+  private String timeZone;
 
-    @JsonIgnore
-    public String getLocationId(){
-        String arr[] = name.split("/");
-        return arr[arr.length - 3];
-    }
+  /**
+   * Gets Project ID.
+   *
+   * @return the Project ID
+   */
+  @JsonIgnore
+  public String getProjectId() {
+    String[] arr = name.split("/");
+    return arr[arr.length - 5];
+  }
 
-    @JsonIgnore
-    public String getDatasetId() {
-        String arr[] = name.split("/");
-        return arr[arr.length - 1];
-    }
+  /**
+   * Gets Location ID.
+   *
+   * @return the Location ID
+   */
+  @JsonIgnore
+  public String getLocationId() {
+    String[] arr = name.split("/");
+    return arr[arr.length - 3];
+  }
 
-    public String getName(){
-        return name;
-    }
+  /**
+   * Gets Dataset ID.
+   *
+   * @return the Dataset ID
+   */
+  @JsonIgnore
+  public String getDatasetId() {
+    String[] arr = name.split("/");
+    return arr[arr.length - 1];
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  /**
+   * Gets name.
+   *
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String projectId, String locationId, String datasetId) {
-        name = "projects/" + projectId + "/locations/" + locationId + "/datasets/" + datasetId;
-    }
+  /**
+   * Sets name.
+   *
+   * @param name the name
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getTimeZone() {
-        return timeZone;
-    }
+  /**
+   * Sets name.
+   *
+   * @param projectId the Project ID
+   * @param locationId the Location ID
+   * @param datasetId the Dataset ID
+   */
+  public void setName(String projectId, String locationId, String datasetId) {
+    name = "projects/" + projectId + "/locations/" + locationId + "/datasets/" + datasetId;
+  }
 
-    public void setTimeZone(String timeZone) {
-        this.timeZone = timeZone;
-    }
+  /**
+   * Gets time zone.
+   *
+   * @return the time zone
+   */
+  public String getTimeZone() {
+    return timeZone;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Dataset dataset = (Dataset) o;
-        return name.equals(dataset.name);
-    }
+  /**
+   * Sets time zone.
+   *
+   * @param timeZone the time zone
+   */
+  public void setTimeZone(String timeZone) {
+    this.timeZone = timeZone;
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Dataset dataset = (Dataset) o;
+    return name.equals(dataset.name);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name);
+  }
 }

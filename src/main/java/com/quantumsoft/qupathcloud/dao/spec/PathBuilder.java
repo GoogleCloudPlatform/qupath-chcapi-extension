@@ -17,6 +17,16 @@ package com.quantumsoft.qupathcloud.dao.spec;
 
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 
-public interface PathBuilder{
-    String toPath() throws QuPathCloudException;
+/**
+ * Path builder interface for converting QueryBuilder parameters to a string path.
+ */
+public interface PathBuilder {
+
+  /**
+   * Converts path to string.
+   *
+   * @return the string path
+   * @throws QuPathCloudException if some path parameters are wrong
+   */
+  String toPath() throws QuPathCloudException;
 }
