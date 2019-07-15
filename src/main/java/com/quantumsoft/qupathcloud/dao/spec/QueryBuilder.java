@@ -64,7 +64,7 @@ public class QueryBuilder {
   /**
    * For project query builder.
    *
-   * @param projectId the project id
+   * @param projectId the Project ID
    * @return the query builder
    */
   public static QueryBuilder forProject(String projectId) {
@@ -74,10 +74,10 @@ public class QueryBuilder {
   }
 
   /**
-   * Sets location id.
+   * Sets Location ID.
    *
-   * @param locationId the location id
-   * @return the location id
+   * @param locationId the Location ID
+   * @return the Location ID
    */
   public QueryBuilder setLocationId(String locationId) {
     this.locationId = locationId;
@@ -85,10 +85,10 @@ public class QueryBuilder {
   }
 
   /**
-   * Sets dataset id.
+   * Sets Dataset ID.
    *
-   * @param datasetId the dataset id
-   * @return the dataset id
+   * @param datasetId the Dataset ID
+   * @return the Dataset ID
    */
   public QueryBuilder setDatasetId(String datasetId) {
     this.datasetId = datasetId;
@@ -96,10 +96,10 @@ public class QueryBuilder {
   }
 
   /**
-   * Sets dicom store id.
+   * Sets DICOM Store ID.
    *
-   * @param dicomStoreId the dicom store id
-   * @return the dicom store id
+   * @param dicomStoreId the DICOM Store ID
+   * @return the DICOM Store ID
    */
   public QueryBuilder setDicomStoreId(String dicomStoreId) {
     this.dicomStoreId = dicomStoreId;
@@ -107,10 +107,10 @@ public class QueryBuilder {
   }
 
   /**
-   * Sets study id.
+   * Sets Study ID.
    *
-   * @param studyId the study id
-   * @return the study id
+   * @param studyId the Study ID
+   * @return the Study ID
    */
   public QueryBuilder setStudyId(String studyId) {
     this.studyId = studyId;
@@ -118,10 +118,10 @@ public class QueryBuilder {
   }
 
   /**
-   * Sets series id.
+   * Sets Series ID.
    *
-   * @param seriesId the series id
-   * @return the series id
+   * @param seriesId the Series ID
+   * @return the Series ID
    */
   public QueryBuilder setSeriesId(String seriesId) {
     this.seriesId = seriesId;
@@ -129,10 +129,10 @@ public class QueryBuilder {
   }
 
   /**
-   * Sets instance id.
+   * Sets Instance ID.
    *
-   * @param instanceId the instance id
-   * @return the instance id
+   * @param instanceId the Instance ID
+   * @return the Instance ID
    */
   public QueryBuilder setInstanceId(String instanceId) {
     this.instanceId = instanceId;
@@ -195,63 +195,63 @@ public class QueryBuilder {
   }
 
   /**
-   * Gets project id.
+   * Gets Project ID.
    *
-   * @return the project id
+   * @return the Project ID
    */
   String getProjectId() {
     return projectId;
   }
 
   /**
-   * Gets location id.
+   * Gets Location ID.
    *
-   * @return the location id
+   * @return the Location ID
    */
   String getLocationId() {
     return locationId;
   }
 
   /**
-   * Gets dataset id.
+   * Gets Dataset ID.
    *
-   * @return the dataset id
+   * @return the Dataset ID
    */
   public String getDatasetId() {
     return datasetId;
   }
 
   /**
-   * Gets dicom store id.
+   * Gets DICOM Store ID.
    *
-   * @return the dicom store id
+   * @return the DICOM Store ID
    */
   public String getDicomStoreId() {
     return dicomStoreId;
   }
 
   /**
-   * Gets study id.
+   * Gets Study ID.
    *
-   * @return the study id
+   * @return the Study ID
    */
   String getStudyId() {
     return studyId;
   }
 
   /**
-   * Gets series id.
+   * Gets Series ID.
    *
-   * @return the series id
+   * @return the Series ID
    */
   String getSeriesId() {
     return seriesId;
   }
 
   /**
-   * Gets instance id.
+   * Gets Instance ID.
    *
-   * @return the instance id
+   * @return the Instance ID
    */
   String getInstanceId() {
     return instanceId;

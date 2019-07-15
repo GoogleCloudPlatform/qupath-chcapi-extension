@@ -18,25 +18,54 @@ package com.quantumsoft.qupathcloud.entities.instance.objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.quantumsoft.qupathcloud.entities.DicomAttribute;
 
+/**
+ * ObjectOfPlanePositionSequence class to support TILED_SPARSE mode.
+ *
+ * @see <a href="http://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.7.6.17.3.html">TILED_SPARSE</a>
+ * @see <a href="http://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.7.6.17.html">Multi-frame Dimension Module</a>
+ */
 public class ObjectOfPlanePositionSequence {
-    @JsonProperty("0048021E")
-    private DicomAttribute<Integer> columnPositionInTotalImagePixelMatrix;
-    @JsonProperty("0048021F")
-    private DicomAttribute<Integer> rowPositionInTotalImagePixelMatrix;
 
-    public DicomAttribute<Integer> getColumnPositionInTotalImagePixelMatrix() {
-        return columnPositionInTotalImagePixelMatrix;
-    }
+  @JsonProperty("0048021E")
+  private DicomAttribute<Integer> columnPositionInTotalImagePixelMatrix;
+  @JsonProperty("0048021F")
+  private DicomAttribute<Integer> rowPositionInTotalImagePixelMatrix;
 
-    public void setColumnPositionInTotalImagePixelMatrix(DicomAttribute<Integer> columnPositionInTotalImagePixelMatrix) {
-        this.columnPositionInTotalImagePixelMatrix = columnPositionInTotalImagePixelMatrix;
-    }
+  /**
+   * Gets Column Position In Total Image Pixel Matrix.
+   *
+   * @return the Column Position In Total Image Pixel Matrix
+   */
+  public DicomAttribute<Integer> getColumnPositionInTotalImagePixelMatrix() {
+    return columnPositionInTotalImagePixelMatrix;
+  }
 
-    public DicomAttribute<Integer> getRowPositionInTotalImagePixelMatrix() {
-        return rowPositionInTotalImagePixelMatrix;
-    }
+  /**
+   * Sets Column Position In Total Image Pixel Matrix.
+   *
+   * @param columnPositionInTotalImagePixelMatrix the Column Position In Total Image Pixel Matrix
+   */
+  public void setColumnPositionInTotalImagePixelMatrix(
+      DicomAttribute<Integer> columnPositionInTotalImagePixelMatrix) {
+    this.columnPositionInTotalImagePixelMatrix = columnPositionInTotalImagePixelMatrix;
+  }
 
-    public void setRowPositionInTotalImagePixelMatrix(DicomAttribute<Integer> rowPositionInTotalImagePixelMatrix) {
-        this.rowPositionInTotalImagePixelMatrix = rowPositionInTotalImagePixelMatrix;
-    }
+  /**
+   * Gets Row Position In Total Image Pixel Matrix.
+   *
+   * @return the Row Position In Total Image Pixel Matrix
+   */
+  public DicomAttribute<Integer> getRowPositionInTotalImagePixelMatrix() {
+    return rowPositionInTotalImagePixelMatrix;
+  }
+
+  /**
+   * Sets Row Position In Total Image Pixel Matrix.
+   *
+   * @param rowPositionInTotalImagePixelMatrix the Row Position In Total Image Pixel Matrix
+   */
+  public void setRowPositionInTotalImagePixelMatrix(
+      DicomAttribute<Integer> rowPositionInTotalImagePixelMatrix) {
+    this.rowPositionInTotalImagePixelMatrix = rowPositionInTotalImagePixelMatrix;
+  }
 }

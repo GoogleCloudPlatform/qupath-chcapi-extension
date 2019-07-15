@@ -18,15 +18,32 @@ package com.quantumsoft.qupathcloud.entities.instance.objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.quantumsoft.qupathcloud.entities.DicomAttribute;
 
+/**
+ * ObjectOfFrameContentSequence class to support TILED_SPARSE mode.
+ *
+ * @see <a href="http://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.7.6.17.3.html">TILED_SPARSE</a>
+ * @see <a href="http://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.7.6.17.html">Multi-frame Dimension Module</a>
+ */
 public class ObjectOfFrameContentSequence {
-    @JsonProperty("00209157")
-    private DicomAttribute<Integer> dimensionIndexValues;
 
-    public DicomAttribute<Integer> getDimensionIndexValues() {
-        return dimensionIndexValues;
-    }
+  @JsonProperty("00209157")
+  private DicomAttribute<Integer> dimensionIndexValues;
 
-    public void setDimensionIndexValues(DicomAttribute<Integer> dimensionIndexValues) {
-        this.dimensionIndexValues = dimensionIndexValues;
-    }
+  /**
+   * Gets Dimension Index Values.
+   *
+   * @return the Dimension Index Values
+   */
+  public DicomAttribute<Integer> getDimensionIndexValues() {
+    return dimensionIndexValues;
+  }
+
+  /**
+   * Sets Dimension Index Values.
+   *
+   * @param dimensionIndexValues the Dimension Index Values
+   */
+  public void setDimensionIndexValues(DicomAttribute<Integer> dimensionIndexValues) {
+    this.dimensionIndexValues = dimensionIndexValues;
+  }
 }
