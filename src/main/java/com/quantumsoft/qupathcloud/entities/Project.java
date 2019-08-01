@@ -15,23 +15,47 @@
 
 package com.quantumsoft.qupathcloud.entities;
 
-public class Project{
-    private String projectId;
-    private String name;
+/**
+ * The Project contains projectId and Project name.
+ */
+public class Project {
 
-    public String getProjectId() {
-        return projectId;
-    }
+  private String projectId;
+  private String name;
 
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
-    }
+  /**
+   * Gets Project ID.
+   *
+   * @return the Project ID
+   */
+  public String getProjectId() {
+    return projectId;
+  }
 
-    public String getName() {
-        return name;
-    }
+  /**
+   * Sets Project ID.
+   *
+   * @param projectId the Project ID
+   */
+  public void setProjectId(String projectId) {
+    this.projectId = projectId;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  /**
+   * Gets name.
+   *
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * Sets name.
+   *
+   * @param name the name
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 }

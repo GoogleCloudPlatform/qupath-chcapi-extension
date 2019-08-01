@@ -15,12 +15,26 @@
 
 package com.quantumsoft.qupathcloud.exception;
 
-public class QuPathCloudException extends Exception{
-    public QuPathCloudException(String message) {
-        super(message);
-    }
+/**
+ * The type QuPath cloud exception.
+ */
+public class QuPathCloudException extends Exception {
 
-    public QuPathCloudException(Throwable e) {
-        super(e);
-    }
+  /**
+   * Instantiates a new QuPath cloud exception.
+   *
+   * @param message the message
+   */
+  public QuPathCloudException(String message) {
+    super(message);
+  }
+
+  /**
+   * Instantiates a new QuPath cloud exception.
+   *
+   * @param e the exception
+   */
+  public QuPathCloudException(Throwable e) {
+    super(e);
+  }
 }

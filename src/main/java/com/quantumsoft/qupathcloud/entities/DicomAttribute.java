@@ -17,55 +17,99 @@ package com.quantumsoft.qupathcloud.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Arrays;
 import java.util.Objects;
 
-public class DicomAttribute<T>{
-    private String vr;
-    @JsonProperty
-    private T[] Value;
+/**
+ * DicomAttribute class may contain any DICOM attribute.
+ * DicomAttribute is composed of:
+ * <ul>
+ *   <li>A DICOM Value Representation (vr field) that describes the data type and format of the attribute value.</li>
+ *   <li>A Value field containing attribute data.</li>
+ * </ul>
+ *
+ * @param <T> the type of an attribute
+ */
+public class DicomAttribute<T> {
 
-    public String getVr() {
-        return vr;
-    }
+  private String vr;
+  @JsonProperty
+  private T[] Value;
 
-    public void setVr(String vr) {
-        this.vr = vr;
-    }
+  /**
+   * Gets vr.
+   *
+   * @return the vr
+   */
+  public String getVr() {
+    return vr;
+  }
 
-    public void setValue(T[] Value) {
-        this.Value = Value;
-    }
+  /**
+   * Sets vr.
+   *
+   * @param vr the vr
+   */
+  public void setVr(String vr) {
+    this.vr = vr;
+  }
 
-    @JsonIgnore
-    public T getValue1() {
-        return Value[0];
-    }
+  /**
+   * Sets value.
+   *
+   * @param Value the value
+   */
+  public void setValue(T[] Value) {
+    this.Value = Value;
+  }
 
-    @JsonIgnore
-    public T getValue2() {
-        return Value[1];
-    }
+  /**
+   * Gets first value in the array.
+   *
+   * @return the first value in the array
+   */
+  @JsonIgnore
+  public T getValue1() {
+    return Value[0];
+  }
 
-    @JsonIgnore
-    public T[] getValue() {
-        return Value;
-    }
+  /**
+   * Gets second value in the array.
+   *
+   * @return the second value in the array
+   */
+  @JsonIgnore
+  public T getValue2() {
+    return Value[1];
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        DicomAttribute<?> that = (DicomAttribute<?>) o;
-        return Objects.equals(vr, that.vr) &&
-                Arrays.equals(Value, that.Value);
-    }
+  /**
+   * Gets all array values of an attribute.
+   *
+   * @return the array values of an attribute
+   */
+  @JsonIgnore
+  public T[] getValue() {
+    return Value;
+  }
 
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(vr);
-        result = 31 * result + Arrays.hashCode(Value);
-        return result;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    DicomAttribute<?> that = (DicomAttribute<?>) o;
+    return Objects.equals(vr, that.vr) &&
+        Arrays.equals(Value, that.Value);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = Objects.hash(vr);
+    result = 31 * result + Arrays.hashCode(Value);
+    return result;
+  }
 }

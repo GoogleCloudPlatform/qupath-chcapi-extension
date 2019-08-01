@@ -16,59 +16,108 @@
 package com.quantumsoft.qupathcloud.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.Objects;
 
-public class DicomStore{
-    private String name;
+/**
+ * The DicomStore class contains DICOM Store name. The name string contains Project ID, Location ID,
+ * Dataset ID and DICOM Store ID.
+ *
+ * @see <a href="https://cloud.google.com/healthcare/docs/reference/rest/v1beta1/projects.locations.datasets.dicomStores">DicomStore</a>
+ */
+public class DicomStore {
 
-    @JsonIgnore
-    public String getProjectId() {
-        String arr[] = name.split("/");
-        return arr[arr.length - 7];
-    }
+  private String name;
 
-    @JsonIgnore
-    public String getLocationId() {
-        String arr[] = name.split("/");
-        return arr[arr.length - 5];
-    }
+  /**
+   * Gets Project ID.
+   *
+   * @return the Project ID
+   */
+  @JsonIgnore
+  public String getProjectId() {
+    String[] arr = name.split("/");
+    return arr[arr.length - 7];
+  }
 
-    @JsonIgnore
-    public String getDatasetId() {
-        String arr[] = name.split("/");
-        return arr[arr.length - 3];
-    }
+  /**
+   * Gets Location ID.
+   *
+   * @return the Location ID
+   */
+  @JsonIgnore
+  public String getLocationId() {
+    String[] arr = name.split("/");
+    return arr[arr.length - 5];
+  }
 
-    @JsonIgnore
-    public String getDicomStoreId() {
-        String arr[] = name.split("/");
-        return arr[arr.length - 1];
-    }
+  /**
+   * Gets Dataset ID.
+   *
+   * @return the Dataset ID
+   */
+  @JsonIgnore
+  public String getDatasetId() {
+    String[] arr = name.split("/");
+    return arr[arr.length - 3];
+  }
 
-    public String getName(){
-        return name;
-    }
+  /**
+   * Gets DICOM Store ID.
+   *
+   * @return the DICOM Store ID
+   */
+  @JsonIgnore
+  public String getDicomStoreId() {
+    String[] arr = name.split("/");
+    return arr[arr.length - 1];
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  /**
+   * Gets name.
+   *
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String projectId, String locationId, String datasetId, String dicomStoreId){
-        name = "projects/" + projectId + "/locations/" + locationId + "/datasets/" + datasetId + "/dicomStores/" +
+  /**
+   * Sets name.
+   *
+   * @param name the name
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  /**
+   * Sets name.
+   *
+   * @param projectId    the Project ID
+   * @param locationId   the Location ID
+   * @param datasetId    the Dataset ID
+   * @param dicomStoreId the DICOM Store ID
+   */
+  public void setName(String projectId, String locationId, String datasetId, String dicomStoreId) {
+    name = "projects/" + projectId + "/locations/" + locationId + "/datasets/" + datasetId
+        + "/dicomStores/" +
         dicomStoreId;
-    }
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        DicomStore that = (DicomStore) o;
-        return Objects.equals(name, that.name);
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    DicomStore that = (DicomStore) o;
+    return Objects.equals(name, that.name);
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(name);
+  }
 }
