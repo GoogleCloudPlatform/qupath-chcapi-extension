@@ -18,15 +18,32 @@ package com.quantumsoft.qupathcloud.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DicomStores contains a list of {@link com.quantumsoft.qupathcloud.entities.DicomStore}
+ * retrieved from the server.
+ *
+ * @see <a href="https://cloud.google.com/healthcare/docs/reference/rest/v1beta1/projects.locations.datasets.dicomStores/list">DicomStores list</a>
+ */
 public class DicomStores {
-    private List<DicomStore> dicomStores = new ArrayList<>();
-    private String nextPageToken;
 
-    public List<DicomStore> getDicomStores(){
-        return dicomStores;
-    }
+  private List<DicomStore> dicomStores = new ArrayList<>();
+  private String nextPageToken;
 
-    public String getNextPageToken() {
-        return nextPageToken;
-    }
+  /**
+   * Gets the list of {@link com.quantumsoft.qupathcloud.entities.DicomStore}.
+   *
+   * @return the list of {@link com.quantumsoft.qupathcloud.entities.DicomStore}
+   */
+  public List<DicomStore> getDicomStores() {
+    return dicomStores;
+  }
+
+  /**
+   * Gets next page token.
+   *
+   * @return the next page token
+   */
+  public String getNextPageToken() {
+    return nextPageToken;
+  }
 }

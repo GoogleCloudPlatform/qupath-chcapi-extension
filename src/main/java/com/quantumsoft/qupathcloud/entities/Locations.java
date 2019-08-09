@@ -18,15 +18,32 @@ package com.quantumsoft.qupathcloud.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Locations contains a list of {@link com.quantumsoft.qupathcloud.entities.Location}
+ * retrieved from the server.
+ *
+ * @see <a href="https://cloud.google.com/healthcare/docs/reference/rest/v1beta1/projects.locations/list">Locations list</a>
+ */
 public class Locations {
-    private List<Location> locations = new ArrayList<>();
-    private String nextPageToken;
 
-    public List<Location> getLocations() {
-        return locations;
-    }
+  private List<Location> locations = new ArrayList<>();
+  private String nextPageToken;
 
-    public String getNextPageToken() {
-        return nextPageToken;
-    }
+  /**
+   * Gets the list of {@link com.quantumsoft.qupathcloud.entities.Location}.
+   *
+   * @return the list of {@link com.quantumsoft.qupathcloud.entities.Location}
+   */
+  public List<Location> getLocations() {
+    return locations;
+  }
+
+  /**
+   * Gets next page token.
+   *
+   * @return the next page token
+   */
+  public String getNextPageToken() {
+    return nextPageToken;
+  }
 }

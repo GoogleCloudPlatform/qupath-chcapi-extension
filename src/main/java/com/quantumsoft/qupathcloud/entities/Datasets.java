@@ -18,15 +18,32 @@ package com.quantumsoft.qupathcloud.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Datasets is the list of {@link com.quantumsoft.qupathcloud.entities.Dataset} retrieved from
+ * the server.
+ *
+ * @see <a href="https://cloud.google.com/healthcare/docs/reference/rest/v1beta1/projects.locations.datasets/list">Datasets list</a>
+ */
 public class Datasets {
-    private List<Dataset> datasets = new ArrayList<>();
-    private String nextPageToken;
 
-    public List<Dataset> getDatasets() {
-        return datasets;
-    }
+  private List<Dataset> datasets = new ArrayList<>();
+  private String nextPageToken;
 
-    public String getNextPageToken() {
-        return nextPageToken;
-    }
+  /**
+   * Gets the list of {@link com.quantumsoft.qupathcloud.entities.Dataset}.
+   *
+   * @return the list of {@link com.quantumsoft.qupathcloud.entities.Dataset}
+   */
+  public List<Dataset> getDatasets() {
+    return datasets;
+  }
+
+  /**
+   * Gets next page token.
+   *
+   * @return the next page token
+   */
+  public String getNextPageToken() {
+    return nextPageToken;
+  }
 }

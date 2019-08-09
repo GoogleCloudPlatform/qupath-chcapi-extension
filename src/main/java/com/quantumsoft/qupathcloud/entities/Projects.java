@@ -18,15 +18,32 @@ package com.quantumsoft.qupathcloud.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Projects contains a list of {@link com.quantumsoft.qupathcloud.entities.Project}
+ * retrieved from the server.
+ *
+ * @see <a href="https://cloud.google.com/resource-manager/docs/creating-managing-projects">Creating and Managing Projects</a>
+ */
 public class Projects {
-    private List<Project> projects = new ArrayList<>();
-    private String nextPageToken;
 
-    public List<Project> getProjects() {
-        return projects;
-    }
+  private List<Project> projects = new ArrayList<>();
+  private String nextPageToken;
 
-    public String getNextPageToken() {
-        return nextPageToken;
-    }
+  /**
+   * Gets the list of {@link com.quantumsoft.qupathcloud.entities.Project}.
+   *
+   * @return the list of {@link com.quantumsoft.qupathcloud.entities.Project}
+   */
+  public List<Project> getProjects() {
+    return projects;
+  }
+
+  /**
+   * Gets next page token.
+   *
+   * @return the next page token
+   */
+  public String getNextPageToken() {
+    return nextPageToken;
+  }
 }

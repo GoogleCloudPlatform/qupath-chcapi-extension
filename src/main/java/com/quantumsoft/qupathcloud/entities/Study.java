@@ -17,15 +17,29 @@ package com.quantumsoft.qupathcloud.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * The Study class contains unique identifier studyInstanceUID.
+ */
 public class Study {
-    @JsonProperty("0020000D")
-    private DicomAttribute<String> studyInstanceUID;
 
-    public DicomAttribute<String> getStudyInstanceUID() {
-        return studyInstanceUID;
-    }
+  @JsonProperty("0020000D")
+  private DicomAttribute<String> studyInstanceUID;
 
-    public void setStudyInstanceUID(DicomAttribute<String> studyInstanceUID) {
-        this.studyInstanceUID = studyInstanceUID;
-    }
+  /**
+   * Gets Study Instance UID.
+   *
+   * @return the Study Instance UID
+   */
+  public DicomAttribute<String> getStudyInstanceUID() {
+    return studyInstanceUID;
+  }
+
+  /**
+   * Sets Study Instance UID.
+   *
+   * @param studyInstanceUID the Study Instance UID
+   */
+  public void setStudyInstanceUID(DicomAttribute<String> studyInstanceUID) {
+    this.studyInstanceUID = studyInstanceUID;
+  }
 }

@@ -17,29 +17,60 @@ package com.quantumsoft.qupathcloud.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * The Location class contains Location name and Location ID. The name string contains Project ID.
+ *
+ * @see <a href="https://cloud.google.com/healthcare/docs/reference/rest/v1beta1/projects.locations">Locations</a>
+ */
 public class Location {
-    private String name;
-    private String locationId;
 
-    @JsonIgnore
-    public String getProjectId() {
-        String arr[] = name.split("/");
-        return arr[arr.length - 3];
-    }
+  private String name;
+  private String locationId;
 
-    public String getLocationId() {
-        return locationId;
-    }
+  /**
+   * Gets Project ID.
+   *
+   * @return the Project ID
+   */
+  @JsonIgnore
+  public String getProjectId() {
+    String[] arr = name.split("/");
+    return arr[arr.length - 3];
+  }
 
-    public void setLocationId(String locationId) {
-        this.locationId = locationId;
-    }
+  /**
+   * Gets Location ID.
+   *
+   * @return the Location ID
+   */
+  public String getLocationId() {
+    return locationId;
+  }
 
-    public String getName() {
-        return name;
-    }
+  /**
+   * Sets Location ID.
+   *
+   * @param locationId the Location ID
+   */
+  public void setLocationId(String locationId) {
+    this.locationId = locationId;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  /**
+   * Gets name.
+   *
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * Sets name.
+   *
+   * @param name the name
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 }
