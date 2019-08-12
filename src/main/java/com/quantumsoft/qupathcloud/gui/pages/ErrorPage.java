@@ -29,59 +29,70 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
+/**
+ * The ErrorPage will be presented in CloudWindow if some error occurs on a
+ * {@link com.quantumsoft.qupathcloud.gui.pages.Page}.
+ */
 public class ErrorPage {
-    private static final double RIGHT_PADDING = 13;
-    private static final double LEFT_PADDING = 13;
-    private static final double TOP_PADDING = 13;
-    private static final double BOTTOM_PADDING = 13;
-    private static final double GLYPH_SIZE = 170;
 
-    public GridPane showErrorPage(QuPathCloudException e){
-        SVGGlyph errorGlyph = new SVGGlyph(1, "exclamation-circle","M438.857 877.714q119.429 " +
-                "0 220.286-58.857t159.714-159.714 58.857-220.286-58.857-220.286-159.714-159.714-220.286-58.857-220.286 " +
-                "58.857-159.714 159.714-58.857 220.286 58.857 220.286 159.714 159.714 220.286 58.857zM512 165.143v108.571q0 " +
-                "8-5.143 13.429t-12.571 5.429h-109.714q-7.429 0-13.143-5.714t-5.714-13.143v-108.571q0-7.429 " +
-                "5.714-13.143t13.143-5.714h109.714q7.429 0 12.571 5.429t5.143 13.429zM510.857 361.714l10.286 " +
-                "354.857q0 6.857-5.714 10.286-5.714 4.571-13.714 4.571h-125.714q-8 " +
-                "0-13.714-4.571-5.714-3.429-5.714-10.286l9.714-354.857q0-5.714 5.714-10t13.714-4.286h105.714q8 " +
-                "0 13.429 4.286t6 10z", Color.RED);
-        errorGlyph.setSize(GLYPH_SIZE);
-        errorGlyph.setScaleY(-1);
-        GridPane.setHalignment(errorGlyph, HPos.CENTER);
-        GridPane.setValignment(errorGlyph, VPos.CENTER);
+  private static final double RIGHT_PADDING = 13;
+  private static final double LEFT_PADDING = 13;
+  private static final double TOP_PADDING = 13;
+  private static final double BOTTOM_PADDING = 13;
+  private static final double GLYPH_SIZE = 170;
 
-        Label errorLabel = new Label("Error");
-        errorLabel.getStyleClass().add("errorPage");
+  /**
+   * Show error page grid pane.
+   *
+   * @param e the exception
+   * @return the grid pane
+   */
+  public GridPane showErrorPage(QuPathCloudException e) {
+    SVGGlyph errorGlyph = new SVGGlyph(1, "exclamation-circle", "M438.857 877.714q119.429 "
+        + "0 220.286-58.857t159.714-159.714 58.857-220.286-58.857-220.286-159.714-159.714-220.286"
+        + "-58.857-220.286 58.857-159.714 159.714-58.857 220.286 58.857 220.286 159.714 159.714 2"
+        + "20.286 58.857zM512 165.143v108.571q0 8-5.143 13.429t-12.571 5.429h-109.714q-7.429 0-13"
+        + ".143-5.714t-5.714-13.143v-108.571q0-7.429 5.714-13.143t13.143-5.714h109.714q7.429 0 12"
+        + ".571 5.429t5.143 13.429zM510.857 361.714l10.286 354.857q0 6.857-5.714 10.286-5.714 4.5"
+        + "71-13.714 4.571h-125.714q-8 0-13.714-4.571-5.714-3.429-5.714-10.286l9.714-354.857q0-5."
+        + "714 5.714-10t13.714-4.286h105.714q8 0 13.429 4.286t6 10z", Color.RED);
+    errorGlyph.setSize(GLYPH_SIZE);
+    errorGlyph.setScaleY(-1);
+    GridPane.setHalignment(errorGlyph, HPos.CENTER);
+    GridPane.setValignment(errorGlyph, VPos.CENTER);
 
-        TextArea textArea = new TextArea(e.toString());
-        textArea.setMaxWidth(800);
-        textArea.setMaxHeight(300);
-        textArea.setWrapText(true);
-        textArea.setEditable(false);
-        textArea.getStyleClass().add("errorText");
-        GridPane.setHalignment(textArea, HPos.CENTER);
-        GridPane.setValignment(textArea, VPos.TOP);
+    Label errorLabel = new Label("Error");
+    errorLabel.getStyleClass().add("errorPage");
 
-        VBox vBox = new VBox(errorLabel,textArea);
-        vBox.setAlignment(Pos.CENTER);
+    TextArea textArea = new TextArea(e.toString());
+    textArea.setMaxWidth(800);
+    textArea.setMaxHeight(300);
+    textArea.setWrapText(true);
+    textArea.setEditable(false);
+    textArea.getStyleClass().add("errorText");
+    GridPane.setHalignment(textArea, HPos.CENTER);
+    GridPane.setValignment(textArea, VPos.TOP);
 
-        GridPane errorPageGrid = new GridPane();
-        errorPageGrid.setPadding(new Insets(TOP_PADDING,RIGHT_PADDING,BOTTOM_PADDING,LEFT_PADDING));
-        ColumnConstraints accessDeniedColumn = new ColumnConstraints();
-        accessDeniedColumn.setPercentWidth(100);
-        errorPageGrid.getColumnConstraints().add(accessDeniedColumn);
+    VBox vBox = new VBox(errorLabel, textArea);
+    vBox.setAlignment(Pos.CENTER);
 
-        RowConstraints glyphRow = new RowConstraints();
-        glyphRow.setPercentHeight(50);
-        errorPageGrid.getRowConstraints().add(glyphRow);
+    GridPane errorPageGrid = new GridPane();
+    errorPageGrid.setPadding(new Insets(TOP_PADDING, RIGHT_PADDING, BOTTOM_PADDING, LEFT_PADDING));
+    ColumnConstraints accessDeniedColumn = new ColumnConstraints();
+    accessDeniedColumn.setPercentWidth(100);
+    errorPageGrid.getColumnConstraints().add(accessDeniedColumn);
 
-        RowConstraints errorLabelRow = new RowConstraints();
-        errorLabelRow.setPercentHeight(50);
-        errorPageGrid.getRowConstraints().add(errorLabelRow);
+    RowConstraints glyphRow = new RowConstraints();
+    glyphRow.setPercentHeight(50);
+    errorPageGrid.getRowConstraints().add(glyphRow);
 
-        errorPageGrid.add(errorGlyph, 0, 0);
-        errorPageGrid.add(vBox, 0, 1);
+    RowConstraints errorLabelRow = new RowConstraints();
+    errorLabelRow.setPercentHeight(50);
+    errorPageGrid.getRowConstraints().add(errorLabelRow);
 
-        return errorPageGrid;
-    }
+    errorPageGrid.add(errorGlyph, 0, 0);
+    errorPageGrid.add(vBox, 0, 1);
+
+    return errorPageGrid;
+  }
 }

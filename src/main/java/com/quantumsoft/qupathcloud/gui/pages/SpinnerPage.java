@@ -18,12 +18,21 @@ package com.quantumsoft.qupathcloud.gui.pages;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.BorderPane;
 
+/**
+ * The SpinnerPage will be presented during the transition to another page.
+ */
 public class SpinnerPage {
-    private static final double SPINNER_SIZE = 200;
 
-    public BorderPane getSpinnerPage(){
-        ProgressIndicator progressIndicator = new ProgressIndicator();
-        progressIndicator.setMaxSize(SPINNER_SIZE,SPINNER_SIZE);
-        return new BorderPane(progressIndicator);
-    }
+  private static final double SPINNER_SIZE = 200;
+
+  /**
+   * Gets spinner page.
+   *
+   * @return the spinner page
+   */
+  public BorderPane getSpinnerPage() {
+    ProgressIndicator progressIndicator = new ProgressIndicator();
+    progressIndicator.setMaxSize(SPINNER_SIZE, SPINNER_SIZE);
+    return new BorderPane(progressIndicator);
+  }
 }

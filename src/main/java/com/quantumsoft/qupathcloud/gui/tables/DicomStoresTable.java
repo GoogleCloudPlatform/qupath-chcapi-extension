@@ -16,29 +16,38 @@
 package com.quantumsoft.qupathcloud.gui.tables;
 
 import com.quantumsoft.qupathcloud.entities.DicomStore;
+import java.util.Comparator;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.util.Comparator;
-import java.util.List;
-
+/**
+ * The DicomStoresTable represents a table with a list of DICOM Stores.
+ */
 public class DicomStoresTable {
 
-    public TableView getDicomstoresTable(List<DicomStore> dicomStores){
+  /**
+   * Gets dicomstores table.
+   *
+   * @param dicomStores the dicom stores
+   * @return the dicomstores table
+   */
+  public TableView getDicomstoresTable(List<DicomStore> dicomStores) {
 
-        dicomStores.sort(Comparator.comparing(DicomStore::getDicomStoreId));
-        ObservableList<DicomStore> dicomStoresObservableList = FXCollections.observableArrayList(dicomStores);
-        TableView<DicomStore> dicomStoresTable = new TableView<>(dicomStoresObservableList);
-        dicomStoresTable.setId("dicomStoresTable");
+    dicomStores.sort(Comparator.comparing(DicomStore::getDicomStoreId));
+    ObservableList<DicomStore> dicomStoresObservableList = FXCollections
+        .observableArrayList(dicomStores);
+    TableView<DicomStore> dicomStoresTable = new TableView<>(dicomStoresObservableList);
+    dicomStoresTable.setId("dicomStoresTable");
 
-        TableColumn<DicomStore, String> nameColumn = new TableColumn<>("ID");
-        nameColumn.prefWidthProperty().bind(dicomStoresTable.widthProperty().multiply(0.996));
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("dicomStoreId"));
-        dicomStoresTable.getColumns().add(nameColumn);
+    TableColumn<DicomStore, String> nameColumn = new TableColumn<>("ID");
+    nameColumn.prefWidthProperty().bind(dicomStoresTable.widthProperty().multiply(0.996));
+    nameColumn.setCellValueFactory(new PropertyValueFactory<>("dicomStoreId"));
+    dicomStoresTable.getColumns().add(nameColumn);
 
-        return dicomStoresTable;
-    }
+    return dicomStoresTable;
+  }
 }

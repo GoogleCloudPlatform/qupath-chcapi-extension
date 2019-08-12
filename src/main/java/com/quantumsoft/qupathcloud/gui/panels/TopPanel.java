@@ -28,79 +28,90 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 
-
+/**
+ * The TopPanel shows a panel with the current position and search box.
+ */
 public class TopPanel {
-    private static final double RIGHT_PADDING = 0;
-    private static final double LEFT_PADDING = 0;
-    private static final double TOP_PADDING = 10;
-    private static final double BOTTOM_PADDING = 10;
-    private static final double SEARCH_WIDTH = 150;
-    private static final double GLYPH_SIZE = 9;
-    private static final double GLYPH_RIGHT_MARGIN = 4;
-    private static final double GLYPH_LEFT_MARGIN = 4;
 
-    public GridPane getBeardCrumbsAndSearchGrid(Position position){
+  private static final double RIGHT_PADDING = 0;
+  private static final double LEFT_PADDING = 0;
+  private static final double TOP_PADDING = 10;
+  private static final double BOTTOM_PADDING = 10;
+  private static final double SEARCH_WIDTH = 150;
+  private static final double GLYPH_SIZE = 9;
+  private static final double GLYPH_RIGHT_MARGIN = 4;
+  private static final double GLYPH_LEFT_MARGIN = 4;
 
-        GridPane beardCrumbsAndSearchGridPanel = new GridPane();
-        beardCrumbsAndSearchGridPanel.setPadding(new Insets(TOP_PADDING,RIGHT_PADDING,BOTTOM_PADDING,LEFT_PADDING));
+  /**
+   * Gets beard crumbs and search grid.
+   *
+   * @param position the position
+   * @return the beard crumbs and search grid
+   */
+  public GridPane getBeardCrumbsAndSearchGrid(Position position) {
 
-        ColumnConstraints beardCrumbsColumn = new ColumnConstraints();
-        beardCrumbsColumn.setPercentWidth(50);
-        beardCrumbsAndSearchGridPanel.getColumnConstraints().add(beardCrumbsColumn);
+    GridPane beardCrumbsAndSearchGridPanel = new GridPane();
+    beardCrumbsAndSearchGridPanel
+        .setPadding(new Insets(TOP_PADDING, RIGHT_PADDING, BOTTOM_PADDING, LEFT_PADDING));
 
-        ColumnConstraints searchColumn = new ColumnConstraints();
-        searchColumn.setPercentWidth(50);
-        beardCrumbsAndSearchGridPanel.getColumnConstraints().add(searchColumn);
+    ColumnConstraints beardCrumbsColumn = new ColumnConstraints();
+    beardCrumbsColumn.setPercentWidth(50);
+    beardCrumbsAndSearchGridPanel.getColumnConstraints().add(beardCrumbsColumn);
 
-        RowConstraints beardCrumbsAndSearchRow = new RowConstraints();
-        beardCrumbsAndSearchGridPanel.getRowConstraints().add(beardCrumbsAndSearchRow);
+    ColumnConstraints searchColumn = new ColumnConstraints();
+    searchColumn.setPercentWidth(50);
+    beardCrumbsAndSearchGridPanel.getColumnConstraints().add(searchColumn);
 
-        Label projectLabel = new Label("PROJECT");
-        Label datasetLabel = new Label("DATASET");
-        Label dicomStoreLabel = new Label("DICOM STORE");
+    RowConstraints beardCrumbsAndSearchRow = new RowConstraints();
+    beardCrumbsAndSearchGridPanel.getRowConstraints().add(beardCrumbsAndSearchRow);
 
-        switch(position){
-            case PROJECTS:
-                projectLabel.getStyleClass().add("beardCrumbsBlack");
-                datasetLabel.getStyleClass().add("beardCrumbsGray");
-                dicomStoreLabel.getStyleClass().add("beardCrumbsGray");
-                break;
-            case DATASETS:
-                projectLabel.getStyleClass().add("beardCrumbsBlack");
-                datasetLabel.getStyleClass().add("beardCrumbsBlack");
-                dicomStoreLabel.getStyleClass().add("beardCrumbsGray");
-                break;
-            case DICOM_STORES:
-                projectLabel.getStyleClass().add("beardCrumbsBlack");
-                datasetLabel.getStyleClass().add("beardCrumbsBlack");
-                dicomStoreLabel.getStyleClass().add("beardCrumbsBlack");
-        }
+    Label projectLabel = new Label("PROJECT");
+    Label datasetLabel = new Label("DATASET");
+    Label dicomStoreLabel = new Label("DICOM STORE");
 
-        HBox beardCrumbsHBox = new HBox(projectLabel, getAngleRightGlyph(), datasetLabel, getAngleRightGlyph(), dicomStoreLabel);
-        beardCrumbsHBox.setAlignment(Pos.CENTER_LEFT);
-
-        JFXTextField search = new JFXTextField();
-        search.setPrefWidth(SEARCH_WIDTH);
-        search.setPromptText("Search");
-        search.setId("search");
-        GridPane.setHalignment(search, HPos.RIGHT);
-        GridPane.setValignment(search, VPos.CENTER);
-        GridPane.setFillWidth(search, false);
-
-        beardCrumbsAndSearchGridPanel.add(beardCrumbsHBox, 0, 0);
-        beardCrumbsAndSearchGridPanel.add(search, 1, 0);
-
-        return beardCrumbsAndSearchGridPanel;
+    switch (position) {
+      case PROJECTS:
+        projectLabel.getStyleClass().add("beardCrumbsBlack");
+        datasetLabel.getStyleClass().add("beardCrumbsGray");
+        dicomStoreLabel.getStyleClass().add("beardCrumbsGray");
+        break;
+      case DATASETS:
+        projectLabel.getStyleClass().add("beardCrumbsBlack");
+        datasetLabel.getStyleClass().add("beardCrumbsBlack");
+        dicomStoreLabel.getStyleClass().add("beardCrumbsGray");
+        break;
+      case DICOM_STORES:
+        projectLabel.getStyleClass().add("beardCrumbsBlack");
+        datasetLabel.getStyleClass().add("beardCrumbsBlack");
+        dicomStoreLabel.getStyleClass().add("beardCrumbsBlack");
     }
 
-    private SVGGlyph getAngleRightGlyph(){
-        SVGGlyph angleRightGlyph = new SVGGlyph(1, "angle-right","M340 " +
-                "402.286q0-7.429-5.714-13.143l-266.286-266.286q-5.714-5.714-13.143-5.714t-13.143 5.714l-28.571 " +
-                "28.571q-5.714 5.714-5.714 13.143t5.714 13.143l224.571 224.571-224.571 224.571q-5.714 5.714-5.714 " +
-                "13.143t5.714 13.143l28.571 28.571q5.714 5.714 13.143 5.714t13.143-5.714l266.286-266.286q5.714-5.714 " +
-                "5.714-13.143z", Color.BLACK);
-        angleRightGlyph.setSize(GLYPH_SIZE);
-        HBox.setMargin(angleRightGlyph, new Insets(0,GLYPH_RIGHT_MARGIN,0,GLYPH_LEFT_MARGIN));
-        return angleRightGlyph;
-    }
+    HBox beardCrumbsHBox = new HBox(projectLabel, getAngleRightGlyph(), datasetLabel,
+        getAngleRightGlyph(), dicomStoreLabel);
+    beardCrumbsHBox.setAlignment(Pos.CENTER_LEFT);
+
+    JFXTextField search = new JFXTextField();
+    search.setPrefWidth(SEARCH_WIDTH);
+    search.setPromptText("Search");
+    search.setId("search");
+    GridPane.setHalignment(search, HPos.RIGHT);
+    GridPane.setValignment(search, VPos.CENTER);
+    GridPane.setFillWidth(search, false);
+
+    beardCrumbsAndSearchGridPanel.add(beardCrumbsHBox, 0, 0);
+    beardCrumbsAndSearchGridPanel.add(search, 1, 0);
+
+    return beardCrumbsAndSearchGridPanel;
+  }
+
+  private SVGGlyph getAngleRightGlyph() {
+    SVGGlyph angleRightGlyph = new SVGGlyph(1, "angle-right", "M340 402.286q0-7.429-5.714-13.1"
+        + "43l-266.286-266.286q-5.714-5.714-13.143-5.714t-13.143 5.714l-28.571 28.571q-5.714 5"
+        + ".714-5.714 13.143t5.714 13.143l224.571 224.571-224.571 224.571q-5.714 5.714-5.714 1"
+        + "3.143t5.714 13.143l28.571 28.571q5.714 5.714 13.143 5.714t13.143-5.714l266.286-266."
+        + "286q5.714-5.714 5.714-13.143z", Color.BLACK);
+    angleRightGlyph.setSize(GLYPH_SIZE);
+    HBox.setMargin(angleRightGlyph, new Insets(0, GLYPH_RIGHT_MARGIN, 0, GLYPH_LEFT_MARGIN));
+    return angleRightGlyph;
+  }
 }
