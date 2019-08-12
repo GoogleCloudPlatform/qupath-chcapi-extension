@@ -15,47 +15,59 @@
 
 package com.quantumsoft.qupathcloud.gui.pages;
 
+import com.quantumsoft.qupathcloud.gui.panels.BottomPanel;
+import com.quantumsoft.qupathcloud.gui.panels.Position;
+import com.quantumsoft.qupathcloud.gui.panels.TopPanel;
 import javafx.geometry.Insets;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-import com.quantumsoft.qupathcloud.gui.panels.TopPanel;
-import com.quantumsoft.qupathcloud.gui.panels.BottomPanel;
-import com.quantumsoft.qupathcloud.gui.panels.Position;
 
+/**
+ * The Page for presenting page with information, a current position with search box and
+ * control buttons.
+ */
 public class Page {
-    private static final double RIGHT_PADDING = 13;
-    private static final double LEFT_PADDING = 13;
-    private static final double TOP_PADDING = 0;
-    private static final double BOTTOM_PADDING = 0;
 
-    public GridPane getPage(TableView table, Position position){
+  private static final double RIGHT_PADDING = 13;
+  private static final double LEFT_PADDING = 13;
+  private static final double TOP_PADDING = 0;
+  private static final double BOTTOM_PADDING = 0;
 
-        GridPane pageGrid = new GridPane();
-        pageGrid.setPadding(new Insets(TOP_PADDING,RIGHT_PADDING,BOTTOM_PADDING,LEFT_PADDING));
+  /**
+   * Gets page.
+   *
+   * @param table    the table
+   * @param position the position
+   * @return the page
+   */
+  public GridPane getPage(TableView table, Position position) {
 
-        ColumnConstraints columnInPageGrid = new ColumnConstraints();
-        columnInPageGrid.setPercentWidth(100);
-        pageGrid.getColumnConstraints().add(columnInPageGrid);
+    GridPane pageGrid = new GridPane();
+    pageGrid.setPadding(new Insets(TOP_PADDING, RIGHT_PADDING, BOTTOM_PADDING, LEFT_PADDING));
 
-        RowConstraints beardCrumbsAndSearchPanelRow = new RowConstraints();
-        pageGrid.getRowConstraints().add(beardCrumbsAndSearchPanelRow);
+    ColumnConstraints columnInPageGrid = new ColumnConstraints();
+    columnInPageGrid.setPercentWidth(100);
+    pageGrid.getColumnConstraints().add(columnInPageGrid);
 
-        RowConstraints nodeRow = new RowConstraints();
-        pageGrid.getRowConstraints().add(nodeRow);
+    RowConstraints beardCrumbsAndSearchPanelRow = new RowConstraints();
+    pageGrid.getRowConstraints().add(beardCrumbsAndSearchPanelRow);
 
-        RowConstraints nextPanelRow = new RowConstraints();
-        pageGrid.getRowConstraints().add(nextPanelRow);
+    RowConstraints nodeRow = new RowConstraints();
+    pageGrid.getRowConstraints().add(nodeRow);
 
-        GridPane beardCrumbsAndSearchRowGrid = new TopPanel().getBeardCrumbsAndSearchGrid(position);
-        BorderPane bottomPanel = new BottomPanel().getNextPanel(position);
+    RowConstraints nextPanelRow = new RowConstraints();
+    pageGrid.getRowConstraints().add(nextPanelRow);
 
-        pageGrid.add(beardCrumbsAndSearchRowGrid, 0, 0);
-        pageGrid.add(table, 0, 1);
-        pageGrid.add(bottomPanel,0,2);
+    GridPane beardCrumbsAndSearchRowGrid = new TopPanel().getBeardCrumbsAndSearchGrid(position);
+    BorderPane bottomPanel = new BottomPanel().getNextPanel(position);
 
-        return pageGrid;
-    }
+    pageGrid.add(beardCrumbsAndSearchRowGrid, 0, 0);
+    pageGrid.add(table, 0, 1);
+    pageGrid.add(bottomPanel, 0, 2);
+
+    return pageGrid;
+  }
 }

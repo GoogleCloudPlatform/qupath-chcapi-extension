@@ -15,6 +15,11 @@
 
 package com.quantumsoft.qupathcloud.gui.panels;
 
+/**
+ * The enum Position represents the current position on a page.
+ */
 public enum Position {
-    PROJECTS, DATASETS, DICOM_STORES
+  PROJECTS,
+  DATASETS,
+  DICOM_STORES
 }

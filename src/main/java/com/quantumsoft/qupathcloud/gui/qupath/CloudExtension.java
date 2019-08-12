@@ -18,59 +18,62 @@ package com.quantumsoft.qupathcloud.gui.qupath;
 import com.quantumsoft.qupathcloud.gui.windows.CloudWindow;
 import com.quantumsoft.qupathcloud.repository.Repository;
 import com.quantumsoft.qupathcloud.synchronization.SynchronizationProjectWithDicomStore;
+import java.io.IOException;
 import javafx.scene.control.Button;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import qupath.lib.gui.QuPathGUI;
 import qupath.lib.gui.extensions.QuPathExtension;
 
-import java.io.IOException;
-
+/**
+ * The CloudExtension class for adding the extension to QuPath.
+ */
 public class CloudExtension implements QuPathExtension {
-    private static final Logger LOGGER = LogManager.getLogger();
-    private static final String EXTENSION_NAME = "Cloud extension";
-    private static final String EXTENSION_DESCRIPTION = "Adds integration with Google Cloud Healthcare API";
 
-    public void installExtension(QuPathGUI qupath) {
-        Button cloudButton = new Button("Cloud");
-        Button synchronizeButton = new Button("Synchronize");
-        Button logoutButton = new Button("Logout");
+  private static final Logger LOGGER = LogManager.getLogger();
+  private static final String EXTENSION_NAME = "Cloud extension";
+  private static final String EXTENSION_DESCRIPTION = "Adds integration with Google Cloud Healthcare API";
 
-        cloudButton.setOnAction(e -> {
-            CloudWindow window = new CloudWindow(qupath);
-            window.showCloudWindow();
-        });
-        cloudButton.disableProperty().bind(qupath.projectProperty().isNull());
+  public void installExtension(QuPathGUI qupath) {
+    Button cloudButton = new Button("Cloud");
+    Button synchronizeButton = new Button("Synchronize");
+    Button logoutButton = new Button("Logout");
 
-        synchronizeButton.setOnAction(event -> {
-            SynchronizationProjectWithDicomStore sync = new SynchronizationProjectWithDicomStore(qupath,
-                    Repository.INSTANCE.getDicomStore());
-            sync.synchronization();
-        });
-        synchronizeButton.disableProperty().bind(Repository.INSTANCE.getDicomStoreProperty().isNull());
+    cloudButton.setOnAction(e -> {
+      CloudWindow window = new CloudWindow(qupath);
+      window.showCloudWindow();
+    });
+    cloudButton.disableProperty().bind(qupath.projectProperty().isNull());
 
-        logoutButton.setOnAction(event -> {
-            Repository.INSTANCE.setDicomStore(null);
-            try {
-                Repository.INSTANCE.invalidateCredentials();
-            } catch (IOException e) {
-                LOGGER.error("Error invalidate!", e);
-            }
-            Repository.INSTANCE.getIsLoggedInProperty().set(true);
-        });
-        logoutButton.disableProperty().bind(Repository.INSTANCE.getIsLoggedInProperty());
+    synchronizeButton.setOnAction(event -> {
+      SynchronizationProjectWithDicomStore sync = new SynchronizationProjectWithDicomStore(qupath,
+          Repository.INSTANCE.getDicomStore());
+      sync.synchronization();
+    });
+    synchronizeButton.disableProperty().bind(Repository.INSTANCE.getDicomStoreProperty().isNull());
 
-        qupath.addToolbarSeparator();
-        qupath.addToolbarButton(cloudButton);
-        qupath.addToolbarButton(synchronizeButton);
-        qupath.addToolbarButton(logoutButton);
-    }
+    logoutButton.setOnAction(event -> {
+      Repository.INSTANCE.setDicomStore(null);
+      try {
+        Repository.INSTANCE.invalidateCredentials();
+      } catch (IOException e) {
+        LOGGER.error("Error invalidate!", e);
+      }
+      Repository.INSTANCE.getIsLoggedInProperty().set(true);
+    });
+    logoutButton.disableProperty().bind(Repository.INSTANCE.getIsLoggedInProperty());
 
-    public String getName() {
-        return EXTENSION_NAME;
-    }
+    qupath.addToolbarSeparator();
+    qupath.addToolbarButton(cloudButton);
+    qupath.addToolbarButton(synchronizeButton);
+    qupath.addToolbarButton(logoutButton);
+  }
 
-    public String getDescription() {
-        return EXTENSION_DESCRIPTION;
-    }
+  public String getName() {
+    return EXTENSION_NAME;
+  }
+
+  public String getDescription() {
+    return EXTENSION_DESCRIPTION;
+  }
 }

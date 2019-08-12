@@ -16,35 +16,43 @@
 package com.quantumsoft.qupathcloud.gui.tables;
 
 import com.quantumsoft.qupathcloud.entities.Dataset;
+import java.util.Comparator;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.util.Comparator;
-import java.util.List;
-
+/**
+ * The DatasetsTable represents a table with a list of Datasets.
+ */
 public class DatasetsTable {
 
-    public TableView getDatasetsTable(List<Dataset> datasets){
+  /**
+   * Gets datasets table.
+   *
+   * @param datasets the datasets
+   * @return the datasets table
+   */
+  public TableView getDatasetsTable(List<Dataset> datasets) {
 
-        datasets.sort(Comparator.comparing(Dataset::getLocationId));
-        datasets.sort(Comparator.comparing(Dataset::getDatasetId));
-        ObservableList<Dataset> datasetsObservableList = FXCollections.observableArrayList(datasets);
-        TableView<Dataset> datasetsTable = new TableView<>(datasetsObservableList);
-        datasetsTable.setId("datasetsTable");
+    datasets.sort(Comparator.comparing(Dataset::getLocationId));
+    datasets.sort(Comparator.comparing(Dataset::getDatasetId));
+    ObservableList<Dataset> datasetsObservableList = FXCollections.observableArrayList(datasets);
+    TableView<Dataset> datasetsTable = new TableView<>(datasetsObservableList);
+    datasetsTable.setId("datasetsTable");
 
-        TableColumn<Dataset, String> nameColumn = new TableColumn<>("ID");
-        nameColumn.prefWidthProperty().bind(datasetsTable.widthProperty().multiply(0.498));
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("datasetId"));
-        datasetsTable.getColumns().add(nameColumn);
+    TableColumn<Dataset, String> nameColumn = new TableColumn<>("ID");
+    nameColumn.prefWidthProperty().bind(datasetsTable.widthProperty().multiply(0.498));
+    nameColumn.setCellValueFactory(new PropertyValueFactory<>("datasetId"));
+    datasetsTable.getColumns().add(nameColumn);
 
-        TableColumn<Dataset, String> locationsColumn = new TableColumn<>("LOCATIONS");
-        locationsColumn.prefWidthProperty().bind(datasetsTable.widthProperty().multiply(0.498));
-        locationsColumn.setCellValueFactory(new PropertyValueFactory<>("locationId"));
-        datasetsTable.getColumns().add(locationsColumn);
+    TableColumn<Dataset, String> locationsColumn = new TableColumn<>("LOCATIONS");
+    locationsColumn.prefWidthProperty().bind(datasetsTable.widthProperty().multiply(0.498));
+    locationsColumn.setCellValueFactory(new PropertyValueFactory<>("locationId"));
+    datasetsTable.getColumns().add(locationsColumn);
 
-        return datasetsTable;
-    }
+    return datasetsTable;
+  }
 }
