@@ -7,7 +7,7 @@ steps:
 - name: 'gcr.io/cloud-builders/git'
   args:
   - 'checkout'
-  - 'tags/v0.2.0-m2'
+  - 'tags/v0.2.0-m5'
   dir: 'qupath'
 - name: 'bash:5.0.7'
   args:
