@@ -16,14 +16,15 @@
 package com.quantumsoft.qupathcloud.imageserver;
 
 import java.awt.image.BufferedImage;
+import java.net.URI;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import qupath.lib.images.PathImage;
 import qupath.lib.images.servers.ImageChannel;
 import qupath.lib.images.servers.ImageServer;
 import qupath.lib.images.servers.ImageServerMetadata;
+import qupath.lib.images.servers.PixelType;
 import qupath.lib.images.servers.TileRequest;
+import qupath.lib.images.servers.TileRequestManager;
 import qupath.lib.regions.RegionRequest;
 
 /**
@@ -39,6 +40,11 @@ public class StubImageServer implements ImageServer<BufferedImage> {
     return path;
   }
 
+  @Override
+  public Collection<URI> getURIs() {
+    return null;
+  }
+
   /**
    * Sets path.
    *
@@ -48,10 +54,6 @@ public class StubImageServer implements ImageServer<BufferedImage> {
     this.path = path;
   }
 
-  @Override
-  public String getShortServerName() {
-    return null;
-  }
 
   @Override
   public double[] getPreferredDownsamples() {
@@ -64,29 +66,10 @@ public class StubImageServer implements ImageServer<BufferedImage> {
   }
 
   @Override
-  public double getPreferredDownsampleFactor(double v) {
-    return 0;
-  }
-
-  @Override
   public double getDownsampleForResolution(int i) {
     return 0;
   }
 
-  @Override
-  public int getPreferredTileWidth() {
-    return 0;
-  }
-
-  @Override
-  public int getPreferredTileHeight() {
-    return 0;
-  }
-
-  @Override
-  public double getMagnification() {
-    return 0;
-  }
 
   @Override
   public int getWidth() {
@@ -95,16 +78,6 @@ public class StubImageServer implements ImageServer<BufferedImage> {
 
   @Override
   public int getHeight() {
-    return 0;
-  }
-
-  @Override
-  public int getLevelWidth(int i) {
-    return 0;
-  }
-
-  @Override
-  public int getLevelHeight(int i) {
     return 0;
   }
 
@@ -129,47 +102,7 @@ public class StubImageServer implements ImageServer<BufferedImage> {
   }
 
   @Override
-  public double getTimePoint(int i) {
-    return 0;
-  }
-
-  @Override
-  public TimeUnit getTimeUnit() {
-    return null;
-  }
-
-  @Override
-  public double getZSpacingMicrons() {
-    return 0;
-  }
-
-  @Override
-  public double getPixelWidthMicrons() {
-    return 0;
-  }
-
-  @Override
-  public double getPixelHeightMicrons() {
-    return 0;
-  }
-
-  @Override
-  public double getAveragedPixelSizeMicrons() {
-    return 0;
-  }
-
-  @Override
-  public boolean hasPixelSizeMicrons() {
-    return false;
-  }
-
-  @Override
-  public BufferedImage getBufferedThumbnail(int i, int i1, int i2) {
-    return null;
-  }
-
-  @Override
-  public PathImage<BufferedImage> readRegion(RegionRequest regionRequest) {
+  public BufferedImage getCachedTile(TileRequest tile) {
     return null;
   }
 
@@ -184,16 +117,6 @@ public class StubImageServer implements ImageServer<BufferedImage> {
   }
 
   @Override
-  public List<String> getSubImageList() {
-    return null;
-  }
-
-  @Override
-  public String getSubImagePath(String s) {
-    return null;
-  }
-
-  @Override
   public List<String> getAssociatedImageList() {
     return null;
   }
@@ -203,10 +126,6 @@ public class StubImageServer implements ImageServer<BufferedImage> {
     return null;
   }
 
-  @Override
-  public String getDisplayedImageName() {
-    return displayedImageName;
-  }
 
   /**
    * Sets displayed image name.
@@ -218,37 +137,17 @@ public class StubImageServer implements ImageServer<BufferedImage> {
   }
 
   @Override
-  public boolean containsSubImages() {
-    return false;
-  }
-
-  @Override
-  public boolean usesBaseServer(ImageServer<?> imageServer) {
-    return false;
-  }
-
-  @Override
   public boolean isEmptyRegion(RegionRequest regionRequest) {
     return false;
   }
 
   @Override
-  public int getBitsPerPixel() {
-    return 0;
-  }
-
-  @Override
-  public Integer getDefaultChannelColor(int i) {
+  public PixelType getPixelType() {
     return null;
   }
 
   @Override
-  public String getChannelName(int i) {
-    return null;
-  }
-
-  @Override
-  public List<ImageChannel> getChannels() {
+  public ImageChannel getChannel(int channel) {
     return null;
   }
 
@@ -268,32 +167,17 @@ public class StubImageServer implements ImageServer<BufferedImage> {
   }
 
   @Override
-  public boolean usesOriginalMetadata() {
-    return false;
-  }
-
-  @Override
-  public BufferedImage getDefaultThumbnail() {
-    return null;
-  }
-
-  @Override
   public BufferedImage getDefaultThumbnail(int i, int i1) {
     return null;
   }
 
   @Override
-  public Collection<TileRequest> getAllTileRequests() {
+  public TileRequestManager getTileRequestManager() {
     return null;
   }
 
   @Override
-  public TileRequest getTile(int i, int i1, int i2, int i3, int i4) {
-    return null;
-  }
-
-  @Override
-  public Collection<TileRequest> getTiles(RegionRequest regionRequest) {
+  public Class<BufferedImage> getImageClass() {
     return null;
   }
 

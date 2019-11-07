@@ -18,14 +18,12 @@ package com.quantumsoft.qupathcloud.imageserver;
 import static com.quantumsoft.qupathcloud.configuration.MetadataConfiguration.METADATA_FILE_EXTENSION;
 
 import com.quantumsoft.qupathcloud.dao.CloudDao;
-import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 import com.quantumsoft.qupathcloud.repository.Repository;
 import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.apache.commons.io.FilenameUtils;
-import qupath.lib.images.servers.FileFormatInfo;
 import qupath.lib.images.servers.ImageServer;
 import qupath.lib.images.servers.ImageServerBuilder;
 
@@ -43,8 +41,7 @@ public class CloudImageServerBuilder implements ImageServerBuilder<BufferedImage
     cloudDao = Repository.INSTANCE.getCloudDao();
   }
 
-  @Override
-  public float supportLevel(URI uri, FileFormatInfo.ImageCheckType info, Class<?> cls) {
+  private float supportLevel(URI uri, String... args) {
     Path filePath = Paths.get(uri);
     String extension = FilenameUtils.getExtension(filePath.toString());
     if (extension.equals(METADATA_FILE_EXTENSION)) {
@@ -55,8 +52,15 @@ public class CloudImageServerBuilder implements ImageServerBuilder<BufferedImage
   }
 
   @Override
-  public ImageServer<BufferedImage> buildServer(URI uri) throws QuPathCloudException {
-    return new CloudImageServer(uri, cloudDao, Repository.INSTANCE.getDicomStore());
+  public UriImageSupport<BufferedImage> checkImageSupport(URI uri, String... args) {
+    float supportLevel = supportLevel(uri, args);
+    return UriImageSupport.createInstance(this.getClass(), supportLevel,
+        DefaultImageServerBuilder.createInstance(this.getClass(), uri, args));
+  }
+
+  @Override
+  public ImageServer<BufferedImage> buildServer(URI uri, String... args) throws Exception {
+    return new CloudImageServer(uri, cloudDao, Repository.INSTANCE.getDicomStore(), false);
   }
 
   @Override
@@ -67,5 +71,10 @@ public class CloudImageServerBuilder implements ImageServerBuilder<BufferedImage
   @Override
   public String getDescription() {
     return "Pyramid image with tiles obtained via google healthcare api";
+  }
+
+  @Override
+  public Class<BufferedImage> getImageType() {
+    return BufferedImage.class;
   }
 }

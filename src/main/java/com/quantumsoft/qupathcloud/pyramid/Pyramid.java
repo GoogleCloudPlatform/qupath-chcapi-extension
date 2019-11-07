@@ -21,6 +21,8 @@ import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import qupath.lib.images.servers.ImageChannel;
+import qupath.lib.images.servers.ImageServerMetadata;
 
 /**
  * The Pyramid to display an whole-slide image in QuPath.
@@ -33,13 +35,13 @@ public class Pyramid {
   private String studyUID;
   private String seriesUID;
 
-    /**
-     * Instantiates a new Pyramid.
-     *
-     * @param instances the instances
-     * @throws QuPathCloudException if an exception occurs
-     */
-    public Pyramid(List<Instance> instances) throws QuPathCloudException {
+  /**
+   * Instantiates a new Pyramid.
+   *
+   * @param instances the instances
+   * @throws QuPathCloudException if an exception occurs
+   */
+  public Pyramid(List<Instance> instances, boolean metadataOnly) throws QuPathCloudException {
     if (instances.get(0).isFullTiled()) {
       instances.sort(Comparator.comparingInt(Pyramid::getInstanceFrameOffset));
     }
@@ -50,7 +52,8 @@ public class Pyramid {
       if (currentLevel == null || currentLevel.getWidth() != getInstanceWidth(instance)) {
         currentLevel = new PyramidLevel(instance);
         levels.add(currentLevel);
-      } else {
+      }
+      if (!metadataOnly) {
         currentLevel.addInstance(instance);
       }
     }
@@ -138,6 +141,22 @@ public class Pyramid {
      */
     public PyramidFrame getFrame(int tileX, int tileY, int level) {
     return levels.get(level).getFrame(tileX, tileY);
+  }
+
+  /**
+   * Gets Series Metadata.
+   *
+   * @return the Series Metadata
+   */
+  public ImageServerMetadata getMetadata() {
+    return new ImageServerMetadata.Builder()
+        .height(getHeight())
+        .width(getWidth())
+        .channels(ImageChannel.getDefaultRGBChannels())
+        .preferredTileSize(getTileWidth(), getTileHeight())
+        .levelsFromDownsamples(getDownsamples())
+        .rgb(true)
+        .build();
   }
 
   private static int getInstanceWidth(Instance instance) {

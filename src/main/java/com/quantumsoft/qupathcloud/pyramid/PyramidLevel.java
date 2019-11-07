@@ -43,16 +43,13 @@ public class PyramidLevel {
    * Instantiates a new Pyramid level.
    *
    * @param instance the instance
-   * @throws QuPathCloudException if an exception occurs
    */
-  public PyramidLevel(Instance instance) throws QuPathCloudException {
+  public PyramidLevel(Instance instance) {
     this.width = instance.getTotalPixelMatrixColumns().getValue1();
     this.height = instance.getTotalPixelMatrixRows().getValue1();
     this.tileWidth = instance.getColumns().getValue1();
     this.tileHeight = instance.getRows().getValue1();
     this.isFullTiled = instance.isFullTiled();
-
-    addInstance(instance);
   }
 
   /**
