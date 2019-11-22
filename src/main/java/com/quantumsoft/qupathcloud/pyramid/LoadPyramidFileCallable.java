@@ -34,6 +34,8 @@ public class LoadPyramidFileCallable implements Callable<Pyramid> {
   /**
    * Instantiates a new Load pyramid file callable.
    *
+   * @param metadataOnly if true, parses metadata, but not actual frames. Qupath uses servers only
+   * for metadata in some cases, so this is a useful optimization.
    * @param filePath the file path
    */
   public LoadPyramidFileCallable(Path filePath, boolean metadataOnly) {

@@ -51,6 +51,12 @@ public class CloudImageServerBuilder implements ImageServerBuilder<BufferedImage
     }
   }
 
+  /**
+   * Return UriImageSupport for provided URI. Qupath picks server to use in order of descending
+   * supportLevel.
+   *
+   * @param uri uri to file to be opened
+   */
   @Override
   public UriImageSupport<BufferedImage> checkImageSupport(URI uri, String... args) {
     float supportLevel = supportLevel(uri, args);
