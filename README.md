@@ -6,7 +6,7 @@ full downloading and [synchronize annotations](#synchronization-annotations) wit
 
 ## Installation:
 
-1) Install QuPath v0.2.0-m2 from [here](https://github.com/qupath/qupath/releases/tag/v0.2.0-m2).
+1) Install QuPath v0.2.0-m5 from [here](https://github.com/qupath/qupath/releases/tag/v0.2.0-m5).
 2) Download the latest JAR from the releases tab.
 3) When you install QuPath, folder for extensions is set to */home/user/QuPath/extensions* by 
 default (in Linux). You can put the JAR in this folder or just drag-and-drop it in the QuPath 
@@ -64,14 +64,14 @@ QuPath uses embedded Java and may cause some errors. If you get any errors with 
 steps:
 1) Download and install Java SE Development Kit 11.
 2) Open QuPath/app folder in the terminal.
-3) Launch QuPath with following parameters `java -Djava.library.path=. -jar qupath-0.2.0-m2.jar`
+3) Launch QuPath with following parameters `java -Djava.library.path=. -jar qupath-0.2.0-m5.jar`
 
 ## Compilation:
 
 Perform the following steps for compiling extension and packaging to qupath-chcapi-extension.jar:
 1) **git clone https://github.com/qupath/qupath.git** in the terminal in your local folder (for 
 adding dependencies from QuPath).
-2) **git checkout v0.2.0-m2** to switch to QuPath v0.2.0-m2.
+2) **git checkout v0.2.0-m5** to switch to QuPath v0.2.0-m5.
 3) Add **apply plugin: 'maven'** string in build.gradle(Build all projects - all projects point) in 
 qupath folder.
 4) **./gradlew install** in qupath folder in the terminal.

@@ -21,6 +21,8 @@ import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import qupath.lib.images.servers.ImageChannel;
+import qupath.lib.images.servers.ImageServerMetadata;
 
 /**
  * The Pyramid to display an whole-slide image in QuPath.
@@ -33,13 +35,15 @@ public class Pyramid {
   private String studyUID;
   private String seriesUID;
 
-    /**
-     * Instantiates a new Pyramid.
-     *
-     * @param instances the instances
-     * @throws QuPathCloudException if an exception occurs
-     */
-    public Pyramid(List<Instance> instances) throws QuPathCloudException {
+  /**
+   * Instantiates a new Pyramid.
+   *
+   * @param instances the instances
+   * @param metadataOnly if true, parses metadata, but not actual frames. Qupath uses servers only
+   * for metadata in some cases, so this is a useful optimization.
+   * @throws QuPathCloudException if an exception occurs
+   */
+  public Pyramid(List<Instance> instances, boolean metadataOnly) throws QuPathCloudException {
     if (instances.get(0).isFullTiled()) {
       instances.sort(Comparator.comparingInt(Pyramid::getInstanceFrameOffset));
     }
@@ -50,7 +54,8 @@ public class Pyramid {
       if (currentLevel == null || currentLevel.getWidth() != getInstanceWidth(instance)) {
         currentLevel = new PyramidLevel(instance);
         levels.add(currentLevel);
-      } else {
+      }
+      if (!metadataOnly) {
         currentLevel.addInstance(instance);
       }
     }
@@ -65,79 +70,96 @@ public class Pyramid {
     seriesUID = instances.get(0).getSeriesInstanceUID().getValue1();
   }
 
-    /**
-     * Get downsamples double [ ].
-     *
-     * @return the double [ ]
-     */
-    public double[] getDownsamples() {
+  /**
+   * Get downsamples double [ ], which contains ratios of level 0 size to level n sizes.
+   * For example, each level being twice smaller would produce [1, 2, 4, 8,...,2^n]
+   *
+   * @return the double [ ]
+   */
+  public double[] getDownsamples() {
     return downsamples;
   }
 
-    /**
-     * Gets width.
-     *
-     * @return the width
-     */
-    public int getWidth() {
+  /**
+   * Gets width.
+   *
+   * @return the width
+   */
+  public int getWidth() {
     return levels.get(0).getWidth();
   }
 
-    /**
-     * Gets height.
-     *
-     * @return the height
-     */
-    public int getHeight() {
+  /**
+   * Gets height.
+   *
+   * @return the height
+   */
+  public int getHeight() {
     return levels.get(0).getHeight();
   }
 
-    /**
-     * Gets tile width.
-     *
-     * @return the tile width
-     */
-    public int getTileWidth() {
+  /**
+   * Gets tile width.
+   *
+   * @return the tile width
+   */
+  public int getTileWidth() {
     return levels.get(0).getTileWidth();
   }
 
-    /**
-     * Gets tile height.
-     *
-     * @return the tile height
-     */
-    public int getTileHeight() {
+  /**
+   * Gets tile height.
+   *
+   * @return the tile height
+   */
+  public int getTileHeight() {
     return levels.get(0).getTileHeight();
   }
 
-    /**
-     * Gets Study UID.
-     *
-     * @return the Study UID
-     */
-    public String getStudyUID() {
+  /**
+   * Gets Study UID.
+   *
+   * @return the Study UID
+   */
+  public String getStudyUID() {
     return studyUID;
   }
 
-    /**
-     * Gets Series UID.
-     *
-     * @return the Series UID
-     */
-    public String getSeriesUID() {
+  /**
+   * Gets Series UID.
+   *
+   * @return the Series UID
+   */
+  public String getSeriesUID() {
     return seriesUID;
   }
 
-    /**
-     * Gets frame.
-     *
-     * @param tileX the tile x
-     * @param tileY the tile y
-     * @param level the level
-     * @return the frame
-     */
-    public PyramidFrame getFrame(int tileX, int tileY, int level) {
+  /**
+   * Gets frame.
+   *
+   * @param tileX the tile x
+   * @param tileY the tile y
+   * @param level the level
+   * @return the frame
+   */
+  public PyramidFrame getFrame(int tileX, int tileY, int level) {
     return levels.get(level).getFrame(tileX, tileY);
+  }
+
+  /**
+   * Gets Series Metadata.
+   *
+   * @return the Series Metadata
+   */
+  public ImageServerMetadata getMetadata() {
+    return new ImageServerMetadata.Builder()
+        .height(getHeight())
+        .width(getWidth())
+        .channels(ImageChannel.getDefaultRGBChannels())
+        .preferredTileSize(getTileWidth(), getTileHeight())
+        .levelsFromDownsamples(getDownsamples())
+        .rgb(true)
+        .build();
   }
 
   private static int getInstanceWidth(Instance instance) {

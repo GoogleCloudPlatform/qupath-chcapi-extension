@@ -37,7 +37,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import qupath.lib.gui.QuPathGUI;
-import qupath.lib.gui.helpers.DisplayHelpers;
+import qupath.lib.gui.dialogs.Dialogs;
 import qupath.lib.gui.prefs.PathPrefs;
 import qupath.lib.images.ImageData;
 import qupath.lib.objects.hierarchy.events.PathObjectHierarchyEvent;
@@ -94,7 +94,7 @@ public enum Repository {
           setDicomStore(projectDicomStore);
         } catch (QuPathCloudException e) {
           LOGGER.error("Repository error!", e);
-          DisplayHelpers.showErrorMessage("Repository error!", e);
+          Dialogs.showErrorMessage("Repository error!", e);
         }
       };
       new Thread(loader).start();

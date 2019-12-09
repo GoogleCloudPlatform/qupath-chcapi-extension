@@ -31,12 +31,11 @@ import com.quantumsoft.qupathcloud.entities.instance.Instance;
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 import com.quantumsoft.qupathcloud.gui.windows.ConflictsWindow;
 import com.quantumsoft.qupathcloud.gui.windows.SynchronizationWindow;
-import com.quantumsoft.qupathcloud.imageserver.StubImageServer;
+import com.quantumsoft.qupathcloud.imageserver.CloudImageServer;
 import com.quantumsoft.qupathcloud.repository.Repository;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -61,8 +60,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import qupath.lib.gui.QuPathGUI;
-import qupath.lib.gui.helpers.DisplayHelpers;
-import qupath.lib.images.ImageData;
+import qupath.lib.gui.commands.ProjectImportImagesCommand;
+import qupath.lib.gui.dialogs.Dialogs;
 import qupath.lib.projects.Project;
 import qupath.lib.projects.ProjectImageEntry;
 
@@ -115,7 +114,7 @@ public class SynchronizationProjectWithDicomStore {
         project.syncChanges();
       } catch (QuPathCloudException | IOException e) {
         LOGGER.error("Synchronization error: ", e);
-        DisplayHelpers.showErrorMessage("Synchronization error!", e);
+        Dialogs.showErrorMessage("Synchronization error!", e);
       } finally {
         Platform.runLater(() -> {
           qupath.refreshProject();
@@ -140,23 +139,22 @@ public class SynchronizationProjectWithDicomStore {
 
     List<Path> tempDirectories = new ArrayList<>();
     for (ProjectImageEntry<BufferedImage> currentEntry : imageList) {
-      String serverPath = currentEntry.getServerPath();
-      String imageExtension = FilenameUtils.getExtension(serverPath);
-      String imageName = FilenameUtils.getBaseName(serverPath);
+      URI serverUri;
+      try {
+        serverUri = currentEntry.getServerURIs().iterator().next();
+      } catch (IOException e) {
+        throw new QuPathCloudException(e);
+      }
+
+      String imageExtension = FilenameUtils.getExtension(serverUri.toString());
+      String imageName = FilenameUtils.getBaseName(serverUri.toString());
 
       if (!imageExtension.equals(METADATA_FILE_EXTENSION)) {
-        URI uri;
-        try {
-          uri = new URI(serverPath);
-        } catch (URISyntaxException e) {
-          throw new QuPathCloudException(e);
-        }
-
         Path tempDirectory = createTempDirectory("QuPath-");
         tempDirectory.toFile().deleteOnExit();
         tempDirectories.add(tempDirectory);
 
-        Path pathToImage = Paths.get(uri);
+        Path pathToImage = Paths.get(serverUri);
         ImageToWsiDcmConverter converter = new ImageToWsiDcmConverter(pathToImage, tempDirectory);
         String checkedFileName = checkFileName(remoteImageSeriesList, imageName);
         converter.convertImageToWsiDcm(checkedFileName);
@@ -168,7 +166,7 @@ public class SynchronizationProjectWithDicomStore {
           throw new QuPathCloudException(e);
         }
         if (dicomizedFiles.size() == 0) {
-          String errorParam = MessageFormat.format("Dicomization failed for: {0}", serverPath);
+          String errorParam = MessageFormat.format("Dicomization failed for: {0}", serverUri);
           throw new QuPathCloudException(errorParam);
         }
         queryBuilder.setPaths(dicomizedFiles);
@@ -179,7 +177,7 @@ public class SynchronizationProjectWithDicomStore {
         Future<Void> future = executorService.submit(callable);
         futureList.add(future);
 
-        project.removeImage(currentEntry);
+        project.removeImage(currentEntry, true);
       }
     }
     for (Future<Void> future : futureList) {
@@ -249,11 +247,21 @@ public class SynchronizationProjectWithDicomStore {
       Path metadataImageFile = metadataConfiguration.saveMetadataFile(series, instances);
       String serverPath = metadataImageFile.toString();
 
-      StubImageServer stubImageServer = new StubImageServer();
-      stubImageServer.setDisplayedImageName(imageName);
-      stubImageServer.setPath(serverPath);
+      try {
+        // metadata only because QuPath goes server->serverBuilder->server,
+        // so fully initializing server here would be wasted work
+        CloudImageServer server = new CloudImageServer(
+            new URI("file://" + serverPath),
+            cloudDao,
+            Repository.INSTANCE.getDicomStore(),
+            true);
 
-      project.addImage(stubImageServer);
+        ProjectImageEntry<BufferedImage> entry =
+            ProjectImportImagesCommand.addSingleImageToProject(project, server, null);
+        entry.setImageName(imageName);
+      } catch (Exception e) {
+        throw new QuPathCloudException(e);
+      }
 
       seriesListInProject.add(series);
     }
@@ -405,22 +413,6 @@ public class SynchronizationProjectWithDicomStore {
     for (ProjectImageEntry<BufferedImage> currentEntry : imageList) {
       Path pathToCurrentEntry = currentEntry.getEntryPath();
       String imageName = currentEntry.getImageName();
-
-      if (Files.notExists(pathToCurrentEntry)) {
-        String serverPath = currentEntry.getServerPath();
-        StubImageServer stubImageServer = new StubImageServer();
-        stubImageServer.setDisplayedImageName(imageName);
-        stubImageServer.setPath(serverPath);
-
-        ImageData<BufferedImage> imageData = qupath.createNewImageData(stubImageServer);
-        ProjectImageEntry<BufferedImage> entry = project.getImageEntry(serverPath);
-        try {
-          entry.saveImageData(imageData);
-        } catch (IOException e) {
-          throw new QuPathCloudException(e);
-        }
-      }
-
       imageDirectories.put(imageName, pathToCurrentEntry);
     }
 
@@ -439,6 +431,11 @@ public class SynchronizationProjectWithDicomStore {
       String imageName = instance.getSopAuthorizationComment().getValue1();
       Path imageDirectory = imageDirectories.get(imageName);
       Path qpdataFile = imageDirectory.resolve(QU_PATH_DATA_FILE);
+      try {
+        Files.createDirectories(imageDirectory);
+      } catch (IOException e) {
+        throw new QuPathCloudException(e);
+      }
       DcmToDataConverter dcmToDataConverter =
           new DcmToDataConverter(downloadedQpdataInstance, qpdataFile);
       dcmToDataConverter.convertDcmToQuPathData();

@@ -29,20 +29,24 @@ import java.util.concurrent.Callable;
 public class LoadPyramidFileCallable implements Callable<Pyramid> {
 
   private Path filePath;
+  private boolean metadataOnly;
 
   /**
    * Instantiates a new Load pyramid file callable.
    *
+   * @param metadataOnly if true, parses metadata, but not actual frames. Qupath uses servers only
+   * for metadata in some cases, so this is a useful optimization.
    * @param filePath the file path
    */
-  public LoadPyramidFileCallable(Path filePath) {
+  public LoadPyramidFileCallable(Path filePath, boolean metadataOnly) {
     this.filePath = filePath;
+    this.metadataOnly = metadataOnly;
   }
 
   @Override
   public Pyramid call() throws QuPathCloudException {
     MetadataConfiguration metaConf = new MetadataConfiguration(filePath.getParent());
     List<Instance> instanceList = metaConf.readMetadataFile(filePath);
-    return new Pyramid(instanceList);
+    return new Pyramid(instanceList, metadataOnly);
   }
 }

@@ -33,6 +33,7 @@ import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -43,11 +44,9 @@ import java.util.concurrent.Executors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import qupath.lib.awt.common.AwtTools;
-import qupath.lib.images.DefaultPathImage;
-import qupath.lib.images.PathImage;
 import qupath.lib.images.servers.AbstractImageServer;
-import qupath.lib.images.servers.ImageChannel;
-import qupath.lib.images.servers.ImageServer;
+import qupath.lib.images.servers.ImageServerBuilder.DefaultImageServerBuilder;
+import qupath.lib.images.servers.ImageServerBuilder.ServerBuilder;
 import qupath.lib.images.servers.ImageServerMetadata;
 import qupath.lib.images.servers.ServerTools;
 import qupath.lib.regions.RegionRequest;
@@ -71,6 +70,8 @@ public class CloudImageServer extends AbstractImageServer<BufferedImage> {
   private Pyramid pyramid;
   private ExecutorService executorService;
 
+  private URI uri;
+
   /**
    * Instantiates a new Cloud image server.
    *
@@ -79,22 +80,28 @@ public class CloudImageServer extends AbstractImageServer<BufferedImage> {
    * @param dicomStore the DICOM Store
    * @throws QuPathCloudException if an error occurs
    */
-  public CloudImageServer(URI uri, CloudDao cloudDao, DicomStore dicomStore)
+  public CloudImageServer(URI uri, CloudDao cloudDao, DicomStore dicomStore, boolean metadataOnly)
       throws QuPathCloudException {
+    super(BufferedImage.class);
+    this.uri = uri;
     this.cloudDao = cloudDao;
     this.dicomStore = dicomStore;
     this.executorService = Executors.newFixedThreadPool(THREADS_COUNT);
 
-    pyramid = new LoadPyramidFileCallable(Paths.get(uri)).call();
+    pyramid = new LoadPyramidFileCallable(Paths.get(uri), metadataOnly).call();
 
-    originalMetadata = new ImageServerMetadata.Builder(getClass(), uri.toString())
-        .height(pyramid.getHeight())
-        .width(pyramid.getWidth())
-        .channels(ImageChannel.getDefaultRGBChannels())
-        .preferredTileSize(pyramid.getTileWidth(), pyramid.getTileHeight())
-        .levelsFromDownsamples(pyramid.getDownsamples())
-        .rgb(true)
-        .build();
+    originalMetadata = pyramid.getMetadata();
+  }
+
+  @Override
+  protected ServerBuilder<BufferedImage> createServerBuilder() {
+    return DefaultImageServerBuilder
+        .createInstance(CloudImageServerBuilder.class, getMetadata(), uri);
+  }
+
+  @Override
+  public Collection<URI> getURIs() {
+    return Collections.singletonList(uri);
   }
 
   @Override
@@ -108,17 +115,8 @@ public class CloudImageServer extends AbstractImageServer<BufferedImage> {
   }
 
   @Override
-  public double getTimePoint(int ind) {
-    return 0;
-  }
-
-  @Override
-  public PathImage<BufferedImage> readRegion(RegionRequest request) {
-    BufferedImage img = readBufferedImage(request);
-    if (img == null) {
-      return null;
-    }
-    return new DefaultPathImage<>(this, request, img);
+  protected String createID() {
+    return getClass().getName() + ": " + uri.toString();
   }
 
   @Override
@@ -129,7 +127,7 @@ public class CloudImageServer extends AbstractImageServer<BufferedImage> {
     }
 
     double downsampleFactor = request.getDownsample();
-    int level = ServerTools.getClosestDownsampleIndex(getPreferredDownsamples(), downsampleFactor);
+    int level = ServerTools.getPreferredResolutionLevel(this, downsampleFactor);
     double downsample = getPreferredDownsamples()[level];
     int levelWidth = (int) (region.width / downsample + .5);
     int levelHeight = (int) (region.height / downsample + .5);
@@ -257,11 +255,6 @@ public class CloudImageServer extends AbstractImageServer<BufferedImage> {
   }
 
   @Override
-  public List<String> getSubImageList() {
-    return Collections.emptyList();
-  }
-
-  @Override
   public List<String> getAssociatedImageList() {
     return Collections.emptyList();
   }
@@ -269,31 +262,6 @@ public class CloudImageServer extends AbstractImageServer<BufferedImage> {
   @Override
   public BufferedImage getAssociatedImage(String name) {
     return null;
-  }
-
-  @Override
-  public String getDisplayedImageName() {
-    return getShortServerName();
-  }
-
-  @Override
-  public boolean containsSubImages() {
-    return false;
-  }
-
-  @Override
-  public boolean usesBaseServer(ImageServer<?> server) {
-    return this == server;
-  }
-
-  @Override
-  public int getBitsPerPixel() {
-    return 8;
-  }
-
-  @Override
-  public Integer getDefaultChannelColor(int channel) {
-    return ImageChannel.getDefaultChannelColor(channel);
   }
 
   @Override
