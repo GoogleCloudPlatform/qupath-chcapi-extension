@@ -71,7 +71,8 @@ public class Pyramid {
   }
 
   /**
-   * Get downsamples double [ ].
+   * Get downsamples double [ ], which contains ratios of level 0 size to level n sizes.
+   * For example, each level being twice smaller would produce [1, 2, 4, 8,...,2^n]
    *
    * @return the double [ ]
    */
