@@ -67,7 +67,7 @@ public class ImageToWsiDcmConverter {
     }
   }
 
-  private void configurePyramidParameters(Dicomizer.Options options) {
+  private void configurePyramidParameters(Dicomizer.Options options) throws QuPathCloudException {
     try (OpenSlide os = new OpenSlide(pathToImage.toFile())) {
       long totalWidth = os.getLevel0Width();
       long totalHeight = os.getLevel0Height();
@@ -107,7 +107,7 @@ public class ImageToWsiDcmConverter {
         options.generatePyramid(levels);
       }
     } catch (Throwable e) {
-      LOGGER.error("Failed to determine input file tiling via Openslide, setting defaults ", e);
+      throw new QuPathCloudException(e);
     }
   }
 

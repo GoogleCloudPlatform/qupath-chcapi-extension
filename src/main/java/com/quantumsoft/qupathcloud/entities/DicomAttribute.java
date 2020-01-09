@@ -37,6 +37,16 @@ public class DicomAttribute<T> {
   private T[] Value;
 
   /**
+   * Check if is tag is empty.
+   *
+   * @return result of tag empty check
+   */
+  @JsonIgnore
+  public boolean isEmpty() {
+    return Value == null || Value.length == 0;
+  }
+
+  /**
    * Gets vr.
    *
    * @return the vr

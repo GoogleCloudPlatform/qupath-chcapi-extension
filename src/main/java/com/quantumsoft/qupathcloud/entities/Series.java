@@ -79,7 +79,7 @@ public class Series {
    * @return the Series Description
    */
   public DicomAttribute<String> getSeriesDescription() {
-    if (seriesDescription == null) {
+    if (seriesDescription == null || seriesDescription.isEmpty()) {
       String temp = studyInstanceUID.getValue1() + seriesInstanceUID.getValue1();
       seriesDescription = new DicomAttribute<>();
       seriesDescription.setValue(new String[]{String.valueOf(temp.hashCode())});

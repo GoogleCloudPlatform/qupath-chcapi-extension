@@ -44,6 +44,8 @@ public class Pyramid {
    * @throws QuPathCloudException if an exception occurs
    */
   public Pyramid(List<Instance> instances, boolean metadataOnly) throws QuPathCloudException {
+    validateInstances(instances);
+
     if (instances.get(0).isFullTiled()) {
       instances.sort(Comparator.comparingInt(Pyramid::getInstanceFrameOffset));
     }
@@ -71,8 +73,8 @@ public class Pyramid {
   }
 
   /**
-   * Get downsamples double [ ], which contains ratios of level 0 size to level n sizes.
-   * For example, each level being twice smaller would produce [1, 2, 4, 8,...,2^n]
+   * Get downsamples double [ ], which contains ratios of level 0 size to level n sizes. For
+   * example, each level being twice smaller would produce [1, 2, 4, 8,...,2^n]
    *
    * @return the double [ ]
    */
@@ -169,5 +171,47 @@ public class Pyramid {
   private static int getInstanceFrameOffset(Instance instance) {
     DicomAttribute<Integer> offset = instance.getConcatenationFrameOffsetNumber();
     return offset == null ? 0 : offset.getValue1();
+  }
+
+  private static void validateInstances(List<Instance> instances) throws QuPathCloudException {
+    final String message = "Not a valid DICOM WSI instance: %s, Reason: %s";
+
+    for (Instance instance : instances) {
+      // just a sanity check to not fail at throwing an exception, should always be present
+      if (instance.getSopInstanceUID() == null || instance.getSopInstanceUID().isEmpty()) {
+        throw new QuPathCloudException(String
+            .format(message, instance.toString(), "SopInstanceUID tag absent"));
+      }
+      if (instance.getTotalPixelMatrixColumns() == null
+          || instance.getTotalPixelMatrixColumns().isEmpty()) {
+        throw new QuPathCloudException(String
+            .format(message, instance.getSopInstanceUID().getValue1(),
+                "TotalPixelMatrixColumns tag absent"));
+      }
+      if (instance.getTotalPixelMatrixRows() == null
+          || instance.getTotalPixelMatrixRows().isEmpty()) {
+        throw new QuPathCloudException(String
+            .format(message, instance.getSopInstanceUID().getValue1(),
+                "getTotalPixelMatrixRows tag absent"));
+      }
+      if (instance.getColumns() == null || instance.getColumns().isEmpty()) {
+        throw new QuPathCloudException(String
+            .format(message, instance.getSopInstanceUID().getValue1(), "Columns tag absent"));
+      }
+      if (instance.getRows() == null || instance.getRows().isEmpty()) {
+        throw new QuPathCloudException(String
+            .format(message, instance.getSopInstanceUID().getValue1(), "Rows tag absent"));
+      }
+      if (instance.getNumberOfFrames() == null || instance.getNumberOfFrames().isEmpty()) {
+        throw new QuPathCloudException(String
+            .format(message, instance.getSopInstanceUID().getValue1(),
+                "NumberOfFrames tag absent"));
+      }
+      if (!instance.isFullTiled() && instance.getPerframeFunctionalGroupsSequence().isEmpty()) {
+        throw new QuPathCloudException(String
+            .format(message, instance.getSopInstanceUID().getValue1(),
+                "TILED_SPARSE(default), but PerframeFunctionalGroupsSequence is absent"));
+      }
+    }
   }
 }

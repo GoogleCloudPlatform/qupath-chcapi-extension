@@ -21,6 +21,7 @@ import com.quantumsoft.qupathcloud.entities.Series;
 import com.quantumsoft.qupathcloud.entities.instance.Instance;
 import com.quantumsoft.qupathcloud.exception.QuPathCloudException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -118,5 +119,9 @@ public class MetadataConfiguration {
     } catch (IOException e) {
       throw new QuPathCloudException(e);
     }
+  }
+
+  public boolean exists(){
+    return Files.exists(projectMetadataIndexFile);
   }
 }

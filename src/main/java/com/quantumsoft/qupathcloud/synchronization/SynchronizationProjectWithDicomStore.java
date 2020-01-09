@@ -206,11 +206,13 @@ public class SynchronizationProjectWithDicomStore {
     List<Series> remoteImageSeriesList = DaoHelper.getImageSeries(remoteSeriesList);
 
     List<Series> seriesListInProject;
-    if (Files.notExists(metadataDirectory)) {
-      try {
-        Files.createDirectory(metadataDirectory);
-      } catch (IOException e) {
-        throw new QuPathCloudException(e);
+    if (!metadataConfiguration.exists()) {
+      if (Files.notExists(metadataDirectory)) {
+        try {
+          Files.createDirectory(metadataDirectory);
+        } catch (IOException e) {
+          throw new QuPathCloudException(e);
+        }
       }
       seriesListInProject = new ArrayList<>();
       seriesProcess(remoteImageSeriesList, metadataConfiguration, seriesListInProject);
