@@ -21,7 +21,6 @@ import static com.quantumsoft.qupathcloud.gui.panels.Position.PROJECTS;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXTextField;
 import com.quantumsoft.qupathcloud.configuration.DicomStoreConfiguration;
 import com.quantumsoft.qupathcloud.dao.CloudDao;
 import com.quantumsoft.qupathcloud.dao.spec.QueryBuilder;
@@ -47,6 +46,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -377,7 +377,7 @@ public class CloudWindow {
     Stage newDicomStoreStage = newDicomStoreWindow.getStage();
 
     JFXButton createButton = (JFXButton) pane.lookup("#createButton");
-    JFXTextField dicomStoreIdField = (JFXTextField) pane.lookup("#dicomStoreId");
+    TextField dicomStoreIdField = (TextField) pane.lookup("#dicomStoreId");
     createButton.setOnAction(event -> {
       String newDicomStoreId = dicomStoreIdField.textProperty().get();
       if (newDicomStoreId.length() > 0) {
@@ -425,7 +425,7 @@ public class CloudWindow {
     Stage newDatasetStage = newDatasetWindow.getStage();
 
     JFXButton createButton = (JFXButton) pane.lookup("#createButton");
-    JFXTextField datasetIdField = (JFXTextField) pane.lookup("#datasetId");
+    TextField datasetIdField = (TextField) pane.lookup("#datasetId");
     JFXComboBox<Label> locationsComboBox = (JFXComboBox) pane.lookup("#locationsComboBoxId");
     createButton.setOnAction(event -> {
       String newDatasetId = datasetIdField.textProperty().get();
@@ -487,7 +487,7 @@ public class CloudWindow {
   }
 
   private <T> void filterDataInTable(TableView<T> table) {
-    JFXTextField filter = (JFXTextField) currentPage.lookup("#search");
+    TextField filter = (TextField) currentPage.lookup("#search");
     ObservableList data = table.getItems();
     filter.textProperty().addListener(
         (ObservableValue<? extends String> observable, String oldValue, String newValue) -> {

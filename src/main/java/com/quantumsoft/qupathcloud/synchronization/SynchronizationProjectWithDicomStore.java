@@ -60,7 +60,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import qupath.lib.gui.QuPathGUI;
-import qupath.lib.gui.commands.ProjectImportImagesCommand;
+import qupath.lib.gui.commands.ProjectCommands;
 import qupath.lib.gui.dialogs.Dialogs;
 import qupath.lib.projects.Project;
 import qupath.lib.projects.ProjectImageEntry;
@@ -252,14 +252,15 @@ public class SynchronizationProjectWithDicomStore {
       try {
         // metadata only because QuPath goes server->serverBuilder->server,
         // so fully initializing server here would be wasted work
+        URI uri = Paths.get(serverPath).toUri();
         CloudImageServer server = new CloudImageServer(
-            new URI("file://" + serverPath),
+            uri,
             cloudDao,
             Repository.INSTANCE.getDicomStore(),
             true);
 
         ProjectImageEntry<BufferedImage> entry =
-            ProjectImportImagesCommand.addSingleImageToProject(project, server, null);
+            ProjectCommands.addSingleImageToProject(project, server, null);
         entry.setImageName(imageName);
       } catch (Exception e) {
         throw new QuPathCloudException(e);

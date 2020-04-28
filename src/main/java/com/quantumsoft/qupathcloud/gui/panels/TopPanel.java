@@ -15,13 +15,13 @@
 
 package com.quantumsoft.qupathcloud.gui.panels;
 
-import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.svg.SVGGlyph;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -90,7 +90,7 @@ public class TopPanel {
         getAngleRightGlyph(), dicomStoreLabel);
     beardCrumbsHBox.setAlignment(Pos.CENTER_LEFT);
 
-    JFXTextField search = new JFXTextField();
+    TextField search = new TextField();
     search.setPrefWidth(SEARCH_WIDTH);
     search.setPromptText("Search");
     search.setId("search");

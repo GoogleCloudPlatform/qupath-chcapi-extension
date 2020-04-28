@@ -7,13 +7,13 @@ steps:
 - name: 'gcr.io/cloud-builders/git'
   args:
   - 'checkout'
-  - 'tags/v0.2.0-m5'
+  - 'tags/v0.2.0-m10'
   dir: 'qupath'
 - name: 'bash:5.0.7'
   args:
   - 'sed'
   - '-i'
-  - '164a\apply plugin: "maven"'
+  - '179a\apply plugin: "maven"'
   - '/workspace/qupath/build.gradle'
 - name: 'gradle:5.4.1-jdk11'
   volumes:

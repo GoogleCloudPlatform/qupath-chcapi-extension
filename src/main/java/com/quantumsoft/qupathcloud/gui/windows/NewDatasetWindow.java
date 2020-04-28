@@ -17,7 +17,6 @@ package com.quantumsoft.qupathcloud.gui.windows;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXTextField;
 import com.quantumsoft.qupathcloud.entities.Location;
 import java.util.List;
 import javafx.geometry.Insets;
@@ -25,6 +24,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -91,7 +91,7 @@ public class NewDatasetWindow {
     buttonsPanel.setLeft(cancelButton);
     buttonsPanel.setRight(createButton);
 
-    JFXTextField dicomStoreId = new JFXTextField();
+    TextField dicomStoreId = new TextField();
     dicomStoreId.setPromptText(PROMPT_TEXT);
     dicomStoreId.setId("datasetId");
 
