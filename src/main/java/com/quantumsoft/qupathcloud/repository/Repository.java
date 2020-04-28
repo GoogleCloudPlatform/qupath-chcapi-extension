@@ -34,6 +34,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import qupath.lib.gui.QuPathGUI;
@@ -106,10 +108,7 @@ public enum Repository {
     cloudDao.set(new CloudDaoImpl(oAuth20));
 
     hierarchyListener = new QuPathHierarchyListener();
-    qupath.addImageDataChangeListener((source, imageDataOld, imageDataNew) -> {
-      LOGGER.trace("ImageData change old: " + imageDataOld + ", new:" + imageDataNew);
-      hierarchyListener.setListenedImageData(imageDataNew);
-    });
+    qupath.imageDataProperty().addListener(hierarchyListener);
   }
 
   /**
@@ -167,27 +166,12 @@ public enum Repository {
   }
 
   // attempt to provide meaningfull modification date for Qpdata.
-  private class QuPathHierarchyListener implements PathObjectHierarchyListener {
+  private class QuPathHierarchyListener implements ChangeListener<ImageData<BufferedImage>>, PathObjectHierarchyListener {
 
     /**
      * The Image data.
      */
     ImageData<BufferedImage> imageData;
-
-    /**
-     * Sets listened image data.
-     *
-     * @param imageData the image data
-     */
-    public void setListenedImageData(ImageData<BufferedImage> imageData) {
-      if (this.imageData != null) {
-        this.imageData.getHierarchy().removePathObjectListener(this);
-      }
-      if (imageData != null) {
-        this.imageData = imageData;
-        this.imageData.getHierarchy().addPathObjectListener(this);
-      }
-    }
 
     @Override
     public void hierarchyChanged(PathObjectHierarchyEvent event) {
@@ -196,6 +180,19 @@ public enum Repository {
       if (!event.getSource().equals(event.getHierarchy().getRootObject())) {
         imageData.setProperty(LAST_CHANGE, new Date());
         LOGGER.trace("imageData lastChange date updated");
+      }
+    }
+
+    @Override
+    public void changed(ObservableValue<? extends ImageData<BufferedImage>> source,
+        ImageData<BufferedImage> imageDataOld, ImageData<BufferedImage> imageDataNew) {
+      LOGGER.trace("ImageData change old: " + imageDataOld + ", new:" + imageDataNew);
+      if (this.imageData != null) {
+        this.imageData.getHierarchy().removePathObjectListener(this);
+      }
+      if (imageDataNew != null) {
+        this.imageData = imageDataNew;
+        this.imageData.getHierarchy().addPathObjectListener(this);
       }
     }
   }

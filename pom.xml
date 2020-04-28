@@ -26,7 +26,7 @@
     <dependency>
       <groupId>qupath</groupId>
       <artifactId>qupath-gui-fx</artifactId>
-      <version>0.2.0-m5</version>
+      <version>0.2.0-m10</version>
     </dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
@@ -56,7 +56,7 @@
     <dependency>
       <groupId>com.jfoenix</groupId>
       <artifactId>jfoenix</artifactId>
-      <version>9.0.8</version>
+      <version>9.0.9</version>
     </dependency>
     <dependency>
       <groupId>org.dcm4che</groupId>

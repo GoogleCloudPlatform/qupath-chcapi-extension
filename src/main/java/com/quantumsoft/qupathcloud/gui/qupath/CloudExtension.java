@@ -19,7 +19,12 @@ import com.quantumsoft.qupathcloud.gui.windows.CloudWindow;
 import com.quantumsoft.qupathcloud.repository.Repository;
 import com.quantumsoft.qupathcloud.synchronization.SynchronizationProjectWithDicomStore;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import javafx.geometry.Orientation;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Separator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import qupath.lib.gui.QuPathGUI;
@@ -63,10 +68,12 @@ public class CloudExtension implements QuPathExtension {
     });
     logoutButton.disableProperty().bind(Repository.INSTANCE.getIsLoggedInProperty());
 
-    qupath.addToolbarSeparator();
-    qupath.addToolbarButton(cloudButton);
-    qupath.addToolbarButton(synchronizeButton);
-    qupath.addToolbarButton(logoutButton);
+    List<Node> nodes = new ArrayList<>();
+    nodes.add(new Separator(Orientation.VERTICAL));
+    nodes.add(cloudButton);
+    nodes.add(synchronizeButton);
+    nodes.add(logoutButton);
+    qupath.getToolBar().getItems().addAll(nodes);
   }
 
   public String getName() {
