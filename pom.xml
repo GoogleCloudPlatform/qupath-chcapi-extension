@@ -9,7 +9,7 @@
 
   <groupId>com.quantumsoft</groupId>
   <artifactId>qupath-chcapi-extension</artifactId>
-  <version>2.0.5</version>
+  <version>2.0.6</version>
 
   <repositories>
     <repository>
